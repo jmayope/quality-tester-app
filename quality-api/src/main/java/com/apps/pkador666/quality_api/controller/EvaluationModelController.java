@@ -1,6 +1,7 @@
 package com.apps.pkador666.quality_api.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apps.pkador666.quality_api.model.EvaluationModel;
@@ -30,7 +31,12 @@ public class EvaluationModelController {
   }
 
   @PostMapping
-  public EvaluationModel postMethodName(@RequestBody EvaluationModel newEvaluationModel) {
+  public EvaluationModel save(@RequestBody EvaluationModel newEvaluationModel) {
+      return evaluationModelRepository.save(newEvaluationModel);
+  }
+
+  @PostMapping("update")
+  public EvaluationModel update(@RequestParam Integer id, @RequestBody EvaluationModel newEvaluationModel) {
       return evaluationModelRepository.save(newEvaluationModel);
   }
   
