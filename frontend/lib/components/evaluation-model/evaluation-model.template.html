@@ -12,7 +12,7 @@
     <div class="col-8 offset-2 mt-3">
       <div class="input-group">
         <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
-        <input type="text" class="form-control" name="text" ng-model="filter.text" placeholder="FILTRAR POR TEXTO" aria-label="FILTRAR POR TEXTO" aria-describedby="basic-addon1">
+        <input type="text" class="form-control text-uppercase" name="text" ng-model="filter.text" placeholder="FILTRAR POR TEXTO" aria-label="FILTRAR POR TEXTO" aria-describedby="basic-addon1">
       </div>
     </div>
     <div class="col-12 mt-3">
@@ -30,7 +30,7 @@
               <small class="text-secondary">{{e.description | uppercase}}</small>
             </div>
             <div class="col-1 pt-3">
-              <span class="badge bg-light text-primary">{{e.status ? 'ACTIVO' : 'INACTIVO'}}</span>
+              <span class="badge bg-light" ng-class="{'text-primary': e.status, 'text-danger': !e.status}">{{e.status ? 'ACTIVO' : 'INACTIVO'}}</span>
             </div>
             <div class="col-2 pt-2 text-end">
               <i class="fa fa-calendar me-1"></i>{{e.createdAt | date:'dd/MM/yyyy'}} <br>
@@ -62,37 +62,35 @@
     <div class="modal-content">
 
       <div class="modal-header">
-        <h5 class="modal-title">Nuevo Residuo</h5>
+        <h5 class="modal-title">{{newEvaluationModel.editing ? 'Editando' : 'Nuevo'}}&nbsp;Modelo de Evaluación</h5>
         <button type="button" class="btn-close" ng-click="toggleEvaluationModal()"></button>
       </div>
 
       <div class="modal-body">
         <form name="residueForm">
           <div class="row">
-            <div class="col-12">
-              <small class="text-secondary">Cantidad</small>
-              <input type="number" name="quantity" ng-model="newEvaluationModel.quantity" class="form-control">
+            <div class="col-4">
+              <small class="text-secondary">Código</small>
+              <input type="text" disabled name="id" ng-model="newEvaluationModel.id" class="form-control text-uppercase" >
+            </div>
+            <div class="col-4">
+              <small class="text-secondary">Abreviatura</small>
+              <input type="text" name="abbr" ng-model="newEvaluationModel.abbr" class="form-control text-uppercase">
+            </div>
+            <div class="col-4">
+              <small class="text-secondary">Nombre</small>
+              <input type="text" name="name" ng-model="newEvaluationModel.name" class="form-control text-uppercase">
             </div>
             <div class="col-12">
-              <small class="text-secondary">Tipo de Residuo</small>
-              <div class="row">
-                <div class="col-3" ng-repeat="r in residueTypes">
-                  <div class="card hand" ng-class="{'border-secondary-color text-secondary-color': newEvaluationModel.type && newEvaluationModel.type.id !== r.id, 'bg-secondary-color text-white': newEvaluationModel.type && newEvaluationModel.type.id === r.id}" ng-click="selectResidueType(r)">
-                    <div class="card-body text-center">
-                      <img src="{{r.image}}" width="30" ng-style="{'mix-blend-mode': newEvaluationModel.type && newEvaluationModel.type.id === r.id ? 'multiply' : 'none' }" height="30" alt=""> <br>
-                      <small>{{r.name | uppercase}}</small>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <small class="text-secondary">Descripción</small>
+              <textarea name="description" rows="5" ng-model="newEvaluationModel.description" class="form-control text-uppercase"></textarea>
             </div>
-            <div class="col-12">
-              <small class="text-secondary">Procesos del Residuo</small>
-              <ul class="list-group">
-                <li class="list-group-item" ng-repeat="p in residueProcess" ng-click="addToProcess(p)">
-                  <i class="fa me-2" ng-class="{'fa-square text-secondary': !p.selected, 'fa-check text-secondary-color': p.selected}"></i>{{p.name | uppercase}}
-                </li>
-              </ul>
+            <div class="col-12" ng-if="newEvaluationModel.editing">
+              <small class="text-secondary">Estado</small>
+              <select name="status" ng-model="newEvaluationModel.status" class="form-select">
+                <option ng-value="true">ACTIVO</option>
+                <option ng-value="false">INACTIVO</option>
+              </select>
             </div>
           </div>
         </form>
@@ -100,7 +98,7 @@
 
       <div class="modal-footer">
         <button class="btn btn-secondary" ng-click="toggleEvaluationModal()">Cerrar</button>
-        <button class="btn btn-primary" ng-click="saveResidue()">Guardar</button>
+        <button class="btn btn-primary" ng-click="saveEvaluationModel()">Guardar</button>
       </div>
 
     </div>

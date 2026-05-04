@@ -10,8 +10,11 @@ import com.apps.pkador666.quality_api.repository.EvaluationModelRepository;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -35,9 +38,23 @@ public class EvaluationModelController {
       return evaluationModelRepository.save(newEvaluationModel);
   }
 
-  @PostMapping("update")
-  public EvaluationModel update(@RequestParam Integer id, @RequestBody EvaluationModel newEvaluationModel) {
-      return evaluationModelRepository.save(newEvaluationModel);
+  @PutMapping("/update")
+  public EvaluationModel putMethodName(@RequestBody EvaluationModel newEvaluationModel) {    
+    return evaluationModelRepository.save(newEvaluationModel);
   }
+
+
+  // @PostMapping("/update/{id}")
+  // public EvaluationModel update(@PathVariable Long id, @RequestBody EvaluationModel newEvaluationModel) {
+  //   EvaluationModel existing = evaluationModelRepository.findById(id)
+  //   .orElseThrow(() -> new RuntimeException("Registro no encontrado"));
+
+  //   existing.setName(newEvaluationModel.getName());
+  //   existing.setCode(newEvaluationModel.getCode());
+  //   existing.setStatus(newEvaluationModel.getStatus());
+
+  //   // Guarda cambios
+  //   return evaluationModelRepository.save(existing);
+  // }
   
 }
