@@ -1,10 +1,7 @@
 package com.apps.pkador666.quality_api.model;
 
 import java.time.LocalDateTime;
-
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-
 import jakarta.persistence.*;
 
 @Entity
