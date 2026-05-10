@@ -16,8 +16,8 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column()
-  private int person_id;
+  @Column(name="person_id")
+  private Integer personId;
 
   @Column()
   private String username;
@@ -31,7 +31,8 @@ public class User {
   @Column(name="user_type")
   private String userType;
 
-  private Boolean is_admin;
+  @Column(name="is_admin")
+  private Boolean isAdmin;
 
   @CreationTimestamp
   @Column(name="create_at", nullable = false, updatable = false)
@@ -45,12 +46,12 @@ public class User {
     this.id = id;
   }
 
-  public int getPerson_id() {
-    return person_id;
+  public Integer getPersonId() {
+    return personId;
   }
 
-  public void setPerson_id(int person_id) {
-    this.person_id = person_id;
+  public void setPersonId(Integer personId) {
+    this.personId = personId;
   }
 
   public String getUsername() {
@@ -85,12 +86,12 @@ public class User {
     this.userType = userType;
   }
 
-  public Boolean getIs_admin() {
-    return is_admin;
+  public Boolean getIsAdmin() {
+    return isAdmin;
   }
 
-  public void setIs_admin(Boolean is_admin) {
-    this.is_admin = is_admin;
+  public void setIsAdmin(Boolean isAdmin) {
+    this.isAdmin = isAdmin;
   }
 
   public LocalDateTime getCreateAt() {
@@ -102,5 +103,4 @@ public class User {
   }
 
   
-
 }
