@@ -11,6 +11,10 @@ angular.module('qualityApp')
       templateUrl: './lib/components/evaluation-model/evaluation-model.template.html',
       controller: 'evaluationModelCtrl',
     })
+    .when('/entity', {
+      templateUrl: './lib/components/entity/entity.template.html',
+      controller: 'entityCtrl',
+    })
     // .when('/offer', {
     //   templateUrl: 'components/offer/offer.template.html',
     //   controller: 'offerCtrl',

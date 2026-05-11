@@ -13,6 +13,10 @@ app.factory("mainService", ["$http", "APP_CONFIG", function($http, APP_CONFIG) {
 
     saveEvaluation: (body) => {
       return $http.post(`${apiUrl}/evaluation-models`, body);
+    },
+
+    findAllEntities: (body) => {
+      return $http.post(`${apiUrl}/entities/by`, body);
     }
   }
 

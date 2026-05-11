@@ -1,7 +1,18 @@
+:root {
+  --primary-color: #0d6efd;
+}
+
+.hand {
+  cursor: pointer;
+}
+
 .font-lg {
   font-size: 30px !important;
 }
 
+.border-primary {
+  border: 1px solid var(--primary-color) !important;
+}
 
 dialog {
   border: none;
