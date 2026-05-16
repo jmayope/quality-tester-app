@@ -1,14 +1,9 @@
 <div class="container" ng-init="init()">
   <div class="row mt-3">
-    <div class="col-6 pb-3">
-      <button class="btn btn-lg btn-light text-primary me-3">
-        <i class="fa fa-circle me-1"></i>Módelos
-      </button>
-      <button class="btn btn-lg btn-primary">
-        <i class="fa fa-circle me-1"></i>Entidades
-      </button>
+    <div class="col-6">
+      <span class="display-4">Entidades</span>
     </div>
-    <div class="col-6 pb-3">
+    <div class="col-6 pb-3 pt-2">
       <div class="input-group input-group-lg">
         <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
         <input type="text" class="form-control text-uppercase" placeholder="BUSCAR POR TEXTO" aria-label="BUSCAR POR TEXTO" aria-describedby="basic-addon1">
@@ -59,6 +54,119 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade"
+     ng-class="{'show d-block': isEntityOpen}"
+     tabindex="-1"
+     role="dialog"
+     style="background: rgba(0,0,0,0.5);"
+     ng-if="isEntityOpen">
+
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">{{newEntity.editing ? 'Editando' : 'Nuevo'}}&nbsp;Entidad</h5>
+        <button type="button" class="btn-close" ng-click="toggleEvaluationModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form name="residueForm">
+          <div class="row">
+            <div class="col-12 mb-2">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" ng-repeat="s in sections" class="btn" ng-class="{'btn-light text-primary': sectionSelected && sectionSelected.id !== s.id, 'btn-primary': sectionSelected && sectionSelected.id === s.id}" ng-click="selectSection(s)">{{s.name}}</button>
+              </div>
+            </div>
+            <div class="col-12" ng-if="sectionSelected && sectionSelected.id === 1">
+              <div class="row">
+                <div class="col-4">
+                  <small class="text-secondary">Código</small>
+                  <input type="text" disabled name="id" ng-model="newEntity.id" class="form-control text-uppercase" >
+                </div>
+                <div class="col-8">
+                  <small class="text-secondary">Nombre</small>
+                  <input type="text" name="name" ng-model="newEntity.name" class="form-control text-uppercase">
+                </div>
+                <div class="col-12">
+                  <small class="text-secondary">Descripción</small>
+                  <textarea name="description" rows="5" ng-model="newEntity.description" class="form-control text-uppercase"></textarea>
+                </div>
+                <div class="col-12" ng-if="newEntity.editing">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" name="status" ng-model="newEntity.status" type="checkbox" role="switch" id="status">
+                    <label class="form-check-label" for="status">Estado</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12" ng-if="sectionSelected && sectionSelected.id === 2">
+              <div class="row">
+                <div class="col-12 text-center" ng-if="!newEntity.elements.length && !newElement">
+                  <i class="fa fa-times text-danger fa-2x"></i><br>
+                  No se tienen Elementos Registrables registrados
+                </div>
+                <div class="col-12" ng-if="newEntity.elements.length">
+
+                </div>
+                <div class="col-12" ng-if="newElement">
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-4">
+                          <small class="text-secondary">Código</small>
+                          <input type="text" name="code" ng-model="newElement.code" class="form-control text-uppercase">
+                        </div>
+                        <div class="col-8">
+                          <small class="text-secondary">Nombre</small>
+                          <input type="text" name="name" ng-model="newElement.name" class="form-control text-uppercase">
+                        </div>
+                        <div class="col-12">
+                          <small class="text-secondary">Descripción</small>
+                          <textarea name="description" rows="3" ng-model="newElement.description" class="form-control text-uppercase"></textarea>
+                        </div>
+                        <div class="col-12 mb-2">
+                          <small class="text-secondary">Tecnologias</small>
+                          <div class="input-group input-group-sm">
+                            <input type="text" name="newTechnology" id="technology" ng-model="newTechnology" class="form-control form-control-sm">
+                            <button class="btn btn-success" type="button" ng-if="newTechnology" id="button-addon2" ng-click="toggleTechnology(newTechnology, false)">Agregar</button>
+                          </div>
+                          <div>
+                            <span class="badge bg-light text-primary me-2" ng-repeat="t in newElement.technologies">{{t}}&nbsp;<i class="hand fa fa-times text-danger" ng-click="toggleTechnology(t, true)"></i></span>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <button class="btn btn-sm btn-light text-danger" ng-click="toggleElement()">
+                            <i class="fa fa-times me-1"></i>Cancelar
+                          </button>
+                        </div>
+                        <div class="col-6 text-end">
+                          <button class="btn btn-sm btn-primary" ng-click="saveElement()">
+                            <i class="fa fa-save me-1"></i>Guardar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 mt-3 text-center">
+                  <button class="btn btn-primary btn-sm" ng-click="toggleElement()">
+                    <i class="fa fa-plus me-1"></i>Nuevo Elemento
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" ng-click="toggleEntity()">Cerrar</button>
+        <button class="btn btn-primary" ng-disabled="!newEntity.elements.length" ng-click="saveEntity()">Guardar</button>
+      </div>
+
     </div>
   </div>
 </div>
