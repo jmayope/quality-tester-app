@@ -1,56 +1,61 @@
 <div class="container" ng-init="init()">
-  <div class="row">
-    <div class="col-8">
-      <strong class="text-primary font-lg">Modelos de Evaluación</strong><br>
-      <span class="text-secondary">Administra los modelos de Evaluación de Calidad</span>
-    </div>
-    <div class="col-4 text-end">
-      <button class="btn btn-primary" ng-click="toggleEvaluationModal()">
-        <i class="fa fa-plus me-1 "></i>Agregar nuevo
+  <div class="row mt-3">
+    <div class="col-6 pb-3">
+      <button class="btn btn-lg btn-primary me-3">
+        <i class="fa fa-circle  me-1"></i>Módelos
+      </button>
+      <button class="btn btn-lg btn-light text-primary">
+        <i class="fa fa-circle me-1"></i>Entidades
       </button>
     </div>
-    <div class="col-8 offset-2 mt-3">
-      <div class="input-group">
+    <div class="col-6 pb-3">
+      <div class="input-group input-group-lg">
         <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
-        <input type="text" class="form-control text-uppercase" name="text" ng-model="filter.text" placeholder="FILTRAR POR TEXTO" aria-label="FILTRAR POR TEXTO" aria-describedby="basic-addon1">
+        <input type="text" name="text" ng-model="filter.text" class="form-control text-uppercase" placeholder="BUSCAR POR TEXTO" aria-label="BUSCAR POR TEXTO" aria-describedby="basic-addon1">
       </div>
     </div>
     <div class="col-12 mt-3">
-      <ul class="list-group">
-        <li class="list-group-item" ng-repeat="e in evaluationModels | filter:filter.text">
-          <div class="row">
-            <div class="col-1 pt-3">
-              #{{e.id}}
-            </div>
-            <div class="col-1 pt-3">
-              <span class="badge bg-primary">{{e.abbr}}</span><br>
-            </div>
-            <div class="col-5 pt-2">
-              <span class="text-secondary">{{e.code | uppercase}} | {{e.name | uppercase}}</span><br>
-              <small class="text-secondary">{{e.description | uppercase}}</small>
-            </div>
-            <div class="col-1 pt-3">
-              <span class="badge bg-light" ng-class="{'text-primary': e.status, 'text-danger': !e.status}">{{e.status ? 'ACTIVO' : 'INACTIVO'}}</span>
-            </div>
-            <div class="col-2 pt-2 text-end">
-              <i class="fa fa-calendar me-1"></i>{{e.createdAt | date:'dd/MM/yyyy'}} <br>
-              <i class="fa fa-clock me-1"></i>{{e.createdAt | date:'hh:mm a'}}
-            </div>
-            <div class="col-2 text-end pt-3">
-              <button class="btn btn-sm btn-light text-primary me-2" ng-click="toggleEvaluationModal(e)">
-                E
-              </button>
-              <button class="btn btn-sm btn-light text-danger" ng-click="deleteEvaluationModel(e)">
-                D
-              </button>
+      <div class="row">
+        <div class="col-3" ng-repeat="e in evaluationModels | filter:filter.text">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <span class="badge bg-primary">{{e.code}}</span>&nbsp;<strong>{{e.name | uppercase}}</strong>
+                  <span class="float-end badge" ng-class="{'bg-danger': !e.status, 'bg-success': e.status}">{{e.status ? 'Activo' : 'Inactivo'}}</span>
+                </div>
+                <div class="col-12">
+                  <div class="span text-secondary">
+                    {{e.description | uppercase}}
+                  </div>
+                </div>
+                <div class="col-12">
+                  <hr>
+                </div>
+                <div class="col-12">
+                  <i class="fa fa-calendar me-1"></i>{{e.createdAt | date:'dd/MM/yyyy'}}&nbsp;<i class="fa fa-clock me-1"></i>{{e.createdAt | date:'hh:mm a'}}    
+                </div>
+                <div class="col-12">
+                  <hr>
+                </div>
+                <div class="col-6">
+                  <button class="btn btn-sm btn-light text-primary me-2" ng-click="toggleEvaluationModal(e)">
+                    <e class="fa fa-pencil"></e>
+                  </button>
+                </div>
+                <div class="col-6 text-end">
+                  <button class="btn btn-sm btn-light text-danger" ng-click="deleteEvaluationModel(e)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-
 <div class="modal fade"
      ng-class="{'show d-block': isEvaluationOpen}"
      tabindex="-1"
