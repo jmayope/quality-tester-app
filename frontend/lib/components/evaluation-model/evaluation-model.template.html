@@ -11,7 +11,7 @@
     </div>
     <div class="col-12 mt-3">
       <div class="row">
-        <div class="col-3" ng-repeat="e in evaluationModels | filter:filter.text">
+        <div class="col-4" ng-repeat="e in evaluationModels | filter:filter.text">
           <div class="card">
             <div class="card-body">
               <div class="row">
@@ -47,10 +47,21 @@
             </div>
           </div>
         </div>
+        <div class="col-4">
+          <div class="card" ng-click="toggleEvaluationModal()">
+            <div class="card-body text-center hand mt-5 mb-5 text-secondary">
+              <i class="fa fa-plus fa-2x"></i><br>
+              <span class="font-lg">
+                Nuevo Módelo de Evaluación
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
 <div class="modal fade"
      ng-class="{'show d-block': isEvaluationOpen}"
      tabindex="-1"
@@ -67,30 +78,154 @@
       </div>
 
       <div class="modal-body">
-        <form name="residueForm">
-          <div class="row">
+        <form name="evaluationForm">
+          <div class="row mb-3">
+            <div class="col-12">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" ng-repeat="s in sections" class="btn" ng-class="{'btn-light text-primary': sectionSelected && sectionSelected.id !== s.id, 'btn-primary': sectionSelected && sectionSelected.id === s.id}" ng-click="selectSection(s)">
+                  <i class="{{s.icon}} me-1"></i>{{s.name}}
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row" ng-if="sectionSelected && sectionSelected.id === 1">
             <div class="col-4">
               <small class="text-secondary">Código</small>
-              <input type="text" disabled name="id" ng-model="newEvaluationModel.id" class="form-control text-uppercase" >
+              <input type="text" disabled name="id" ng-model="newEvaluationModel.id" class="form-control form-control-sm text-uppercase" required>
             </div>
             <div class="col-4">
               <small class="text-secondary">Abreviatura</small>
-              <input type="text" name="abbr" ng-model="newEvaluationModel.abbr" class="form-control text-uppercase">
+              <input type="text" name="abbr" ng-model="newEvaluationModel.abbr" class="form-control form-control-sm text-uppercase" required>
             </div>
             <div class="col-4">
               <small class="text-secondary">Nombre</small>
-              <input type="text" name="name" ng-model="newEvaluationModel.name" class="form-control text-uppercase">
+              <input type="text" name="name" ng-model="newEvaluationModel.name" class="form-control form-control-sm text-uppercase" required>
             </div>
             <div class="col-12">
               <small class="text-secondary">Descripción</small>
-              <textarea name="description" rows="5" ng-model="newEvaluationModel.description" class="form-control text-uppercase"></textarea>
+              <textarea name="description" rows="5" ng-model="newEvaluationModel.description" class="form-control form-control-sm text-uppercase" required></textarea>
             </div>
             <div class="col-12" ng-if="newEvaluationModel.editing">
               <small class="text-secondary">Estado</small>
-              <select name="status" ng-model="newEvaluationModel.status" class="form-select">
+              <select name="status" ng-model="newEvaluationModel.status" class="form-select" required>
                 <option ng-value="true">ACTIVO</option>
                 <option ng-value="false">INACTIVO</option>
               </select>
+            </div>
+          </div>
+          <div class="row" ng-if="sectionSelected && sectionSelected.id === 2">
+            <div class="col-12 text-center" ng-if="!newEvaluationModel.sections.length && !newSection">
+              <i class="fa fa-times text-danger fa-2x"></i><br>
+              No se tienen registrado ninguna sección
+            </div>
+            <div class="col-12" ng-if="newSection">
+              <div class="card">
+                <div class="card-body">
+
+                  <div class="row">
+                    <div class="col-12">
+                      <strong>Nueva Sección</strong>
+                    </div>
+                    <div class="col-4">
+                      <small class="text-secondary">Orden</small>
+                      <input type="number" name="order" ng-model="newSection.order" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="col-8">
+                      <small class="text-secondary">Nombre</small>
+                      <input type="text" name="name" ng-model="newSection.name" class="form-control form-control-sm text-uppercase" required>
+                    </div>
+                    <div class="col-12 mb-3">
+                      <small class="text-secondary">Descripción</small>
+                      <textarea name="description" ng-model="newSection.description" class="form-control form-control-sm text-uppercase" required></textarea>
+                    </div>
+                    <div class="col-6">
+                      <button class="btn btn-sm btn-light text-danger" ng-click="toggleSection()">
+                        <i class="fa fa-times me-1"></i>Cancelar
+                      </button>
+                    </div>
+                    <div class="col-6 text-end">
+                      <button class="btn btn-sm btn-primary" ng-click="saveSection()">
+                        <i class="fa fa-save me-1"></i>Guardar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 text-center mt-3" ng-if="!newSection">
+              <button class="btn btn-light text-primary" ng-click="toggleSection()">
+                <i class="fa fa-plus me-1"></i>Nueva Sección
+              </button>
+            </div>
+            <div class="col-12 mt-3" ng-if="newEvaluationModel.sections.length">
+              <ul class="list-group font-sm">
+                <li class="list-group-item" ng-repeat="s in newEvaluationModel.sections">
+                  <div class="row">
+                    <div class="col-8">
+                      {{s.order}}&nbsp;{{s.name | uppercase}} <br>
+                      <small class="text-secondary">{{s.description | uppercase}}</small>
+                    </div>
+                    <div class="col-4 pt-2 text-end">
+                      <button class="btn btn-sm btn-light text-primary me-2" ng-click="toggleSection(s, false)">
+                        <i class="fa fa-pencil"></i>
+                      </button>
+                      <button class="btn btn-sm btn-sm" ng-click="toggleDetail(s)">
+                        <i class="fa" ng-class="{'fa-arrow-down': !s.showDetail, 'fa-arrow-up': s.showDetail}"></i>
+                      </button>
+                    </div>
+                    <div class="col-12" ng-if="s.showDetail">
+                      <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="ss in s.sections">
+                          <div class="row">
+                            <div class="col-9">
+                              <strong>{{ss.order}}&nbsp;{{ss.name | uppercase}}</strong>
+                            </div>
+                            <div class="col-3 text-end">
+                              <i class="hand fa fa-pencil text-primary me-2" (click)="toggleSubSection(s,ss, false)"></i>
+                              <i class="hand fa fa-trash text-danger" ng-click="toggleSubSection(s,ss, true)"></i>
+                            </div>
+                          </div>
+                        </li>
+                        <li class="list-group-item" ng-if="newSubSection">
+                          <div class="row">
+                            <div class="col-12">
+                              <strong>Nueva Sub Sección</strong>
+                            </div>
+                            <div class="col-3">
+                              <small class="text-secondary">Orden</small>
+                              <input type="number" name="order-ss" ng-model="newSubSection.code" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-9">
+                              <small class="text-secondary">Nombre</small>
+                              <input type="text" name="name-ss" ng-model="newSubSection.name" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-6 mt-3">
+                              <button class="btn btn-sm btn-light text-danger">
+                                <i class="fa fa-times me-1"></i>Cancelar
+                              </button>
+                            </div>
+                            <div class="col-6 mt-3 text-end">
+                              <button class="btn btn-sm btn-primary" ng-click="saveSubSection(s)">
+                                <i class="fa fa-plus me-1"></i>Guardar
+                              </button>
+                            </div>
+                          </div>
+                        </li>
+                        <li class="list-group-item text-center" ng-if="!newSubSection">
+                          <button class="btn btn-sm btn-light text-primary" ng-click="toggleSubSection()">
+                            <i class="fa fa-plus me-1"></i>Agregar Subsección
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="row" ng-if="sectionSelected && sectionSelected.id === 3">
+            <div class="col-12">
+
             </div>
           </div>
         </form>
@@ -98,7 +233,7 @@
 
       <div class="modal-footer">
         <button class="btn btn-secondary" ng-click="toggleEvaluationModal()">Cerrar</button>
-        <button class="btn btn-primary" ng-click="saveEvaluationModel()">Guardar</button>
+        <button class="btn btn-primary" ng-disabled="evaluationForm.$invalid || !newEvaluationModel.sections.length || !newEvaluationModel.metrics.length" ng-click="saveEvaluationModel()">Guardar</button>
       </div>
 
     </div>

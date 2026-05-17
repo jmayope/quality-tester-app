@@ -21,15 +21,30 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
   $scope.newEvaluationModel = {};
   $scope.filter = {};
   $scope.isEvaluationOpen = false;
+  $scope.newSection = undefined;
+  $scope.newSubSection = undefined;
+
+  $scope.sections = [
+    {id: 1, name: "General", icon: 'fa fa-cog'},
+    {id: 2, name: "Secciones", icon: 'fa fa-table-columns'},
+    {id: 3, name: "Métricas", icon: 'fa fa-ruler'},
+  ];
+  $scope.sectionSelected = undefined;
 
   $scope.toggleEvaluationModal = (item = undefined) => {
     if ($scope.isEvaluationOpen) {
       $scope.isEvaluationOpen = false;
     } else { 
       $scope.isEvaluationOpen = true;
-      $scope.newEvaluationModel = {};
+      $scope.newEvaluationModel = {
+        sections: [],
+        metrics: []
+      };
+      $scope.selectSection($scope.sections[0]);
       if (item) {
         $scope.newEvaluationModel = item;
+        $scope.newEvaluationModel.sections = $scope.newEvaluationModel.sections || [];
+        $scope.newEvaluationModel.metrics = $scope.newEvaluationModel.metrics || [];
         $scope.newEvaluationModel.editing = true;
       }
     }
@@ -96,5 +111,61 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
         console.log(err);
       })
     }
+  }
+
+  $scope.toggleDetail = (section) => {
+    section.showDetail = !section.showDetail;
+  }
+
+  $scope.selectSection = (section) => {
+    $scope.sectionSelected = section;
+  }
+
+  $scope.toggleSection = (section = undefined, drop = false) => {
+    if ($scope.newSection) {
+      $scope.newSection = undefined;
+    } else {
+      if (drop) {
+        $scope.newEvaluationModel.sections.splice($scope.newEvaluationModel.sections.indexOf(section), 1);
+      } else {
+        $scope.newSection = {
+          sections: []
+        };
+        if (section) {
+          $scope.newSection = JSON.parse(JSON.stringify(section));
+          $scope.newSection.sections = $scope.newSection.sections || [];
+        }
+      }
+    }
+  }
+
+  $scope.toggleSubSection = (section = undefined, subsection = undefined, drop = false) => {
+    if ($scope.newSubSection) {
+      $scope.newSubSection = undefined;
+    } else {
+      if (drop) {
+        section.sections.splice(section.sections.indexOf(subsection), 1);
+      } else {
+        $scope.newSubSection = {};
+        if (subsection) {
+          $scope.newSubSection = JSON.parse(JSON.stringify(subsection));
+          $scope.newSubSection.editing = true;
+        }
+      }
+    }
+  }
+
+  $scope.saveSubSection = (section) => {
+    if ($scope.newSubSection.editing) {
+      console.log("Actualizar");
+    } else {
+      section.sections.push($scope.newSubSection);
+    }
+    $scope.newSubSection = undefined;
+  }
+
+  $scope.saveSection = () => {
+    $scope.newEvaluationModel.sections.push($scope.newSection);
+    $scope.newSection = undefined;
   }
 }]);

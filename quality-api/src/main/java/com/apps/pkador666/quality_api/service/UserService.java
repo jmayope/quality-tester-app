@@ -33,6 +33,7 @@ public class UserService {
 
   public User register(int personId, String username, String password, Boolean idAdmin) {
     User user = new User();
+    user.setStatus(true);
     user.setPersonId(personId);
     user.setUsername(username);
     user.setPassword(passwordEncoder.encode(password));

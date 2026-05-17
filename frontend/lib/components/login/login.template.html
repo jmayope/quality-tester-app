@@ -1,0 +1,97 @@
+<div class="container" ng-init="init()">
+  <div class="row">
+    <div class="col-8 offset-2">
+      <div class="card">
+        <div class="row">
+          <div class="col-6 bg-primary text-white p-3">
+            <strong class="">Bienvenido</strong> <br>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vitae voluptatem consequuntur repudiandae tenetur maiores doloribus eos earum possimus velit libero suscipit qui, neque cupiditate pariatur quia? Explicabo temporibus soluta ratione.
+          </div>
+          <div class="col-6 p-3">
+            <form name="loginForm">
+              <div class="row" ng-if="!isRegister">
+                <div class="col-12">
+                  <strong class="font-lg">Iniciar Sesión</strong>
+                </div>
+                <div class="col-12">
+                  <small class="text-secondary">Nombre de Usuario</small>
+                  <input type="text" name="username" ng-model="credentials.username" class="form-control form-control-lg" required>
+                </div>
+                <div class="col-12">
+                  <small class="text-secondary">Contraseña</small>
+                  <input type="password" name="password" ng-model="credentials.password" class="form-control form-control-lg" required>
+                </div>
+                <div class="col-12 mt-3 text-center">
+                  <button class="btn btn-primary" ng-click="login()" ng-disabled="loginForm.$invalid">
+                    <i class="fa fa-arrow-right me-1"></i>Ingresar
+                  </button>
+                </div>
+                <div class="col-12 mt-3 text-center">
+                  <small class="text-secondary">Si no tienes cuenta</small><br><button class="btn btn-sm btn-success" ng-click="toggleRegister()">Registrate</button>
+                </div>
+              </div>
+              <div class="row" ng-if="isRegister">
+                <div class="col-12">
+                  <button class="btn btn-light text-danger"><i class="fa fa-arrow-left me-1"></i>Volver</button>
+                </div>
+                <div class="col-12">
+                  <div class="alert alert-secondary">
+                    <i class="fa fa-exclamation me-1"></i>Tus datos personales seran validados previamente a su <strong class="text-primary">ALTA</strong>.
+                  </div>
+                </div>
+                <div class="col-12">
+                  <small class="text-secondary">Nombre Completo</small>
+                  <input type="text" name="fullName" ng-model="newRegister.person.fullName" class="form-control" required>
+                </div>
+                <div class="col-12">
+                  <small class="text-secondary">Correo Electrónico</small>
+                  <input type="text" name="email" ng-model="newRegister.person.email" class="form-control" required>
+                </div>
+                <div class="col-12">
+                  <small class="text-secondary">Fecha de Nacimiento</small>
+                  <input type="date" name="birthDate" ng-model="newRegister.person.birthDate" class="form-control" required>
+                </div>
+                <div class="col-12">
+                  <small class="text-secondary">Genero</small>
+                  <select name="gender" ng-model="newRegister.person.gender" class="form-select" required>
+                    <option ng-value="undefined">--SELECCIONE GENERO--</option>
+                    <option ng-repeat="g in genders" ng-value="g.id">{{g.name}}</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <small class="text-secondary">Nombre de Usuario</small>
+                  <input type="text" name="username" ng-model="newRegister.user.username" class="form-control" required>
+                </div>
+                <div class="col-12">
+                  <small class="text-secondary">Contraseña</small>
+                  <div class="input-group">
+                    <input type="{{!showPassword ? 'password' : 'text'}}" name="password" ng-model="newRegister.user.password" class="form-control" required>
+                    <button class="btn btn-light text-primary" type="button" id="button-addon2" ng-click="togglePassword()"><i class="fa" ng-class="{'fa-eye': !showPassword, 'fa-eye-slash': showPassword}"></i></button>
+                  </div>
+                  <span class="text-danger" ng-if="newRegister.user.password !== newRegister.user.confirmPassword">
+                    Las contraseñas son DIFERENTES
+                  </span>
+                </div>
+                <div class="col-12">
+                  <small class="text-secondary">Confirme Contraseña</small>
+                  <div class="input-group">
+                    <input type="{{!showPassword ? 'password' : 'text'}}" name="confirmPassword" ng-model="newRegister.user.confirmPassword" class="form-control" required>
+                    <button class="btn btn-light text-primary" type="button" id="button-addon2" ng-click="togglePassword()"><i class="fa" ng-class="{'fa-eye': !showPassword, 'fa-eye-slash': showPassword}"></i></button>
+                  </div>
+                  <span class="text-danger" ng-if="newRegister.user.password !== newRegister.user.confirmPassword">
+                    Las contraseñas son DIFERENTES
+                  </span>
+                </div>
+                <div class="col-12 text-center mt-3">
+                  <button class="btn btn-primary" ng-disabled="loginForm.$invalid || newRegister.user.password !== newRegister.user.confirmPassword" ng-click="register()">
+                    <i class="fa fa-plus me-1"></i>Registrar
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

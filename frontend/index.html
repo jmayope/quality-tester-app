@@ -19,22 +19,21 @@
   <script src="lib/components/login/login.controller.js"></script>
   <script src="lib/components/evaluation-model/evaluation-model.controller.js"></script>
   <script src="lib/components/entity/entity.controller.js"></script>
+  <script src="lib/components/global-vars/global-vars.controller.js"></script>
+  <script src="lib/components/users/users.controller.js"></script>
 </head>
-<body>
-  <div class="container-fluid m-0 p-0">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+<body ng-controller="indexCtrl">
+  <div class="container-fluid m-0 p-0" ng-init="init()">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" ng-if="userLoged.id">
       <div class="container">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" href="#">EQualityApp</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <a class="btn btn btn-light text-primary me-3" href="#!/evaluation-model">
-            <i class="fa fa-circle me-1"></i>Módelos
-          </a>
-          <a class="btn btn btn-primary"  href="#!/entity">
-            <i class="fa fa-circle me-1"></i>Entidades
+          <a class="btn me-3" ng-class="{'btn-light text-primary': menuSelected && menuSelected.id !== m.id, 'btn-primary': menuSelected && menuSelected.id === m.id}" ng-repeat="m in menu" href="#!{{m.route}}" ng-click="selectMenuItem(m)">
+            <i class="fa fa-circle me-1"></i>{{m.name}}
           </a>
           <!-- <ul class="navbar-nav">
             <li class="nav-item">
@@ -51,6 +50,9 @@
             </li>
           </ul> -->
         </div>
+        <button class="btn btn-light text-danger" ng-click="logout()">
+          <i class="fa fa-arrow-right me-1"></i>Salir Sesión
+        </button>
       </div>
     </nav>
     <div class="container pt-3 ">

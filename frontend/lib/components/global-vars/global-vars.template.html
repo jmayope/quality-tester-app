@@ -1,0 +1,206 @@
+<div class="container" ng-init="init()">
+  <div class="row">
+    <div class="col-12">
+      <div class="alert alert-secondary">
+        <i class="fa fa-info me-1"></i>En esta sección podras configurar inicialmente, los valores globales que se pueden compartir con las demas empresas.
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <strong class="text-primary"><i class="fa fa-ruler me-1"></i>Metricas</strong>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" ng-if="!newMetric">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+              <input type="text" class="form-control text-uppercase" name="search" ng-model="filter.text" placeholder="BUSCAR POR TEXTO" aria-label="BUSCAR POR TEXTO" aria-describedby="basic-addon1">
+            </div>
+          </li>
+          <li class="list-group-item" ng-if="newMetric">
+            <div class="row">
+              <div class="col-12">
+                <strong>Nueva Métrica</strong><br>
+                
+              </div>
+              
+            </div>
+          </li>
+          <li class="list-group-item" ng-repeat="m in metrics">
+            <div class="row">
+              <div class="col-9">
+                {{m.name | uppercase}}&nbsp;<span>De {{m.min}} a {{m.max}}</span>
+              </div>
+              <div class="col-3 text-end">
+                <i class="fa fa-pencil text-primary hand me-2"></i>
+                <i class="fa fa-trash text-danger hand"></i>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item text-center">
+            <button class="btn btn-light text-primary" ng-click="toggleItem('metric')">
+              <i class="fa fa-plus me-1"></i>Nueva Métrica
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-6"></div>
+    <div class="col-12"></div>
+  </div>
+</div>
+
+
+<div class="modal fade"
+     ng-class="{'show d-block': isNewItemOpen}"
+     tabindex="-1"
+     role="dialog"
+     style="background: rgba(0,0,0,0.5);"
+     ng-if="isNewItemOpen">
+
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">{{newItem.editing ? 'Editando' : 'Nueva'}}&nbsp;Métrica</h5>
+        
+        <button type="button" class="btn-close" ng-click="toggleEvaluationModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form name="itemForm">
+          <div class="row" ng-if="newItem.type === 'metric'">
+            <div class="col-12">
+              <small class="text-secondary">Categoria</small>
+              <select name="category" ng-model="newMetric.category" class="form-select form-select-sm" required>
+                <option ng-value="undefined">--SELECCIONE--</option>
+                <option ng-repeat="c in categories" ng-value="c.id">{{c.name | uppercase}}</option>
+              </select>
+            </div>
+            <div class="col 12">
+              <small class="text-secondary">Atributo</small>
+              <select name="attribute" ng-model="newMetric.attribute" class="form-select form-select-sm" required>
+                <option ng-value="undefined">--SELECCIONE--</option>
+                <option ng-repeat="a in attributes" ng-value="a.id">{{a.name | uppercase}}</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <small class="text-secondary">Nombre</small>
+              <input type="text" name="name" ng-model="newMetric.name" class="form-control form-control-sm" required>
+            </div>
+            <div class="col-12">
+              <small class="text-secondary">Tipo de Medición</small>
+              <select name="meditionType" ng-change="selectMeditionType()" ng-model="newItem.meditionType" class="form-select form-select-sm" required>
+                <option ng-value="undefined">--SELECCIONE--</option>
+                <option ng-repeat="m in meditionTypes" ng-value="m.id">{{m.name}}</option>
+              </select>
+            </div>
+            <div class="col-12 mt-2" ng-if="newItem.meditionType === 1">
+              <div class="row">
+                <div class="col-6">
+                  <small class="text-secondary">Valor Mínimo</small>
+                  <input type="number" name="min" ng-model="newMetric.meditionType.min" class="form-control form-control-sm" required>
+                </div>
+                <div class="col-6">
+                  <small class="text-secondary">Valor Máximo</small>
+                  <input type="number" name="max" ng-model="newMetric.meditionType.max" class="form-control form-control-sm" required>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 mt-2" ng-if="newItem.meditionType === 2">
+              <div class="row">
+                <div class="col-12">
+                  <ul class="list-group">
+                    <li class="list-group-item text-center" ng-if="!newScale">
+                      <button class="btn btn-sm btn-light text-primary" ng-click="toggleScale()">
+                        <i class="fa fa-plus me-1"></i>Agregar Escala
+                      </button>
+                    </li>
+                    <li class="list-group-item" ng-if="newScale">
+                      <div class="card">
+                        <div class="card-header">
+                          <i class="fa fa-bar-chart me-1"></i>Nueva Escala
+                        </div>
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-12">
+                              <small class="text-secondary">Nombre</small>
+                              <input type="text" name="newScale.name" ng-model="newScale.name" class="form-control form-control-sm text-uppercase" required>
+                            </div>
+                            <div class="col-12">
+                              <small class="text-secondary">Tipo de Escala</small>
+                              <select name="type" ng-model="newScale.type" class="form-select form-select-sm" required>
+                                <option ng-value="undefined">--SELECCIONE--</option>
+                                <option ng-repeat="st in scaleTypes" ng-value="st.id">{{st.name | uppercase}}</option>
+                              </select>
+                            </div>
+                            <div class="col-12" ng-if="newScale.type === 1">
+                              <small class="text-secondary">Valor</small>
+                              <input type="number" name="value" ng-model="newScale.value" class="form-control form-control-sm" required>
+                            </div>
+                            <div class="col-12" ng-if="newScale.type === 2">
+                              <div class="row">
+                                <div class="col-6">
+                                  <small class="text-secondary">De</small>
+                                  <input type="number" name="of" ng-model="newScale.of" class="form-control form-control-sm" required>
+                                </div>
+                                <div class="col-6">
+                                  <small class="text-secondary">A</small>
+                                  <input type="number" name="to" ng-model="newScale.to" class="form-control form-control-sm" required>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-6 mt-2">
+                              <button class="btn btn-sm btn-light text-danger" ng-click="toggleScale()">
+                                <i class="fa fa-times me-1"></i>Cancelar
+                              </button>
+                            </div>
+                            <div class="col-6 text-end mt-2">
+                              <button class="btn btn-sm btn-light text-primary" ng-click="saveScale()">
+                                <i class="fa fa-save me-1"></i>Guardar
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="list-group-item" ng-repeat="s in newMetric.meditionType.scales">
+                      <div class="row">
+                        <div class="col-4">
+                          <strong>{{s.name | uppercase}}</strong>
+                        </div>
+                        <div class="col-5">
+                          <div ng-if="s.type === 1">
+                            <small class="text-secondary">Valor</small><br>
+                            <span>{{s.value}}</span>
+                          </div>
+                          <div ng-if="s.type === 2">
+                            <small class="text-secondary">De:</small>&nbsp;<span>{{s.of}}</span>&nbsp;<small class="text-secondary">a:</small>&nbsp;<span>{{s.to}}</span>
+                          </div>
+                        </div>
+                        <div class="col-3">
+                          <button class="btn btn-sm btn-light text-primary me-2" ng-click="toggleScale(s)">
+                            <i class="fa fa-pencil"></i>
+                          </button>
+                          <button class="btn btn-sm btn-light text-danger" ng-click="toggleScale(s, true)">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" ng-click="toggleEvaluationModal()">Cerrar</button>
+        <button class="btn btn-primary" ng-disabled="itemForm.$invalid" ng-click="saveEvaluationModel()">Guardar</button>
+      </div>
+
+    </div>
+  </div>
+</div>

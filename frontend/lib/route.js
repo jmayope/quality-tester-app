@@ -4,7 +4,7 @@ angular.module('qualityApp')
 
   $routeProvider
     .when('/login', {
-      templateUrl: 'components/login/login.template.html',
+      templateUrl: './lib/components/login/login.template.html',
       controller: 'loginCtrl'
     })
     .when('/evaluation-model', {
@@ -14,6 +14,14 @@ angular.module('qualityApp')
     .when('/entity', {
       templateUrl: './lib/components/entity/entity.template.html',
       controller: 'entityCtrl',
+    })
+    .when('/global-vars', {
+      templateUrl: './lib/components/global-vars/global-vars.template.html',
+      controller: 'globalVarsCtrl',
+    })
+    .when('/users', {
+      templateUrl: './lib/components/users/users.template.html',
+      controller: 'usersCtrl',
     })
     // .when('/offer', {
     //   templateUrl: 'components/offer/offer.template.html',
@@ -44,6 +52,6 @@ angular.module('qualityApp')
     //   controller: 'wasteManifestCtrl',
     // })
     .otherwise({
-      redirectTo: '/evaluation-model'
+      redirectTo: '/login'
     });
 });

@@ -3,6 +3,12 @@ app.factory("mainService", ["$http", "APP_CONFIG", function($http, APP_CONFIG) {
   let apiUrl = `${APP_CONFIG.API_URL}`;
 
   return {
+    auth: (body) => {
+      return $http.post(`${apiUrl}/auth/login`, body);
+    },
+    findAllUsers: () => {
+      return $http.get(`${apiUrl}/users`);
+    },  
     findAllEvaluations: () => {
       return $http.get(`${apiUrl}/evaluation-models`);
     },
