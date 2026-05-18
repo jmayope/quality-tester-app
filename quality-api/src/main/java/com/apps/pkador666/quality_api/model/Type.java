@@ -1,8 +1,6 @@
 package com.apps.pkador666.quality_api.model;
-
-import org.springframework.boot.jackson.autoconfigure.JacksonProperties.Json;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import jakarta.persistence.*;
 
@@ -22,8 +20,8 @@ public class Type {
   @Column()
   private String name;
 
-  @Column()
-  private Json additionalFields;
+  @JdbcTypeCode(SqlTypes.JSON)
+  private String additionalFields;
 
   @Column()
   private String status;
