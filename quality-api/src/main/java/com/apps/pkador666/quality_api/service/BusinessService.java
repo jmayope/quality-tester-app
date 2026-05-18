@@ -2,6 +2,7 @@ package com.apps.pkador666.quality_api.service;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -25,11 +26,11 @@ public class BusinessService {
   }
 
   public Business updateOne(Long id, String name, String description, Boolean status) {
-    Business businessToUpdate = businessRepository.findById(id);
-    businessToUpdate.setName(name);
-    businessToUpdate.setDescription(description);
-    businessToUpdate.setStatus(status);
-    return businessRepository.save(businessToUpdate);
+    Optional<Business> businessToUpdate = businessRepository.findById(id);
+    businessToUpdate.get().setName(name);
+    businessToUpdate.get().setDescription(description);
+    businessToUpdate.get().setStatus(status);
+    return businessRepository.save(businessToUpdate.get());
   }
 
   public Boolean deleteOne(Long id) {

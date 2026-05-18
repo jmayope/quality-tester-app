@@ -14,8 +14,8 @@ public class EvaluableElement {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name="entity_id")
-  private Long entityId;
+  @Column(name="business_id")
+  private Long businessId;
 
   @Column()
   private String code;
@@ -44,12 +44,12 @@ public class EvaluableElement {
     this.id = id;
   }
 
-  public Long getEntityId() {
-    return entityId;
+  public Long getBusinessId() {
+    return businessId;
   }
 
-  public void setEntityId(Long entityId) {
-    this.entityId = entityId;
+  public void setBusinessId(Long businessId) {
+    this.businessId = businessId;
   }
 
   public String getCode() {

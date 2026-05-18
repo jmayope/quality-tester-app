@@ -13,9 +13,9 @@ public class EvaluableElementService {
     this.evaluableElementRepository = evaluableElementRepository;
   }
 
-  public EvaluableElement create(Long entityId, String code, String name, String description, String technologies, Boolean status) {
+  public EvaluableElement create(Long businessId, String code, String name, String description, String technologies, Boolean status) {
     EvaluableElement newEvaluableElement = new EvaluableElement();
-    newEvaluableElement.setEntityId(entityId);
+    newEvaluableElement.setBusinessId(businessId);
     newEvaluableElement.setCode(code);
     newEvaluableElement.setName(name);
     newEvaluableElement.setDescription(description);

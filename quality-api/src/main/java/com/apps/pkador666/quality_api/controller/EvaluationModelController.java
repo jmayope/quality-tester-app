@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.apps.pkador666.quality_api.model.EvaluationModel;
 import com.apps.pkador666.quality_api.repository.EvaluationModelRepository;
+import com.apps.pkador666.quality_api.service.EvaluationModelService;
 
 import java.util.List;
 
@@ -21,25 +22,38 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequestMapping("/evaluation-models")
 public class EvaluationModelController {
   
-  private final EvaluationModelRepository evaluationModelRepository;
+  private final EvaluationModelService evaluationModelService;
 
-  public EvaluationModelController(EvaluationModelRepository evaluationModelRepository) {
-    this.evaluationModelRepository = evaluationModelRepository;
+  public EvaluationModelController(EvaluationModelService evaluationModelRepository) {
+    this.evaluationModelService = evaluationModelRepository;
   }
 
   @GetMapping
   public List<EvaluationModel> findAll() {
-      return evaluationModelRepository.findAll();
+      return evaluationModelService.findAll();
   }
 
   @PostMapping
   public EvaluationModel save(@RequestBody EvaluationModel newEvaluationModel) {
-      return evaluationModelRepository.save(newEvaluationModel);
+      return evaluationModelService.create(
+        newEvaluationModel.getCode(), 
+        newEvaluationModel.getAbbr(), 
+        newEvaluationModel.getName(), 
+        newEvaluationModel.getDescription(), 
+        newEvaluationModel.getStatus()
+      );
   }
 
   @PutMapping("/update")
-  public EvaluationModel putMethodName(@RequestBody EvaluationModel newEvaluationModel) {    
-    return evaluationModelRepository.save(newEvaluationModel);
+  public EvaluationModel update(@RequestBody EvaluationModel newEvaluationModel) {    
+    return evaluationModelService.update(
+      newEvaluationModel.getId(),
+      newEvaluationModel.getCode(), 
+      newEvaluationModel.getAbbr(), 
+      newEvaluationModel.getName(), 
+      newEvaluationModel.getDescription(), 
+      newEvaluationModel.getStatus()
+    );
   }
 
 
