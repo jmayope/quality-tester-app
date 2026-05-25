@@ -12,6 +12,9 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RestController
@@ -26,6 +29,11 @@ public class TypeController {
   @GetMapping("/by-category/{category}")
   public ResponseEntity<ApiResponse<List<Type>>> findAll(@RequestParam String category) {
       return ResponseEntity.ok(typeService.findAll());
+  }
+
+  @PostMapping
+  public ResponseEntity<ApiResponse<Type>> create(@RequestBody Type newType) {
+      return ResponseEntity.of(typeService.create(newType));
   }
   
 }
