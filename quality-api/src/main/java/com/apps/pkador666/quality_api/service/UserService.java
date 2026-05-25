@@ -31,13 +31,14 @@ public class UserService {
     return user;
   }
 
-  public User register(int personId, String username, String password, Boolean idAdmin) {
+  public User register(User newUser) {
     User user = new User();
     user.setStatus(true);
-    user.setPersonId(personId);
-    user.setUsername(username);
-    user.setPassword(passwordEncoder.encode(password));
-    user.setIsAdmin(idAdmin);
+    user.setPersonId(newUser.getPersonId());
+    user.setUsername(newUser.getUsername());
+    user.setPassword(passwordEncoder.encode(newUser.getPassword()));
+    user.setIsAdmin(newUser.getIsAdmin());
+    user.setUserType(newUser.getUserType());
     return userRepository.save(user);
   }
 

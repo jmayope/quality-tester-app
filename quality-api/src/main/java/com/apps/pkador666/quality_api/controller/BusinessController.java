@@ -15,7 +15,7 @@ import com.apps.pkador666.quality_api.model.EvaluationModel;
 import com.apps.pkador666.quality_api.service.BusinessService;
 
 @RestController
-@RequestMapping("/evaluation-models")
+@RequestMapping("/business")
 public class BusinessController {
   
   private final BusinessService businessService;
@@ -24,10 +24,10 @@ public class BusinessController {
     this.businessService = businessService;
   }
 
-  // @GetMapping
-  // public List<Business> findAll() {
-  //     return businessService.findAll();
-  // }
+  @GetMapping
+  public ResponseEntity<ApiResponse<List<Business>>> findAll() {
+      return ResponseEntity.ok(businessService.findAll());
+  }
 
   // @PostMapping
   // public ResponseEntity<ApiResponse<Business>> register(@RequestBody Business newUser) {

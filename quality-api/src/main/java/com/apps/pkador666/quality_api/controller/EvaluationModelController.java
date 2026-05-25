@@ -4,12 +4,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.apps.pkador666.quality_api.model.ApiResponse;
 import com.apps.pkador666.quality_api.model.EvaluationModel;
 import com.apps.pkador666.quality_api.repository.EvaluationModelRepository;
 import com.apps.pkador666.quality_api.service.EvaluationModelService;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,36 +26,36 @@ public class EvaluationModelController {
   
   private final EvaluationModelService evaluationModelService;
 
-  public EvaluationModelController(EvaluationModelService evaluationModelRepository) {
-    this.evaluationModelService = evaluationModelRepository;
+  public EvaluationModelController(EvaluationModelService evaluationModelService) {
+    this.evaluationModelService = evaluationModelService;
   }
 
   @GetMapping
-  public List<EvaluationModel> findAll() {
-      return evaluationModelService.findAll();
+  public ResponseEntity<ApiResponse<List<EvaluationModel>>> findAll() {
+      return ResponseEntity.ok(evaluationModelService.findAll());
   }
 
   @PostMapping
-  public EvaluationModel save(@RequestBody EvaluationModel newEvaluationModel) {
-      return evaluationModelService.create(
+  public ResponseEntity<ApiResponse<EvaluationModel>> save(@RequestBody EvaluationModel newEvaluationModel) {
+      return ResponseEntity.ok(evaluationModelService.create(
         newEvaluationModel.getCode(), 
         newEvaluationModel.getAbbr(), 
         newEvaluationModel.getName(), 
         newEvaluationModel.getDescription(), 
         newEvaluationModel.getStatus()
-      );
+      ));
   }
 
   @PutMapping("/update")
-  public EvaluationModel update(@RequestBody EvaluationModel newEvaluationModel) {    
-    return evaluationModelService.update(
+  public ResponseEntity<ApiResponse<EvaluationModel>> update(@RequestBody EvaluationModel newEvaluationModel) {    
+    return ResponseEntity.ok(evaluationModelService.update(
       newEvaluationModel.getId(),
       newEvaluationModel.getCode(), 
       newEvaluationModel.getAbbr(), 
       newEvaluationModel.getName(), 
       newEvaluationModel.getDescription(), 
       newEvaluationModel.getStatus()
-    );
+    ));
   }
 
 
