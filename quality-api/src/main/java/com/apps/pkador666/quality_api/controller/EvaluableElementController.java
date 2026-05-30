@@ -25,7 +25,7 @@ public class EvaluableElementController {
 
   @GetMapping
   public ResponseEntity<ApiResponse<List<EvaluableElement>>> findAll() {
-      return ResponseEntity.ok(evaluableElementService.findAll());
+      return ResponseEntity.ok(ApiResponse.success(evaluableElementService.findAll(), "Listado Correcto"));
   }
   
 }

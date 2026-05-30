@@ -6,8 +6,8 @@ app.controller("loginCtrl", ["$scope","mainService","$location","APP_CONFIG", "$
   };
 
   $scope.genders = [
-    {id: 1, name: 'Masculino'},
-    {id: 2, name: 'Femenino'}
+    {id: true, name: 'Masculino'},
+    {id: false, name: 'Femenino'}
   ];
   $scope.showPassword = false;
   $scope.isRegister = false;
@@ -33,7 +33,11 @@ app.controller("loginCtrl", ["$scope","mainService","$location","APP_CONFIG", "$
       $location.path("/entity");
     })
     .catch((err) => {
-      console.log(err);
+      Swal.fire({
+        icon: 'error',
+        title: err.data.message
+      });
+      return;
     })
   }
 

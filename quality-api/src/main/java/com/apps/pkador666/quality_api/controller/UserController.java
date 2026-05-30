@@ -25,13 +25,17 @@ public class UserController {
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<User>>> findAll() {
-      return ResponseEntity.ok(userService.findAll());
+  public ResponseEntity<ApiResponse<List<User>>> findAll() {    
+    List<User> users = userService.findAll();
+    ApiResponse<List<User>> response = ApiResponse.success(users, "Correcto");
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping
   public ResponseEntity<ApiResponse<User>> create(@RequestBody User newUser) {
-      return ResponseEntity.ok(userService.register(newUser));
+    User userCreated = userService.register(newUser);
+    ApiResponse<User> response = ApiResponse.success(userCreated, "Creación Correcta");
+    return ResponseEntity.ok(response);
   }
   
 }

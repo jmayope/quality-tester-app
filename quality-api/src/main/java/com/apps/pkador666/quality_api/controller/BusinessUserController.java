@@ -24,7 +24,7 @@ public class BusinessUserController {
 
   @GetMapping
   public ResponseEntity<ApiResponse<List<BusinessUser>>> findAll() {
-      return ResponseEntity.ok(businessUserService.findAll());
+      return ResponseEntity.ok(ApiResponse.success(businessUserService.findAll(), "Listado correcto"));
   }
   
   

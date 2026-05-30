@@ -14,8 +14,9 @@ public class EvaluableElement {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name="business_id")
-  private Long businessId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "business_id", nullable = false)
+  private Business business;
 
   @Column()
   private String code;
@@ -44,12 +45,12 @@ public class EvaluableElement {
     this.id = id;
   }
 
-  public Long getBusinessId() {
-    return businessId;
+  public Business getBusiness() {
+    return business;
   }
 
-  public void setBusinessId(Long businessId) {
-    this.businessId = businessId;
+  public void setBusiness(Business business) {
+    this.business = business;
   }
 
   public String getCode() {

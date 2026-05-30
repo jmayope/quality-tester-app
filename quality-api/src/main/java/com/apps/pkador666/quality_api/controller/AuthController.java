@@ -24,7 +24,7 @@ public class AuthController {
   @PostMapping("register")
   public ResponseEntity<ApiResponse<User>> register(@RequestBody User newUser) {
       try {
-        User userCreated = userService.register(newUser.getPersonId(), newUser.getUsername(), newUser.getPassword(), newUser.getIsAdmin());
+        User userCreated = userService.register(newUser);
         return ResponseEntity.ok(ApiResponse.success(userCreated, "Registro correcto."));
       } catch (RuntimeException e) {
         return ResponseEntity.badRequest().body(ApiResponse.validation("Error al momento de registro", e.getMessage()));
@@ -38,7 +38,7 @@ public class AuthController {
       User userAuthenticated = userService.authenticate(user.getUsername(), user.getPassword());
       return ResponseEntity.ok(ApiResponse.success(userAuthenticated, "Usuario autenticado exitosamente."));
     } catch (RuntimeException e) {
-      return ResponseEntity.badRequest().body(ApiResponse.validation("Error al momento de autenticarse.", e.getMessage()));
+      return ResponseEntity.badRequest().body(ApiResponse.validation("Credenciales incorrectas.", e.getMessage()));
     }
   }
   

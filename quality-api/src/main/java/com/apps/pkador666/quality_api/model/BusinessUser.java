@@ -13,11 +13,13 @@ public class BusinessUser {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name="business_id")
-  private Long businessId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "business_id", nullable = false)
+  private Business business;
 
-  @Column(name="user_id")
-  private Long userId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
   @Column()
   private Boolean status;
@@ -34,20 +36,20 @@ public class BusinessUser {
     this.id = id;
   }
 
-  public Long getBusinessId() {
-    return businessId;
+  public Business getBusiness() {
+    return business;
   }
 
-  public void setBusinessId(Long businessId) {
-    this.businessId = businessId;
+  public void setBusiness(Business business) {
+    this.business = business;
   }
 
-  public Long getUserId() {
-    return userId;
+  public User getUser() {
+    return user;
   }
 
-  public void setUserId(Long userId) {
-    this.userId = userId;
+  public void setUser(User user) {
+    this.user = user;
   }
 
   public Boolean getStatus() {
@@ -65,6 +67,6 @@ public class BusinessUser {
   public void setCreateAt(LocalDateTime createAt) {
     this.createAt = createAt;
   }
-
+  
   
 }

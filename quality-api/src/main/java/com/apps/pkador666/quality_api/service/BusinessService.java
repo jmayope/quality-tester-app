@@ -2,6 +2,7 @@ package com.apps.pkador666.quality_api.service;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -15,6 +16,10 @@ public class BusinessService {
 
   public BusinessService(BusinessRepository businessRepository) {
     this.businessRepository = businessRepository;
+  }
+
+  public List<Business> findAll() {
+    return businessRepository.findAll();
   }
 
   public Business create(String name, String description, Boolean status) {

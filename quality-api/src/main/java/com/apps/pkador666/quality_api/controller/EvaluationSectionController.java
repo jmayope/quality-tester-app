@@ -25,7 +25,7 @@ public class EvaluationSectionController {
 
   @GetMapping
   public ResponseEntity<ApiResponse<List<EvaluationSection>>> findAll() {
-    return ResponseEntity.ok(evaluationSectionService.findAll());
+    return ResponseEntity.ok(ApiResponse.success(evaluationSectionService.findAll(), "Listado correcto"));
   }
   
 }

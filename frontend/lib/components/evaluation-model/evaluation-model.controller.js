@@ -8,7 +8,8 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
   $scope.getEvaluationModels = () => {
     mainService.findAllEvaluations().then((result) => {
       console.log(result.data);
-      $scope.evaluationModels = result.data;
+      $scope.evaluationModels = result.data.data;
+      console.log(result);
       $scope.evaluationModels.sort((a, b) => a.id - b.id);
     })
     .catch((err) => {

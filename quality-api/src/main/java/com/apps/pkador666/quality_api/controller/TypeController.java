@@ -28,12 +28,12 @@ public class TypeController {
 
   @GetMapping("/by-category/{category}")
   public ResponseEntity<ApiResponse<List<Type>>> findAll(@RequestParam String category) {
-      return ResponseEntity.ok(typeService.findAll());
+      return ResponseEntity.ok(ApiResponse.success(typeService.findAll(), "Listado correcto"));
   }
 
   @PostMapping
   public ResponseEntity<ApiResponse<Type>> create(@RequestBody Type newType) {
-      return ResponseEntity.of(typeService.create(newType));
+      return ResponseEntity.ok(ApiResponse.success(typeService.create(newType), "Creación correcta"));
   }
   
 }

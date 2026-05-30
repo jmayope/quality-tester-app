@@ -32,30 +32,30 @@ public class EvaluationModelController {
 
   @GetMapping
   public ResponseEntity<ApiResponse<List<EvaluationModel>>> findAll() {
-      return ResponseEntity.ok(evaluationModelService.findAll());
+      return ResponseEntity.ok(ApiResponse.success(evaluationModelService.findAll(), "Listado Correcto"));
   }
 
   @PostMapping
   public ResponseEntity<ApiResponse<EvaluationModel>> save(@RequestBody EvaluationModel newEvaluationModel) {
-      return ResponseEntity.ok(evaluationModelService.create(
+      return ResponseEntity.ok(ApiResponse.success(evaluationModelService.create(
         newEvaluationModel.getCode(), 
         newEvaluationModel.getAbbr(), 
         newEvaluationModel.getName(), 
         newEvaluationModel.getDescription(), 
         newEvaluationModel.getStatus()
-      ));
+      ), "Listado Correcto"));
   }
 
   @PutMapping("/update")
   public ResponseEntity<ApiResponse<EvaluationModel>> update(@RequestBody EvaluationModel newEvaluationModel) {    
-    return ResponseEntity.ok(evaluationModelService.update(
+    return ResponseEntity.ok(ApiResponse.success(evaluationModelService.update(
       newEvaluationModel.getId(),
       newEvaluationModel.getCode(), 
       newEvaluationModel.getAbbr(), 
       newEvaluationModel.getName(), 
       newEvaluationModel.getDescription(), 
       newEvaluationModel.getStatus()
-    ));
+    ), "Actualización CorrectA"));
   }
 
 

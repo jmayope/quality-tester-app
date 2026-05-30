@@ -25,7 +25,7 @@ public class RoleController {
 
   @GetMapping
   public ResponseEntity<ApiResponse<List<Role>>> findAll() {
-      return ResponseEntity.ok(roleService.findAll());
+      return ResponseEntity.ok(ApiResponse.success(roleService.findAll(), "Listado Correcto"));
   }
   
 }

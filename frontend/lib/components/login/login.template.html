@@ -1,16 +1,43 @@
 <div class="container" ng-init="init()">
-  <div class="row">
+  <div class="row mt-5">
     <div class="col-8 offset-2">
       <div class="card">
         <div class="row">
           <div class="col-6 bg-primary text-white p-3">
             <strong class="">Bienvenido</strong> <br>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vitae voluptatem consequuntur repudiandae tenetur maiores doloribus eos earum possimus velit libero suscipit qui, neque cupiditate pariatur quia? Explicabo temporibus soluta ratione.
+            Esta plataforma ha sido diseñada para facilitar la evaluación y análisis de la calidad del software mediante métricas, criterios y modelos de evaluación estandarizados.
+            <ul>
+              <li>Funcionalidades Principales</li>
+              <ul>
+                <li>
+                  <strong>Gestión de Evaluaciones</strong> <br>
+                  Crea, edita y administra procesos de evaluación para diferentes proyectos de software.
+                </li>
+                <li>
+                  <strong>Aplicación de Métricas de Calidad</strong> <br>
+                  Evalúa atributos como funcionalidad, usabilidad, rendimiento, mantenibilidad, seguridad y confiabilidad.
+                </li>
+                <li>
+                  <strong>Generación de Reportes</strong> <br>
+                  Obtén reportes detallados con resultados, observaciones y recomendaciones para la mejora continua.
+                </li>
+                <li>
+                  <strong>Panel de Indicadores y Estadísticas</strong> <br>
+                  Visualiza gráficos, tendencias e indicadores clave para monitorear la calidad de los proyectos evaluados.
+                </li>
+                <li>
+                  <strong>Historial y Seguimiento</strong> <br>
+                  Consulta evaluaciones anteriores y realiza comparaciones para medir la evolución de la calidad del software a lo largo del tiempo.
+                </li>
+              </ul>
+            </ul> 
+
+
           </div>
-          <div class="col-6 p-3">
+          <div class="col-6 p-3 pe-4">
             <form name="loginForm">
-              <div class="row" ng-if="!isRegister">
-                <div class="col-12">
+              <div class="row mt-5 pt-3" ng-if="!isRegister">
+                <div class="col-12 mt-5 pt-5 text-center" >
                   <strong class="font-lg">Iniciar Sesión</strong>
                 </div>
                 <div class="col-12">

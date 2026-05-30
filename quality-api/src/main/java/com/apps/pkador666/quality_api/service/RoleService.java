@@ -1,5 +1,7 @@
 package com.apps.pkador666.quality_api.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.apps.pkador666.quality_api.model.Role;
@@ -11,6 +13,10 @@ public class RoleService {
 
   public RoleService(RoleRepository roleRepository) {
     this.roleRepository = roleRepository;
+  }
+
+  public List<Role> findAll() {
+    return roleRepository.findAll();
   }
 
   public Role create(String name, Boolean status) {

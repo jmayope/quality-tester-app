@@ -26,7 +26,7 @@ public class BusinessController {
 
   @GetMapping
   public ResponseEntity<ApiResponse<List<Business>>> findAll() {
-      return ResponseEntity.ok(businessService.findAll());
+      return ResponseEntity.ok(ApiResponse.success(businessService.findAll(), "Listado Correcto"));
   }
 
   // @PostMapping

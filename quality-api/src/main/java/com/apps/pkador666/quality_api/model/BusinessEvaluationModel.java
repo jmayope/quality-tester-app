@@ -7,22 +7,26 @@ import org.hibernate.annotations.CreationTimestamp;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="user_roles")
-public class UserRole {
+@Table(name="business_evaluation_models")
+public class BusinessEvaluationModel {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+  @JoinColumn(name = "business_id", nullable = false)
+  private Business business;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "role_id", nullable = false)
-  private Role role;
+  @JoinColumn(name = "evaluation_model_id", nullable = false)
+  private EvaluationModel evaluationModel;
 
   @Column()
   private Boolean status;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "creator_by_id", nullable = false)
+  private BusinessUser creatorBy;
 
   @CreationTimestamp
   @Column(name="create_at", nullable = false, updatable = false)
@@ -36,20 +40,20 @@ public class UserRole {
     this.id = id;
   }
 
-  public User getUser() {
-    return user;
+  public Business getBusiness() {
+    return business;
   }
 
-  public void setUser(User user) {
-    this.user = user;
+  public void setBusiness(Business business) {
+    this.business = business;
   }
 
-  public Role getRole() {
-    return role;
+  public EvaluationModel getEvaluationModel() {
+    return evaluationModel;
   }
 
-  public void setRole(Role role) {
-    this.role = role;
+  public void setEvaluationModel(EvaluationModel evaluationModel) {
+    this.evaluationModel = evaluationModel;
   }
 
   public Boolean getStatus() {
@@ -60,6 +64,14 @@ public class UserRole {
     this.status = status;
   }
 
+  public BusinessUser getCreatorBy() {
+    return creatorBy;
+  }
+
+  public void setCreatorBy(BusinessUser creatorBy) {
+    this.creatorBy = creatorBy;
+  }
+
   public LocalDateTime getCreateAt() {
     return createAt;
   }
@@ -67,5 +79,6 @@ public class UserRole {
   public void setCreateAt(LocalDateTime createAt) {
     this.createAt = createAt;
   }
-    
+
+  
 }

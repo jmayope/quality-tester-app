@@ -26,7 +26,7 @@ public class PersonController {
 
   @GetMapping
   public ResponseEntity<ApiResponse<List<Person>>> findAll() {
-      return ResponseEntity.ok(personService.findAll());
+      return ResponseEntity.ok(ApiResponse.success(personService.findAll(), "Listado Correcto"));
   }
   
 }

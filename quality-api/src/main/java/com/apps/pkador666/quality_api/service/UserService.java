@@ -1,5 +1,7 @@
 package com.apps.pkador666.quality_api.service;
 
+import java.util.List;
+
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,10 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
+  public List<User> findAll() {
+    return userRepository.findAll();
+  }
+
   public User authenticate(String username, String password) {
     User user = authRepository.findByUsername(username)
       .orElseThrow(() -> new BadCredentialsException("Usuario no encontrado"));
@@ -34,7 +40,8 @@ public class UserService {
   public User register(User newUser) {
     User user = new User();
     user.setStatus(true);
-    user.setPersonId(newUser.getPersonId());
+
+    user.setPerson(newUser.getPerson());
     user.setUsername(newUser.getUsername());
     user.setPassword(passwordEncoder.encode(newUser.getPassword()));
     user.setIsAdmin(newUser.getIsAdmin());

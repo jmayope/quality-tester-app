@@ -10,8 +10,9 @@ public class EvaluationSection {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name="business_id")
-  private Long businessId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "evaluation_model_id", nullable = false)
+  private EvaluationModel evaluationModel;
 
   @Column()
   private Long parent;
@@ -19,8 +20,8 @@ public class EvaluationSection {
   @Column()
   private String name;
 
-  @Column()
-  private Long order;
+  @Column(name="section_order")
+  private Long sectionOrder;
 
   @Column()
   private String description;
@@ -36,12 +37,12 @@ public class EvaluationSection {
     this.id = id;
   }
 
-  public Long getBusinessId() {
-    return businessId;
+  public EvaluationModel getEvaluationModel() {
+    return evaluationModel;
   }
 
-  public void setBusinessId(Long businessId) {
-    this.businessId = businessId;
+  public void setEvaluationModel(EvaluationModel evaluationModel) {
+    this.evaluationModel = evaluationModel;
   }
 
   public Long getParent() {
@@ -60,12 +61,12 @@ public class EvaluationSection {
     this.name = name;
   }
 
-  public Long getOrder() {
-    return order;
+  public Long getSectionOrder() {
+    return sectionOrder;
   }
 
-  public void setOrder(Long order) {
-    this.order = order;
+  public void setSectionOrder(Long sectionOrder) {
+    this.sectionOrder = sectionOrder;
   }
 
   public String getDescription() {
@@ -83,6 +84,6 @@ public class EvaluationSection {
   public void setStatus(Boolean status) {
     this.status = status;
   }
-
+  
   
 }

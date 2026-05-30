@@ -25,15 +25,15 @@ public class ApiResponse<T> {
   }
 
   // ÉXITO: Lista de items
-  public static <T> ApiResponse<T> success(List<T> items, String message) {
-    ApiResponse<T> response = new ApiResponse<>();
-    response.data = (T) items;
-    response.status = 200;
-    response.message = message;
-    response.error = ErrorDetail.none();
-    response.validation = ValidationError.none();
-    return response;
-  }
+  // public static <T> ApiResponse<T> success(List<T> items, String message) {
+  //   ApiResponse<T> response = new ApiResponse<>();
+  //   response.data = (T) items;
+  //   response.status = 200;
+  //   response.message = message;
+  //   response.error = ErrorDetail.none();
+  //   response.validation = ValidationError.none();
+  //   return response;
+  // }
 
   // ERROR del servidor (500, etc.)
   public static <T> ApiResponse<T> error(int status, String message, String errorMessage) {

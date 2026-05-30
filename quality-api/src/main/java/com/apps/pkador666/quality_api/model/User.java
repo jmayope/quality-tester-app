@@ -1,7 +1,5 @@
 package com.apps.pkador666.quality_api.model;
 
-import jakarta.persistence.Entity;
-
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,8 +14,9 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name="person_id")
-  private Integer personId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "person_id", nullable = false)
+  private Person person;
 
   @Column()
   private String username;
@@ -28,7 +27,7 @@ public class User {
   @Column()
   private Boolean status;
 
-  @Column(name="user_type")
+  @Column(name = "user_type")
   private String userType;
 
   @Column(name="is_admin")
@@ -46,12 +45,12 @@ public class User {
     this.id = id;
   }
 
-  public Integer getPersonId() {
-    return personId;
+  public Person getPerson() {
+    return person;
   }
 
-  public void setPersonId(Integer personId) {
-    this.personId = personId;
+  public void setPerson(Person person) {
+    this.person = person;
   }
 
   public String getUsername() {
@@ -103,4 +102,5 @@ public class User {
   }
 
   
+      
 }

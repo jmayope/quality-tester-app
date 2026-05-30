@@ -10,23 +10,23 @@ import com.apps.pkador666.quality_api.repository.TypeRepository;
 @Service
 public class TypeService {
 
-  private final TypeService typeService;
+  private final TypeRepository typeRepository;
 
-  public TypeService(TypeService typeService) {
-    this.typeService = typeService;
+  public TypeService(TypeRepository typeRepository) {
+    this.typeRepository = typeRepository;
   }
 
   public List<Type> findAll() {
-    return typeService.findAll();
+    return typeRepository.findAll();
   }
 
-  public Type create(Type newType) {
-    Type type = new Type();
-    type.setCategory(newType.getCategory());
-    type.setCode(newType.getCode());
-    type.setName(newType.getName());
-    type.setAdditionalFields(newType.getAdditionalFields());
-    return typeService.save(type);
+  public Type create(Type type) {
+    Type newType = new Type();
+    newType.setCategory(type.getCategory());
+    newType.setCode(type.getCode());
+    newType.setName(type.getName());
+    newType.setAdditionalFields(type.getAdditionalFields());
+    return typeRepository.save(newType);
   }
 
 }

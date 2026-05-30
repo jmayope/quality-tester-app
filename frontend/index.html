@@ -22,17 +22,17 @@
   <script src="lib/components/global-vars/global-vars.controller.js"></script>
   <script src="lib/components/users/users.controller.js"></script>
 </head>
-<body ng-controller="indexCtrl">
+<body ng-controller="indexCtrl" style="background-color: #f2f3f5;">
   <div class="container-fluid m-0 p-0" ng-init="init()">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary" ng-if="userLoged.id">
+    <nav class="navbar navbar-expand-lg bg-primary" ng-if="userLoged.id">
       <div class="container">
-        <a class="navbar-brand" href="#">EQualityApp</a>
+        <a class="navbar-brand text-white">EQualityApp</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <a class="btn me-3" ng-class="{'btn-light text-primary': menuSelected && menuSelected.id !== m.id, 'btn-primary': menuSelected && menuSelected.id === m.id}" ng-repeat="m in menu" href="#!{{m.route}}" ng-click="selectMenuItem(m)">
+          <a class="btn me-3" ng-class="{'btn-primary': menuSelected && menuSelected.id !== m.id, 'btn-light text-primary': menuSelected && menuSelected.id === m.id}" ng-repeat="m in menu" href="#!{{m.route}}" ng-click="selectMenuItem(m)">
             <i class="fa fa-circle me-1"></i>{{m.name}}
           </a>
           <!-- <ul class="navbar-nav">

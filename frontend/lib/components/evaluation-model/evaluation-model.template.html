@@ -1,37 +1,45 @@
 <div class="container" ng-init="init()">
   <div class="row mt-3">
-    <div class="col-8 pb-3">
-      <span class="display-4">Módelos de Evaluación</span>
+    <div class="col-6 pb-3">
+      <span class="font-lg">Módelos de Evaluación</span>
     </div>
-    <div class="col-4 pb-3">
-      <div class="input-group input-group-lg">
+    <div class="col-6 pb-3">
+      <div class="input-group">
         <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
         <input type="text" name="text" ng-model="filter.text" class="form-control text-uppercase" placeholder="BUSCAR POR TEXTO" aria-label="BUSCAR POR TEXTO" aria-describedby="basic-addon1">
       </div>
     </div>
     <div class="col-12 mt-3">
       <div class="row">
-        <div class="col-4" ng-repeat="e in evaluationModels | filter:filter.text">
-          <div class="card">
+        <div class="col-4 mb-3">
+          <div class="card borderless" ng-click="toggleEvaluationModal()">
+            <div class="card-body text-center hand mt-3 mb-3 text-secondary">
+              <i class="fa fa-plus-circle fa-3x"></i><br>
+              <span class="font-lg">
+                Nuevo Módelo
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-4 mb-3" ng-repeat="e in evaluationModels | filter:filter.text">
+          <div class="card borderless">
             <div class="card-body">
               <div class="row">
                 <div class="col-12">
-                  <span class="badge bg-primary">{{e.code}}</span>&nbsp;<strong>{{e.name | uppercase}}</strong>
                   <span class="float-end badge" ng-class="{'bg-danger': !e.status, 'bg-success': e.status}">{{e.status ? 'Activo' : 'Inactivo'}}</span>
+                  <span class="badge bg-primary">{{e.code | uppercase}}</span><br><strong>{{e.name | uppercase}}</strong>
                 </div>
                 <div class="col-12">
                   <div class="span text-secondary">
-                    {{e.description | uppercase}}
+                    <small>
+                      {{e.description | uppercase}}
+                    </small>
                   </div>
                 </div>
-                <div class="col-12">
-                  <hr>
-                </div>
-                <div class="col-12">
-                  <i class="fa fa-calendar me-1"></i>{{e.createdAt | date:'dd/MM/yyyy'}}&nbsp;<i class="fa fa-clock me-1"></i>{{e.createdAt | date:'hh:mm a'}}    
-                </div>
-                <div class="col-12">
-                  <hr>
+                <div class="col-12 text-end mb-3 mt-3">
+                  <small>
+                    <i class="fa fa-calendar me-1"></i>{{e.createdAt | date:'dd/MM/yyyy'}}&nbsp;<i class="fa fa-clock me-1"></i>{{e.createdAt | date:'hh:mm a'}}    
+                  </small>
                 </div>
                 <div class="col-6">
                   <button class="btn btn-sm btn-light text-primary me-2" ng-click="toggleEvaluationModal(e)">
@@ -47,16 +55,7 @@
             </div>
           </div>
         </div>
-        <div class="col-4">
-          <div class="card" ng-click="toggleEvaluationModal()">
-            <div class="card-body text-center hand mt-5 mb-5 text-secondary">
-              <i class="fa fa-plus fa-2x"></i><br>
-              <span class="font-lg">
-                Nuevo Módelo de Evaluación
-              </span>
-            </div>
-          </div>
-        </div>
+        
       </div>
     </div>
   </div>

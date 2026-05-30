@@ -10,7 +10,7 @@ app.controller("usersCtrl", ["$scope", "mainService", function($scope, mainServi
     mainService.findAllUsers()
     .then((response) => {
       console.log(response);
-      $scope.users = response.data;
+      $scope.users = response.data.data;
     })
     .catch((err) => {
       console.log("Error => ", err);

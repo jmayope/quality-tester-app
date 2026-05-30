@@ -18,6 +18,19 @@
   border: 1px solid var(--primary-color) !important;
 }
 
+.bg-primary-color {
+  background-color: var(--primary-color) !important;
+  color: #ffffff;
+}
+
+.rounded-semi-pill {
+  border-radius: 20px !important;
+}
+
+.text-primary-color {
+  color: var(--primary-color) !important;
+}
+
 dialog {
   border: none;
   border-radius: 12px;
@@ -47,4 +60,8 @@ dialog::backdrop {
 
 .btn-block {
   width: 100% !important;
+}
+
+.borderless {
+  border: none;
 }
