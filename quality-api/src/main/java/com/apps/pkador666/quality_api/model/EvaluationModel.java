@@ -1,6 +1,8 @@
 package com.apps.pkador666.quality_api.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 import org.hibernate.annotations.CreationTimestamp;
 import jakarta.persistence.*;
 
@@ -30,6 +32,14 @@ public class EvaluationModel {
   @CreationTimestamp
   @Column(name="created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
+
+  @OneToMany
+  @JoinColumn(name = "evaluation_model_id")
+  private List<EvaluationSection> sections;
+
+  @OneToMany
+  @JoinColumn(name = "evaluation_model_id")
+  private List<EvaluationMetric> evaluationMetrics;
 
   public Long getId() {
     return id;
@@ -87,5 +97,21 @@ public class EvaluationModel {
     this.createdAt = createdAt;
   }
 
-  
+  public List<EvaluationSection> getSections() {
+    return sections;
+  }
+
+  public void setSections(List<EvaluationSection> sections) {
+    this.sections = sections;
+  }
+
+  public List<EvaluationMetric> getEvaluationMetrics() {
+    return evaluationMetrics;
+  }
+
+  public void setEvaluationMetrics(List<EvaluationMetric> evaluationMetrics) {
+    this.evaluationMetrics = evaluationMetrics;
+  }
+
+    
 }

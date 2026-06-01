@@ -84,6 +84,5 @@ public class EvaluationSection {
   public void setStatus(Boolean status) {
     this.status = status;
   }
-  
-  
+
 }

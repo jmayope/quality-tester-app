@@ -37,13 +37,7 @@ public class EvaluationModelController {
 
   @PostMapping
   public ResponseEntity<ApiResponse<EvaluationModel>> save(@RequestBody EvaluationModel newEvaluationModel) {
-      return ResponseEntity.ok(ApiResponse.success(evaluationModelService.create(
-        newEvaluationModel.getCode(), 
-        newEvaluationModel.getAbbr(), 
-        newEvaluationModel.getName(), 
-        newEvaluationModel.getDescription(), 
-        newEvaluationModel.getStatus()
-      ), "Listado Correcto"));
+      return ResponseEntity.ok(ApiResponse.success(evaluationModelService.create(newEvaluationModel), "Listado Correcto"));
   }
 
   @PutMapping("/update")

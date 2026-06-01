@@ -5,9 +5,9 @@ app.constant("APP_CONFIG", {
   API_URL: "http://localhost:8080/api",
   TOKEN_NAME: "quality-token",
   CATEGORIES: [
-    {id: 'QA', name: 'Calidad de Software'},
-    {id: 'DEV', name: 'Desarrollo de Software'},
-    {id: 'DEVOPS', name: 'DevOps / Operación'},
+    {id: 1, name: 'Calidad de Software'},
+    {id: 2, name: 'Desarrollo de Software'},
+    {id: 3, name: 'DevOps / Operación'},
   ],
   ATTRIBUTES: [
     {id: 1, name: 'fiabilidad'},

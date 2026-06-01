@@ -39,13 +39,13 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
       $scope.isEvaluationOpen = true;
       $scope.newEvaluationModel = {
         sections: [],
-        metrics: []
+        evaluationMetrics: []
       };
       $scope.selectSection($scope.sections[0]);
       if (item) {
         $scope.newEvaluationModel = item;
         $scope.newEvaluationModel.sections = $scope.newEvaluationModel.sections || [];
-        $scope.newEvaluationModel.metrics = $scope.newEvaluationModel.metrics || [];
+        $scope.newEvaluationModel.evaluationMetrics = $scope.newEvaluationModel.evaluationMetrics || [];
         $scope.newEvaluationModel.editing = true;
       }
     }
@@ -88,6 +88,7 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
           icon: 'success',
           text: 'Se actualizó el Modelo correctamente'
         });
+
         $scope.toggleEvaluationModal();
         $scope.getEvaluationModels();
       })

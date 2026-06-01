@@ -1,34 +1,53 @@
 package com.apps.pkador666.quality_api.service;
 
 import com.apps.pkador666.quality_api.repository.EvaluationModelRepository;
+import com.apps.pkador666.quality_api.repository.EvaluationSectionRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.apps.pkador666.quality_api.model.EvaluationMetric;
 import com.apps.pkador666.quality_api.model.EvaluationModel;
+import com.apps.pkador666.quality_api.model.EvaluationSection;
 
 @Service
 public class EvaluationModelService {
   private final EvaluationModelRepository evaluationModelRepository;
+  private final EvaluationSectionService evaluationSectionService;
+  private final EvaluationMetricService evaluationMetricService;
 
-  public EvaluationModelService(EvaluationModelRepository evaluationModelRepository) {
+  public EvaluationModelService(
+    EvaluationModelRepository evaluationModelRepository,
+    EvaluationSectionService evaluationSectionService,
+    EvaluationMetricService evaluationMetricService
+  ) {
     this.evaluationModelRepository = evaluationModelRepository;
+    this.evaluationSectionService = evaluationSectionService;
+    this.evaluationMetricService = evaluationMetricService;
   }
 
   public List<EvaluationModel> findAll() {
     return evaluationModelRepository.findAll();
   }
 
-  public EvaluationModel create(String code, String abbr, String name, String description, Boolean status) {
-    EvaluationModel newEvaluationModel = new EvaluationModel();
-    newEvaluationModel.setCode(code);
-    newEvaluationModel.setAbbr(abbr);
-    newEvaluationModel.setName(name);
-    newEvaluationModel.setDescription(description);
-    newEvaluationModel.setStatus(status);
-    return evaluationModelRepository.save(newEvaluationModel);
+  public EvaluationModel create(EvaluationModel newEvaluationModel) {
+    EvaluationModel evaluationModel = new EvaluationModel();
+    evaluationModel.setCode(newEvaluationModel.getCode());
+    evaluationModel.setAbbr(newEvaluationModel.getAbbr());
+    evaluationModel.setName(newEvaluationModel.getName());
+    evaluationModel.setDescription(newEvaluationModel.getDescription());
+    evaluationModel.setStatus(newEvaluationModel.getStatus());
+    EvaluationModel evaluationModelCreated = evaluationModelRepository.save(evaluationModel);
+
+    List<EvaluationSection> sectionCreateds = evaluationSectionService.createMany(newEvaluationModel.getSections());
+    evaluationModelCreated.setSections(sectionCreateds);
+
+    List<EvaluationMetric> metricCreateds = evaluationMetricService.createMany(newEvaluationModel.getEvaluationMetrics());
+    evaluationModelCreated.setEvaluationMetrics(metricCreateds);
+
+    return evaluationModelCreated;
   }
 
   public EvaluationModel update(Long id, String code, String abbr, String name, String description, Boolean status) {

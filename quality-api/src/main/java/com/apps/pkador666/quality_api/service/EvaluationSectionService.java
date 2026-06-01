@@ -1,38 +1,36 @@
 package com.apps.pkador666.quality_api.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.apps.pkador666.quality_api.model.EvaluationModel;
 import com.apps.pkador666.quality_api.model.EvaluationSection;
-import com.apps.pkador666.quality_api.repository.EvaluationModelRepository;
 import com.apps.pkador666.quality_api.repository.EvaluationSectionRepository;
 
 @Service
 public class EvaluationSectionService {
   private final EvaluationSectionRepository evaluationSectionRepository;
-  private final EvaluationModelRepository evaluationModelRepository;
 
-  public EvaluationSectionService(EvaluationSectionRepository evaluationSectionRepository, EvaluationModelRepository evaluationModelRepository) {
+  public EvaluationSectionService(EvaluationSectionRepository evaluationSectionRepository) {
     this.evaluationSectionRepository = evaluationSectionRepository;
-    this.evaluationModelRepository = evaluationModelRepository;
   }
 
   public List<EvaluationSection> findAll() {
     return evaluationSectionRepository.findAll();
   }
 
-  public EvaluationSection create(Long evaluationModelId, Long parent, String name, Long sectionOrder, String description, Boolean status) {
+  public List<EvaluationSection> createMany(List<EvaluationSection> evaluationSections) {
+    return evaluationSectionRepository.saveAll(evaluationSections);
+  }
+
+  public EvaluationSection create(EvaluationSection evaluationSection) {
     EvaluationSection newEvaluationSection = new EvaluationSection();
-    Optional<EvaluationModel> evaluationModelFound = evaluationModelRepository.findById(evaluationModelId);
-    newEvaluationSection.setEvaluationModel(evaluationModelFound.get());
-    newEvaluationSection.setParent(parent);
-    newEvaluationSection.setName(name);
-    newEvaluationSection.setSectionOrder(sectionOrder);
-    newEvaluationSection.setDescription(description);
-    newEvaluationSection.setStatus(status);
+    newEvaluationSection.setEvaluationModel(evaluationSection.getEvaluationModel());
+    newEvaluationSection.setParent(evaluationSection.getParent());
+    newEvaluationSection.setName(evaluationSection.getName());
+    newEvaluationSection.setSectionOrder(evaluationSection.getSectionOrder());
+    newEvaluationSection.setDescription(evaluationSection.getDescription());
+    newEvaluationSection.setStatus(evaluationSection.getStatus());
     return evaluationSectionRepository.save(newEvaluationSection);
   }
 }

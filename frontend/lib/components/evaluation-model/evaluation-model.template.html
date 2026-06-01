@@ -223,16 +223,14 @@
             </div>
           </div>
           <div class="row" ng-if="sectionSelected && sectionSelected.id === 3">
-            <div class="col-12">
-
-            </div>
+            
           </div>
         </form>
       </div>
 
       <div class="modal-footer">
         <button class="btn btn-secondary" ng-click="toggleEvaluationModal()">Cerrar</button>
-        <button class="btn btn-primary" ng-disabled="evaluationForm.$invalid || !newEvaluationModel.sections.length || !newEvaluationModel.metrics.length" ng-click="saveEvaluationModel()">Guardar</button>
+        <button class="btn btn-primary" ng-disabled="evaluationForm.$invalid || !newEvaluationModel.sections.length || !newEvaluationModel.evaluationMetrics.length" ng-click="saveEvaluationModel()">Guardar</button>
       </div>
 
     </div>

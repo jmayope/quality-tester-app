@@ -64,7 +64,7 @@
       <div class="modal-header">
         <h5 class="modal-title">{{newItem.editing ? 'Editando' : 'Nueva'}}&nbsp;Métrica</h5>
         
-        <button type="button" class="btn-close" ng-click="toggleEvaluationModal()"></button>
+        <button type="button" class="btn-close" ng-click="toggleItem()"></button>
       </div>
 
       <div class="modal-body">
@@ -79,7 +79,7 @@
             </div>
             <div class="col 12">
               <small class="text-secondary">Atributo</small>
-              <select name="attribute" ng-model="newMetric.attribute" class="form-select form-select-sm" required>
+              <select name="metricAttribute" ng-model="newMetric.metricAttribute" class="form-select form-select-sm" required>
                 <option ng-value="undefined">--SELECCIONE--</option>
                 <option ng-repeat="a in attributes" ng-value="a.id">{{a.name | uppercase}}</option>
               </select>
@@ -92,22 +92,22 @@
               <small class="text-secondary">Tipo de Medición</small>
               <select name="meditionType" ng-change="selectMeditionType()" ng-model="newItem.meditionType" class="form-select form-select-sm" required>
                 <option ng-value="undefined">--SELECCIONE--</option>
-                <option ng-repeat="m in meditionTypes" ng-value="m.id">{{m.name}}</option>
+                <option ng-repeat="m in meditionTypes" ng-value="m">{{m.name}}</option>
               </select>
             </div>
-            <div class="col-12 mt-2" ng-if="newItem.meditionType === 1">
+            <div class="col-12 mt-2" ng-if="newItem.meditionType.id === 1">
               <div class="row">
                 <div class="col-6">
                   <small class="text-secondary">Valor Mínimo</small>
-                  <input type="number" name="min" ng-model="newMetric.meditionType.min" class="form-control form-control-sm" required>
+                  <input type="number" name="minValue" ng-model="newMetric.meditionType.minValue" class="form-control form-control-sm" required>
                 </div>
                 <div class="col-6">
                   <small class="text-secondary">Valor Máximo</small>
-                  <input type="number" name="max" ng-model="newMetric.meditionType.max" class="form-control form-control-sm" required>
+                  <input type="number" name="maxValue" ng-model="newMetric.meditionType.maxValue" class="form-control form-control-sm" required>
                 </div>
               </div>
             </div>
-            <div class="col-12 mt-2" ng-if="newItem.meditionType === 2">
+            <div class="col-12 mt-2" ng-if="newItem.meditionType.id === 2">
               <div class="row">
                 <div class="col-12">
                   <ul class="list-group">
@@ -197,8 +197,8 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-secondary" ng-click="toggleEvaluationModal()">Cerrar</button>
-        <button class="btn btn-primary" ng-disabled="itemForm.$invalid" ng-click="saveEvaluationModel()">Guardar</button>
+        <button class="btn btn-secondary" ng-click="toggleItem()">Cerrar</button>
+        <button class="btn btn-primary" ng-disabled="itemForm.$invalid" ng-click="saveItem('metric')">Guardar</button>
       </div>
 
     </div>

@@ -23,6 +23,10 @@ app.factory("mainService", ["$http", "APP_CONFIG", function($http, APP_CONFIG) {
 
     findAllEntities: (body) => {
       return $http.post(`${apiUrl}/entities/by`, body);
+    },
+
+    saveMetrics: (body) => {
+      return $http.post(`${apiUrl}/metrics`, body);
     }
   }
 

@@ -1,4 +1,4 @@
-app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG", function($scope, APP_CONFIG) {
+app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function($scope, APP_CONFIG, mainService) {
   $scope.filter = {};
   $scope.categories = APP_CONFIG.CATEGORIES;
   $scope.attributes = APP_CONFIG.ATTRIBUTES;
@@ -46,8 +46,9 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG", function($scope, APP_C
 
   $scope.selectMeditionType = () => {
     if ($scope.newItem.meditionType) {
-      $scope.newMetric.meditionType = {};
+      $scope.newMetric.meditionType = $scope.newItem.meditionType;
       $scope.newScale = undefined;
+      console.log($scope.newMetric);
       switch ($scope.newItem.meditionType) {
         case 2:
           $scope.newMetric.meditionType.scales = [];
@@ -103,5 +104,26 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG", function($scope, APP_C
     $scope.newScale = undefined;
   }
 
+  $scope.saveItem = (type) => {
+    switch (type) {
+      case 'metric':
+        $scope.newMetric.minValue =$scope.newMetric.meditionType.minValue;
+        $scope.newMetric.maxValue =$scope.newMetric.meditionType.maxValue;
+        console.log($scope.newItem);
+        console.log($scope.newMetric);
+        // Necesitas crear Tipos
+        mainService.saveMetrics($scope.newMetric)
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        break;
+    
+      default:
+        break;
+    }
+  }
 
 }])
