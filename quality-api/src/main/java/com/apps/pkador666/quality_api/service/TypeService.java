@@ -25,6 +25,7 @@ public class TypeService {
     newType.setCategory(type.getCategory());
     newType.setCode(type.getCode());
     newType.setName(type.getName());
+    newType.setStatus(type.getStatus());
     newType.setAdditionalFields(type.getAdditionalFields());
     return typeRepository.save(newType);
   }

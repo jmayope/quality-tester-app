@@ -24,7 +24,7 @@ public class Type {
   private String additionalFields;
 
   @Column()
-  private String status;
+  private boolean status;
 
   public Long getId() {
     return id;
@@ -66,14 +66,13 @@ public class Type {
     this.additionalFields = additionalFields;
   }
 
-  public String getStatus() {
+  public boolean getStatus() {
     return status;
   }
 
-  public void setStatus(String status) {
+  public void setStatus(boolean status) {
     this.status = status;
   }
 
   
-
 }

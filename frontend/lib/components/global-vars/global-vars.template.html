@@ -6,15 +6,15 @@
       </div>
     </div>
     <div class="col-6">
-      <div class="card">
-        <div class="card-header">
+      <div class="card borderless">
+        <div class="card-header borderless">
           <strong class="text-primary"><i class="fa fa-ruler me-1"></i>Metricas</strong>
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item" ng-if="!newMetric">
             <div class="input-group">
               <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
-              <input type="text" class="form-control text-uppercase" name="search" ng-model="filter.text" placeholder="BUSCAR POR TEXTO" aria-label="BUSCAR POR TEXTO" aria-describedby="basic-addon1">
+              <input type="text" class="form-control text-uppercase" name="search" ng-model="filter.metricText" placeholder="BUSCAR POR TEXTO" aria-label="BUSCAR POR TEXTO" aria-describedby="basic-addon1">
             </div>
           </li>
           <li class="list-group-item" ng-if="newMetric">
@@ -26,7 +26,7 @@
               
             </div>
           </li>
-          <li class="list-group-item" ng-repeat="m in metrics">
+          <li class="list-group-item" ng-repeat="m in metrics | filter:filter.metricText">
             <div class="row">
               <div class="col-9">
                 {{m.name | uppercase}}&nbsp;<span>De {{m.min}} a {{m.max}}</span>
@@ -45,7 +45,39 @@
         </ul>
       </div>
     </div>
-    <div class="col-6"></div>
+    <div class="col-6">
+      <div class="card borderless">
+        <div class="card-header text-primary-color borderless">
+          <i class="fa fa-list-alt me-1"></i>Tipos
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+              <input type="text" class="form-control text-uppercase" name="search" ng-model="filter.typeText" placeholder="BUSCAR POR TEXTO" aria-label="BUSCAR POR TEXTO" aria-describedby="basic-addon1">
+            </div>
+          </li>
+          <li class="list-group-item" ng-repeat="t in types">
+            <div class="row">
+              <div class="col-9">
+                <span class="badge bg-success me-2">{{t.category | uppercase}}</span>
+                <span class="badge bg-primary me-2">{{t.code | uppercase}}</span>
+                {{t.name | uppercase}}
+              </div>
+              <div class="col-3 text-end">
+                <i class="fa fa-pencil text-primary hand me-2"></i>
+                <i class="fa fa-trash text-danger hand"></i>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item text-center">
+            <button class="btn btn-sm btn-light text-primary-color" ng-click="toggleItem('type')">
+              <i class="fa fa-plus me-1"></i>Agregar Tipo
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
     <div class="col-12"></div>
   </div>
 </div>
@@ -193,12 +225,35 @@
               </div>
             </div>
           </div>
+          <div class="row" ng-if="newItem.type === 'type'">
+            <div class="col-12">
+              <small class="text-secondary">Categoria</small>
+              <input type="text" name="category" ng-model="newType.category" class="form-control form-control-sm" required>
+            </div>
+            <div class="col-4">
+              <small class="text-secondary">Código</small>
+              <input type="text" name="code" ng-model="newType.code" class="form-control form-control-sm" required>
+            </div>
+            <div class="col-8">
+              <small class="text-secondary">Nombre</small>
+              <input type="text" name="name" ng-model="newType.name" class="form-control form-control-sm" required>
+            </div>
+            <div class="col-12">
+              <small class="text-secondary">Estado del Registro</small>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="status" ng-model="newType.status" value="true" id="type-status">
+                <label class="form-check-label" for="type-status">
+                  {{newType.status ? 'Activo' : 'Inactivo'}}
+                </label>
+              </div>
+            </div>
+          </div>
         </form>
       </div>
 
       <div class="modal-footer">
         <button class="btn btn-secondary" ng-click="toggleItem()">Cerrar</button>
-        <button class="btn btn-primary" ng-disabled="itemForm.$invalid" ng-click="saveItem('metric')">Guardar</button>
+        <button class="btn btn-primary" ng-disabled="itemForm.$invalid" ng-click="saveItem(newItem.type)">Guardar</button>
       </div>
 
     </div>

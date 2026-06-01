@@ -26,8 +26,8 @@ public class TypeController {
     this.typeService = typeService;
   }
 
-  @GetMapping("/by-category/{category}")
-  public ResponseEntity<ApiResponse<List<Type>>> findAll(@RequestParam String category) {
+  @GetMapping
+  public ResponseEntity<ApiResponse<List<Type>>> findAll() {
       return ResponseEntity.ok(ApiResponse.success(typeService.findAll(), "Listado correcto"));
   }
 

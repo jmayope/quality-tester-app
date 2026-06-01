@@ -4,19 +4,36 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function
   $scope.attributes = APP_CONFIG.ATTRIBUTES;
   $scope.meditionTypes = APP_CONFIG.MEDITION_TYPES;
   $scope.scaleTypes = APP_CONFIG.SCALE_TYPES;
-
+  $scope.types = [];
   $scope.isNewItemOpen = false;
+  
+  $scope.newMetric = undefined;
+  $scope.newItem = undefined;
 
   $scope.init = () => {
     console.log("Inciaidndo");
+    $scope.getTypes();
   }
-  $scope.newMetric = undefined;
+
+  $scope.getTypes = () => {
+    mainService.findAllTypes()
+    .then((response) => {
+      console.log(response);
+      $scope.types = response.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
   $scope.newItem = (type) => {
     switch (type) {
       case 'metric':
         $scope.newMetric = {};   
         break;
-    
+      case 'type':
+        $scope.newType = {};
+        break;
       default:
         break;
     }
@@ -34,8 +51,15 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function
         case 'metric':
           $scope.newMetric = {};
           if (item) {
-            $scope.newMetric = JSON.parse(JSON.stringify(item));
+            $scope.newMetric = structuredClone(item);
             $scope.newItem.editing = true;
+          }
+          break;
+        case 'type':
+          $scope.newType = {};
+          if (item) {
+            $scope.newType = structuredClone(item);
+            $scope.newType.editing = true;
           }
           break;
         default:
@@ -105,6 +129,14 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function
   }
 
   $scope.saveItem = (type) => {
+    Swal.fire({
+      html: APP_CONFIG.SPINNER_LOADING,
+      text: 'Guardando información',
+      alloallowEnterKey: false,
+      allowOutsideClick: false,
+      showCancelButton: false,
+      showConfirmButton: false
+    });
     switch (type) {
       case 'metric':
         $scope.newMetric.minValue =$scope.newMetric.meditionType.minValue;
@@ -114,13 +146,39 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function
         // Necesitas crear Tipos
         mainService.saveMetrics($scope.newMetric)
         .then((data) => {
+          Swal.close();
           console.log(data);
         })
         .catch((err) => {
+          Swal.close();
+          Swal.fire({
+            icon: 'error',
+            text: err.message
+          });
           console.log(err);
         })
         break;
-    
+      case 'type':
+        mainService.saveTypes($scope.newType)
+        .then((result) => {
+          console.log(result);
+          Swal.close();
+          $scope.getTypes();
+          $scope.toggleItem();
+          Swal.fire({
+            icon: 'success',
+            text: result.message
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          Swal.close();
+          Swal.fire({
+            icon: 'error',
+            text: err.message
+          });
+        })
+        break;
       default:
         break;
     }

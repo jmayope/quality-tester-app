@@ -4,6 +4,17 @@ app.constant("APP_CONFIG", {
   VERSION: "1.0.0",
   API_URL: "http://localhost:8080/api",
   TOKEN_NAME: "quality-token",
+  SPINNER_LOADING: `
+    <div class="spinner-grow text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-secondary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-success" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  `,
   CATEGORIES: [
     {id: 1, name: 'Calidad de Software'},
     {id: 2, name: 'Desarrollo de Software'},
