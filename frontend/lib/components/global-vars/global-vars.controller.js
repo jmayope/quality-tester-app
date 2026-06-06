@@ -1,10 +1,12 @@
 app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function($scope, APP_CONFIG, mainService) {
   $scope.filter = {};
-  $scope.categories = APP_CONFIG.CATEGORIES;
-  $scope.attributes = APP_CONFIG.ATTRIBUTES;
-  $scope.meditionTypes = APP_CONFIG.MEDITION_TYPES;
-  $scope.scaleTypes = APP_CONFIG.SCALE_TYPES;
+  $scope.categories = [];
+  $scope.attributes = [];
+  $scope.meditionTypes = [];
+  $scope.scaleTypes = [];
+  $scope.allMetricScales = [];
   $scope.types = [];
+  $scope.metrics = [];
   $scope.isNewItemOpen = false;
   
   $scope.newMetric = undefined;
@@ -20,6 +22,32 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function
     .then((response) => {
       console.log(response);
       $scope.types = response.data;
+      $scope.categories = $scope.types.filter(t => t.category === 'CATEGORIA_DE_METRICA');
+      $scope.attributes = $scope.types.filter(t => t.category === 'ATRIBUTO_DE_METRICA');
+      $scope.meditionTypes = $scope.types.filter(t => t.category === 'TIPO_DE_MEDICION');
+      $scope.scaleTypes = $scope.types.filter(t => t.category === 'TIPO_DE_ESCALA');
+      $scope.getMetrics();
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  $scope.getMetrics = () => {
+    mainService.findAllMetrics()
+    .then((metrics) => {
+      $scope.metrics = metrics.data;
+      mainService.findAllMetricScales()
+      .then((metricScales) => {
+        $scope.allMetricScales = metricScales.data;
+        $scope.metrics.map(m => {
+          m.scales = $scope.allMetricScales.filter(ms => ms.metric && ms.metric.id === m.id);
+        });
+        console.log($scope.metrics);
+      })
+      .catch((err) => {
+
+      })
     })
     .catch((err) => {
       console.log(err);
@@ -73,8 +101,8 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function
       $scope.newMetric.meditionType = $scope.newItem.meditionType;
       $scope.newScale = undefined;
       console.log($scope.newMetric);
-      switch ($scope.newItem.meditionType) {
-        case 2:
+      switch ($scope.newItem.meditionType.code) {
+        case '2':
           $scope.newMetric.meditionType.scales = [];
           break;
         default:
@@ -101,7 +129,7 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function
 
   $scope.saveScale = () => {
     switch ($scope.newScale.type) {
-      case 2:
+      case '2':
         console.log($scope.newMetric.meditionType.scales.find(s => $scope.newScale.to >= s.to || $scope.newScale.of <= s.of));
         if ($scope.newMetric.meditionType.scales.find(s => $scope.newScale.to <= s.to || $scope.newScale.to <= s.of || $scope.newScale.of <= s.to || $scope.newScale.of <= s.of)) {
           Swal.fire({
@@ -111,7 +139,7 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function
           return;
         }
         break;
-      case 1:
+      case '1':
         console.log($scope.newMetric.meditionType.scales.find(s => $scope.newScale.to >= s.to || $scope.newScale.of <= s.of));
         if ($scope.newMetric.meditionType.scales.find(s => $scope.newScale.to <= s.value || $scope.newScale.of <= s.value)) {
           Swal.fire({
@@ -143,11 +171,56 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function
         $scope.newMetric.maxValue =$scope.newMetric.meditionType.maxValue;
         console.log($scope.newItem);
         console.log($scope.newMetric);
+        let newMetric = structuredClone($scope.newMetric);
+        // newMetric.meditionType = newMetric.meditionType.id;
+        newMetric.status = newMetric.status || true;
+        let scales = newMetric.meditionType.scales || [];
+        delete newMetric.meditionType.scales;
+        delete newMetric.meditionType.minValue;
+        delete newMetric.meditionType.maxValue;
         // Necesitas crear Tipos
-        mainService.saveMetrics($scope.newMetric)
+        mainService.saveMetrics(newMetric)
         .then((data) => {
-          Swal.close();
-          console.log(data);
+
+          if (!data.data) {
+            Swal.fire({
+              icon: 'error',
+              text: 'Hubo un error al momento de crear la Metrica'
+            });
+            return;
+          }
+          if (scales.length) {
+            scales.map(s => {
+              s.metric = data.data;
+              s.status = true;
+            });
+            mainService.saveListMetricScales(scales)
+            .then((metricScalesCreateds) => {
+              Swal.close();
+              $scope.toggleItem();
+              
+              Swal.fire({
+                icon: 'success',
+                text: 'Se guardo la metrica correctamente'
+              });
+              $scope.getMetrics();
+              console.log(data);
+              console.log(metricScalesCreateds);
+            })
+            .catch((err) => {
+              console.log(err);
+            })
+          } else {
+            Swal.close();
+            $scope.toggleItem();
+            
+            Swal.fire({
+              icon: 'success',
+              text: 'Se guardo la metrica correctamente'
+            });
+            $scope.getMetrics();
+            console.log(data);
+          }
         })
         .catch((err) => {
           Swal.close();

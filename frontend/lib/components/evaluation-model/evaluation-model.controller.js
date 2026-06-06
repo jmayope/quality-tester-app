@@ -8,22 +8,49 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
   $scope.getEvaluationModels = () => {
     mainService.findAllEvaluations().then((result) => {
       console.log(result.data);
-      $scope.evaluationModels = result.data.data;
+      $scope.evaluationModels = result.data;
       console.log(result);
       $scope.evaluationModels.sort((a, b) => a.id - b.id);
+      $scope.getMetrics();
     })
     .catch((err) => {
       console.log(err);
     });
   }
 
-  $scope.evaluationModels = [];
+  $scope.getMetrics = () => {
+    mainService.findAllMetrics()
+    .then((metrics) => {
+      $scope.metrics = metrics.data;
+      $scope.getMetricScales();
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
 
+  $scope.getMetricScales = () => {
+    mainService.findAllMetricScales()
+    .then((metricScales) => {
+      $scope.metrics.map(m => {
+        m.scales = metricScales.data.filter(ms => ms.metric.id === m.id);
+      });
+      console.log($scope.metrics);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  $scope.evaluationModels = [];
+  $scope.metrics = [];
   $scope.newEvaluationModel = {};
   $scope.filter = {};
   $scope.isEvaluationOpen = false;
+  $scope.isMetricOpen = false;
   $scope.newSection = undefined;
   $scope.newSubSection = undefined;
+  $scope.sectionToAssign = undefined;
 
   $scope.sections = [
     {id: 1, name: "General", icon: 'fa fa-cog'},
@@ -98,9 +125,10 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
     } else {
       $scope.newEvaluationModel.status = true;
       $scope.newEvaluationModel.code = $scope.newEvaluationModel.abbr;
-      body = JSON.parse(JSON.stringify($scope.newEvaluationModel));
+      body = structuredClone($scope.newEvaluationModel);
       mainService.saveEvaluation(body)
       .then((result) => {
+
         console.log(result);
         Swal.fire({
           icon: 'success',
@@ -169,5 +197,15 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
   $scope.saveSection = () => {
     $scope.newEvaluationModel.sections.push($scope.newSection);
     $scope.newSection = undefined;
+  }
+
+  $scope.toggleMetric = (section = undefined) => {
+    if ($scope.isMetricOpen) {
+      $scope.isMetricOpen = false;
+      $scope.sectionToAssign = undefined;
+    } else {
+      $scope.sectionToAssign = section;
+      $scope.isMetricOpen = true;
+    }
   }
 }]);

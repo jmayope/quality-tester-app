@@ -23,12 +23,12 @@
         </div>
         <div class="col-4 mb-3" ng-repeat="e in evaluationModels | filter:filter.text">
           <div class="card borderless">
+            <div class="card-header">
+              <span class="float-end badge" ng-class="{'bg-danger': !e.status, 'bg-success': e.status}">{{e.status ? 'Activo' : 'Inactivo'}}</span>
+              <strong>{{e.name | uppercase}}</strong> <br><span class="badge bg-primary">{{e.code | uppercase}}</span>
+            </div>
             <div class="card-body">
               <div class="row">
-                <div class="col-12">
-                  <span class="float-end badge" ng-class="{'bg-danger': !e.status, 'bg-success': e.status}">{{e.status ? 'Activo' : 'Inactivo'}}</span>
-                  <span class="badge bg-primary">{{e.code | uppercase}}</span><br><strong>{{e.name | uppercase}}</strong>
-                </div>
                 <div class="col-12">
                   <div class="span text-secondary">
                     <small>
@@ -38,7 +38,8 @@
                 </div>
                 <div class="col-12 text-end mb-3 mt-3">
                   <small>
-                    <i class="fa fa-calendar me-1"></i>{{e.createdAt | date:'dd/MM/yyyy'}}&nbsp;<i class="fa fa-clock me-1"></i>{{e.createdAt | date:'hh:mm a'}}    
+                    <i class="fa fa-calendar me-1"></i>{{e.createdAt | date:'dd/MM/yyyy'}} <br>
+                    <i class="fa fa-clock me-1"></i>{{e.createdAt | date:'hh:mm a'}}    
                   </small>
                 </div>
                 <div class="col-6">
@@ -174,14 +175,19 @@
                     </div>
                     <div class="col-12" ng-if="s.showDetail">
                       <ul class="list-group">
+                        <li class="list-group-item text-center" ng-if="!newSubSection">
+                          <button class="btn btn-sm btn-light text-primary" ng-click="toggleSubSection()">
+                            <i class="fa fa-plus me-1"></i>Agregar Subsección
+                          </button>
+                        </li>
                         <li class="list-group-item" ng-repeat="ss in s.sections">
                           <div class="row">
                             <div class="col-9">
-                              <strong>{{ss.order}}&nbsp;{{ss.name | uppercase}}</strong>
+                              <small class="text-secondary">{{ss.order}}&nbsp;{{ss.name | uppercase}}</small>
                             </div>
                             <div class="col-3 text-end">
-                              <i class="hand fa fa-pencil text-primary me-2" (click)="toggleSubSection(s,ss, false)"></i>
-                              <i class="hand fa fa-trash text-danger" ng-click="toggleSubSection(s,ss, true)"></i>
+                              <i class="hand fa fa-pencil text-primary me-2" (click)="toggleSubSection(s, ss, false)"></i>
+                              <i class="hand fa fa-trash text-danger" ng-click="toggleSubSection(s, ss, true)"></i>
                             </div>
                           </div>
                         </li>
@@ -192,7 +198,7 @@
                             </div>
                             <div class="col-3">
                               <small class="text-secondary">Orden</small>
-                              <input type="number" name="order-ss" ng-model="newSubSection.code" class="form-control form-control-sm">
+                              <input type="number" name="order-ss" ng-model="newSubSection.order" class="form-control form-control-sm">
                             </div>
                             <div class="col-9">
                               <small class="text-secondary">Nombre</small>
@@ -210,11 +216,7 @@
                             </div>
                           </div>
                         </li>
-                        <li class="list-group-item text-center" ng-if="!newSubSection">
-                          <button class="btn btn-sm btn-light text-primary" ng-click="toggleSubSection()">
-                            <i class="fa fa-plus me-1"></i>Agregar Subsección
-                          </button>
-                        </li>
+                        
                       </ul>
                     </div>
                   </div>
@@ -223,7 +225,33 @@
             </div>
           </div>
           <div class="row" ng-if="sectionSelected && sectionSelected.id === 3">
-            
+            <div class="col-12 text-center text-secondary" ng-if="newEvaluationModel.sections && !newEvaluationModel.sections.length">
+              <i class="fa fa-times fa-3x"></i> <br>
+              No se tiene registrado ninguna sección
+            </div>
+            <div class="col-12" ng-if="newEvaluationModel.sections && newEvaluationModel.sections.length">
+              {{newEvaluationModel | json}}
+              <ul class="list-group">
+                <li class="list-group-item" ng-repeat="s in newEvaluationModel.sections">
+                  <div class="row">
+                    <div class="col-12">
+                      <small class="text-secondary">
+                        {{s.name | uppercase}}
+                      </small>
+                    </div>
+                    <div class="col-12 text-center">
+                      <button class="btn btn-light btn-sm text-primary-color" ng-click="toggleMetric(s)" ng-if="!s.metric">
+                        <i class="fa fa-plus me-1"></i>Agregar
+                      </button>
+                      <span ng-if="s.metric">
+                        <small class="text-secondary">Se aplica: </small><br>
+                        {{s.metric.name | uppercase}}
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </form>
       </div>
@@ -233,6 +261,43 @@
         <button class="btn btn-primary" ng-disabled="evaluationForm.$invalid || !newEvaluationModel.sections.length || !newEvaluationModel.evaluationMetrics.length" ng-click="saveEvaluationModel()">Guardar</button>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<div class="modal fade"
+     ng-class="{'show d-block': isMetricOpen}"
+     tabindex="-1"
+     role="dialog"
+     style="background: rgba(0,0,0,0.5);"
+     ng-if="isMetricOpen">
+
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Asignando Métrica</h5>
+        <button type="button" class="btn-close" ng-click="toggleMetric()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <small class="text-secondary">Sección Seleccionada</small>
+            <input type="text" name="sectionName" ng-model="sectionToAssign.name" disabled class="form-control form-control-sm">
+          </div>
+          <div class="col-12">
+            <small class="text-secondary">Métrica</small>
+            <select name="metric" ng-model="sectionToAssign.metric" class="form-select form-select-sm">
+              <option ng-value="undefined">--SELECCIONE--</option>
+              <option ng-repeat="m in metrics" ng-value="m">{{m.name}}</option>
+            </select>
+          </div>
+          <div class="col-12 mt-3">
+            <button class="btn btn-sm bg-primary-color" type="button" ng-click="toggleMetric()">
+              <i class="fa fa-save me-1"></i>Asignar
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

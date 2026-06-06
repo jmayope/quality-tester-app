@@ -9,13 +9,18 @@ app.factory("mainService", ["$http", "APP_CONFIG", function($http, APP_CONFIG) {
     findAllTypes: () => {
       return $http.get(`${apiUrl}/types`).then(response => response.data);
     },
+    findAllMetrics: () => {
+      return $http.get(`${apiUrl}/metrics`).then(response => response.data);
+    },
     findAllUsers: () => {
       return $http.get(`${apiUrl}/users`).then(response => response.data);
-    },  
+    },
     findAllEvaluations: () => {
       return $http.get(`${apiUrl}/evaluation-models`).then(response => response.data);
     },
-
+    findAllMetricScales: () => {
+      return $http.get(`${apiUrl}/metric-scales`).then(response => response.data);
+    },
     updateEvaluation: (body) => {
       return $http.put(`${apiUrl}/evaluation-models/update`, body).then(response => response.data);
     },
@@ -33,7 +38,13 @@ app.factory("mainService", ["$http", "APP_CONFIG", function($http, APP_CONFIG) {
     },
     saveTypes: (body) => {
       return $http.post(`${apiUrl}/types`, body).then(response => response.data);
-    } 
+    },
+    saveMetricScale: (body) => {
+      return $http.post(`${apiUrl}/metric-scales`, body).then(response => response.data);
+    },
+    saveListMetricScales: (body) => {
+      return $http.post(`${apiUrl}/metric-scales/list`, body).then(response => response.data);
+    },
   }
 
 }])
