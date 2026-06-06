@@ -14,6 +14,10 @@ public class EvaluationMetric {
   private EvaluationModel evaluationModel;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "evaluation_section_id", nullable = false)
+  private EvaluationSection evaluationSection;
+
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "metric_id", nullable = false)
   private Metric metric;
 

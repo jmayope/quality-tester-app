@@ -28,10 +28,6 @@ public class Metric {
   @JoinColumn(name = "medition_type", nullable = false)
   private Type meditionType;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "evaluation_model_id", nullable = false)
-  private EvaluationModel evaluationModel;
-
   @Column(name="min_value")
   private Double minValue;
 
@@ -85,14 +81,6 @@ public class Metric {
     this.meditionType = meditionType;
   }
 
-  public EvaluationModel getEvaluationModel() {
-    return evaluationModel;
-  }
-
-  public void setEvaluationModel(EvaluationModel evaluationModel) {
-    this.evaluationModel = evaluationModel;
-  }
-
   public Double getMinValue() {
     return minValue;
   }
@@ -124,6 +112,5 @@ public class Metric {
   public void setCreateAt(LocalDateTime createAt) {
     this.createAt = createAt;
   }
-
-  
+    
 }

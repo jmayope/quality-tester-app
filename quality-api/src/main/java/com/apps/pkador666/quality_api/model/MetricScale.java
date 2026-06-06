@@ -18,9 +18,12 @@ public class MetricScale {
   private Type scaleType;
 
   @Column()
-  private Double value;
+  private String name;
 
   @Column()
+  private Double value;
+
+  @Column(name="from_value")
   private Double from;
 
   @Column()
@@ -51,6 +54,14 @@ public class MetricScale {
 
   public void setScaleType(Type scaleType) {
     this.scaleType = scaleType;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public Double getValue() {
@@ -84,6 +95,5 @@ public class MetricScale {
   public void setStatus(Boolean status) {
     this.status = status;
   }
-
-  
+    
 }
