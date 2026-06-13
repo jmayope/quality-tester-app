@@ -128,7 +128,7 @@
                     </div>
                     <div class="col-4">
                       <small class="text-secondary">Orden</small>
-                      <input type="number" name="order" ng-model="newSection.order" class="form-control form-control-sm" required>
+                      <input type="number" name="sectionOrder" ng-model="newSection.sectionOrder" class="form-control form-control-sm" required>
                     </div>
                     <div class="col-8">
                       <small class="text-secondary">Nombre</small>
@@ -265,8 +265,9 @@
       </div>
 
       <div class="modal-footer">
+        <!-- <small class="text-danger" ng-if="!newEvaluationModel.sections.length">Necesitas tener registrado secciones. <br></small> -->
         <button class="btn btn-secondary" ng-click="toggleEvaluationModal()">Cerrar</button>
-        <button class="btn btn-primary" ng-disabled="evaluationForm.$invalid || !newEvaluationModel.sections.length || !newEvaluationModel.evaluationMetrics.length" ng-click="saveEvaluationModel()">Guardar</button>
+        <button class="btn btn-primary" ng-disabled="evaluationForm.$invalid" ng-click="saveEvaluationModel()">Guardar</button>
       </div>
 
     </div>

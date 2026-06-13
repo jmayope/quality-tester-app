@@ -33,21 +33,16 @@ public class EvaluationModelService {
   }
 
   public EvaluationModel create(EvaluationModel newEvaluationModel) {
+
     EvaluationModel evaluationModel = new EvaluationModel();
+
     evaluationModel.setCode(newEvaluationModel.getCode());
     evaluationModel.setAbbr(newEvaluationModel.getAbbr());
     evaluationModel.setName(newEvaluationModel.getName());
     evaluationModel.setDescription(newEvaluationModel.getDescription());
     evaluationModel.setStatus(newEvaluationModel.getStatus());
-    EvaluationModel evaluationModelCreated = evaluationModelRepository.save(evaluationModel);
 
-    List<EvaluationSection> sectionCreateds = evaluationSectionService.createMany(newEvaluationModel.getSections());
-    evaluationModelCreated.setSections(sectionCreateds);
-
-    List<EvaluationMetric> metricCreateds = evaluationMetricService.createMany(newEvaluationModel.getEvaluationMetrics());
-    evaluationModelCreated.setEvaluationMetrics(metricCreateds);
-
-    return evaluationModelCreated;
+    return evaluationModelRepository.save(evaluationModel);
   }
 
   public EvaluationModel update(Long id, String code, String abbr, String name, String description, Boolean status) {

@@ -51,7 +51,7 @@ app.controller("indexCtrl", ["$scope", "$location", "APP_CONFIG", "$timeout", ($
 
     console.log("Usuario logueado");
     // actualizar datos
-    $scope.initView = "/entity";
+    $scope.initView = $scope.initView || "/entity";
     $scope.init();
   });
 
@@ -80,7 +80,7 @@ app.controller("indexCtrl", ["$scope", "$location", "APP_CONFIG", "$timeout", ($
     if (menuSelected) {
       $scope.initView = menuSelected.route;
     }
-    $scope.selectMenuItem($scope.menu.find(m => m.route === $scope.initView || $location.$$url));
+    $scope.selectMenuItem($scope.menu.find(m => m.route === $location.$$url));
   }
 
   $scope.logout = () => {
