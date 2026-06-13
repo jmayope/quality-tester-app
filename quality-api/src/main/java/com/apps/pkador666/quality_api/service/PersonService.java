@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.apps.pkador666.quality_api.dto.request.PersonRequest;
 import com.apps.pkador666.quality_api.model.Person;
 import com.apps.pkador666.quality_api.repository.PersonRepository;
 
@@ -20,13 +21,15 @@ public class PersonService {
     return personRepository.findAll();
   }
 
-  public Person create(String fullName, String email, LocalDate birthDate, Boolean gender, Boolean status) {
+  public Person create(PersonRequest person) {
     Person newPerson = new Person();
-    newPerson.setFullName(fullName);
-    newPerson.setEmail(email);
-    newPerson.setBirthDate(birthDate);
-    newPerson.setGender(gender);
-    newPerson.setStatus(status);
+
+    newPerson.setFullName(person.getFullName());
+    newPerson.setEmail(person.getEmail());
+    newPerson.setBirthDate(person.getBirthDate());
+    newPerson.setGender(person.getGender());
+    newPerson.setStatus(person.getStatus().get() == null ? true : person.getStatus().get());
+    
     return personRepository.save(newPerson);
   }
 }

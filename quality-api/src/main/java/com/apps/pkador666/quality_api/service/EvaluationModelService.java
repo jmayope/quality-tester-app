@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.apps.pkador666.quality_api.dto.request.EvaluationModelRequest;
 import com.apps.pkador666.quality_api.model.EvaluationMetric;
 import com.apps.pkador666.quality_api.model.EvaluationModel;
 import com.apps.pkador666.quality_api.model.EvaluationSection;
@@ -32,27 +33,27 @@ public class EvaluationModelService {
     return evaluationModelRepository.findAll();
   }
 
-  public EvaluationModel create(EvaluationModel newEvaluationModel) {
+  public EvaluationModel create(EvaluationModelRequest evaluationModel) {
 
-    EvaluationModel evaluationModel = new EvaluationModel();
+    EvaluationModel evaluationModelCreated = new EvaluationModel();
 
-    evaluationModel.setCode(newEvaluationModel.getCode());
-    evaluationModel.setAbbr(newEvaluationModel.getAbbr());
-    evaluationModel.setName(newEvaluationModel.getName());
-    evaluationModel.setDescription(newEvaluationModel.getDescription());
-    evaluationModel.setStatus(newEvaluationModel.getStatus());
+    evaluationModelCreated.setCode(evaluationModel.getCode());
+    evaluationModelCreated.setAbbr(evaluationModel.getAbbr());
+    evaluationModelCreated.setName(evaluationModel.getName());
+    evaluationModelCreated.setDescription(evaluationModel.getDescription());
+    evaluationModelCreated.setStatus(evaluationModel.getStatus().get() == null ? true : evaluationModel.getStatus().get());
 
-    return evaluationModelRepository.save(evaluationModel);
+    return evaluationModelRepository.save(evaluationModelCreated);
   }
 
-  public EvaluationModel update(Long id, String code, String abbr, String name, String description, Boolean status) {
-    Optional<EvaluationModel> newEvaluationModel = evaluationModelRepository.findById(id);
-    newEvaluationModel.get().setCode(code);
-    newEvaluationModel.get().setAbbr(abbr);
-    newEvaluationModel.get().setName(name);
-    newEvaluationModel.get().setDescription(description);
-    newEvaluationModel.get().setStatus(status);
-    return evaluationModelRepository.save(newEvaluationModel.get());
+  public EvaluationModel update(EvaluationModelRequest evaluationModel) {
+    Optional<EvaluationModel> evaluationModelUpdated = evaluationModelRepository.findById(evaluationModel.getId().get());
+    evaluationModelUpdated.get().setCode(evaluationModel.getCode());
+    evaluationModelUpdated.get().setAbbr(evaluationModel.getAbbr());
+    evaluationModelUpdated.get().setName(evaluationModel.getName());
+    evaluationModelUpdated.get().setDescription(evaluationModel.getDescription());
+    evaluationModelUpdated.get().setStatus(evaluationModel.getStatus().get() == null ? true : evaluationModel.getStatus().get());
+    return evaluationModelRepository.save(evaluationModelUpdated.get());
   }
 
 }

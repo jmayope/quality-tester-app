@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.apps.pkador666.quality_api.dto.request.UserRoleRequest;
 import com.apps.pkador666.quality_api.model.Role;
 import com.apps.pkador666.quality_api.model.User;
 import com.apps.pkador666.quality_api.model.UserRole;
@@ -28,13 +29,13 @@ public class UserRoleService {
     return userRoleRepository.findAll();
   }
 
-  public UserRole create(Long userId, long roleId, Boolean status) {
+  public UserRole create(UserRoleRequest userRole) {
     UserRole newUserRole = new UserRole();
-    Optional<User> userFound = userRepository.findById(userId);
+    Optional<User> userFound = userRepository.findById(userRole.getUserId());
     newUserRole.setUser(userFound.get());
-    Optional<Role> roleFound = roleRepository.findById(roleId);
+    Optional<Role> roleFound = roleRepository.findById(userRole.getRoleId());
     newUserRole.setRole(roleFound.get());
-    newUserRole.setStatus(status);
+    newUserRole.setStatus(userRole.getStatus().get() == null ? true : userRole.getStatus().get());
     return userRoleRepository.save(newUserRole);
   }
 }

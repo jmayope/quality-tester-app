@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apps.pkador666.quality_api.dto.request.BusinessRequest;
+import com.apps.pkador666.quality_api.dto.response.BusinessResponse;
 import com.apps.pkador666.quality_api.model.ApiResponse;
 import com.apps.pkador666.quality_api.model.Business;
 import com.apps.pkador666.quality_api.service.BusinessService;
@@ -26,7 +27,7 @@ public class BusinessController {
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<Business>>> findAll() {
+  public ResponseEntity<ApiResponse<List<BusinessResponse>>> findAll() {
       return ResponseEntity.ok(ApiResponse.success(businessService.findAll(), "Listado Correcto"));
   }
 

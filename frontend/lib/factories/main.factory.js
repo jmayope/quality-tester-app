@@ -28,11 +28,23 @@ app.factory("mainService", ["$http", "APP_CONFIG", function($http, APP_CONFIG) {
     saveEvaluation: (body) => {
       return $http.post(`${apiUrl}/evaluation-models`, body).then(response => response.data);
     },
-
-    findAllEntities: (body) => {
-      return $http.post(`${apiUrl}/entities/by`, body).then(response => response.data);
+    findAllEvaluableElements: () => {
+      return $http.get(`${apiUrl}/evaluable-elements`).then(response => response.data);
+    },
+    saveEvaluableElements: (body) => {
+      return $http.post(`${apiUrl}/evaluable-elements`, body).then(response => response.data);
     },
 
+    saveManyEvaluableElements: (body) => {
+      return $http.post(`${apiUrl}/evaluable-elements/list`, body).then(response => response.data);
+    },
+
+    findAllEntities: () => {
+      return $http.get(`${apiUrl}/business`).then(response => response.data);
+    },
+    saveEntities: (body) => {
+      return $http.post(`${apiUrl}/business`, body).then(response => response.data);
+    },
     saveMetrics: (body) => {
       return $http.post(`${apiUrl}/metrics`, body).then(response => response.data);
     },

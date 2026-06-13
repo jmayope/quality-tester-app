@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.apps.pkador666.quality_api.dto.request.MetricRequest;
 import com.apps.pkador666.quality_api.model.ApiResponse;
 import com.apps.pkador666.quality_api.model.Metric;
 import com.apps.pkador666.quality_api.service.MetricService;
@@ -29,7 +30,7 @@ public class MetricController {
   }
 
   @PostMapping
-  public ResponseEntity<ApiResponse<Metric>> create(@RequestBody Metric newMetric) {
+  public ResponseEntity<ApiResponse<Metric>> create(@RequestBody MetricRequest newMetric) {
       return ResponseEntity.ok(ApiResponse.success(metricService.create(newMetric), "Creación Correcta"));
   }
   

@@ -43,6 +43,7 @@ app.controller("loginCtrl", ["$scope","mainService","$location","APP_CONFIG", "$
       Swal.close();
       // Disparar evento global
       $rootScope.$broadcast("userLogged");
+      localStorage.setItem('menu', JSON.stringify(APP_CONFIG.MENU[0]))
       $location.path("/entity");
     })
     .catch((err) => {

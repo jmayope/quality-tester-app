@@ -3,6 +3,7 @@ package com.apps.pkador666.quality_api.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.apps.pkador666.quality_api.dto.request.MetricScaleRequest;
 import com.apps.pkador666.quality_api.model.ApiResponse;
 import com.apps.pkador666.quality_api.model.MetricScale;
 import com.apps.pkador666.quality_api.service.MetricScaleService;
@@ -32,12 +33,12 @@ public class MetricScaleController {
   }
 
   @PostMapping
-  public ResponseEntity<ApiResponse<MetricScale>> create(@RequestBody MetricScale newMetricScale) {
+  public ResponseEntity<ApiResponse<MetricScale>> create(@RequestBody MetricScaleRequest newMetricScale) {
       return ResponseEntity.ok(ApiResponse.success(metricScaleService.create(newMetricScale), "Creación de Escala de Métrica Correcta"));
   }
   
   @PostMapping("list")
-  public ResponseEntity<ApiResponse<List<MetricScale>>> createMany(@RequestBody List<MetricScale> newMetricScales) {
+  public ResponseEntity<ApiResponse<List<MetricScale>>> createMany(@RequestBody List<MetricScaleRequest> newMetricScales) {
       return ResponseEntity.ok(ApiResponse.success(metricScaleService.createMany(newMetricScales), "Creación de lista de Escala de Metricas correcta"));
   }
   

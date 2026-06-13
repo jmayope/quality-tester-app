@@ -57,7 +57,7 @@ app.controller("indexCtrl", ["$scope", "$location", "APP_CONFIG", "$timeout", ($
 
   $scope.userLoged = {};
   $scope.loadData = function () {
-    $scope.userLoged = JSON.parse(localStorage.getItem(APP_CONFIG.TOKEN_NAME) || '{}');
+    $scope.userLoged = JSON.parse(localStorage.getItem(APP_CONFIG.TOKEN_NAME) || 'undefined');
   };
 
   $scope.menuSelected = undefined;
@@ -75,7 +75,7 @@ app.controller("indexCtrl", ["$scope", "$location", "APP_CONFIG", "$timeout", ($
     $scope.loadData();
     console.log($location.$$url);
     
-    let menuSelected = JSON.parse(localStorage.getItem("menu") || '');
+    let menuSelected = JSON.parse(localStorage.getItem("menu") || '{}');
     console.log(menuSelected);
     if (menuSelected) {
       $scope.initView = menuSelected.route;

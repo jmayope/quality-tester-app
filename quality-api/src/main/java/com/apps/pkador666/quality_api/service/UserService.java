@@ -8,7 +8,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.apps.pkador666.quality_api.dto.request.NewUserRequest;
+import com.apps.pkador666.quality_api.dto.request.UserRequest;
 import com.apps.pkador666.quality_api.model.Person;
 import com.apps.pkador666.quality_api.model.User;
 import com.apps.pkador666.quality_api.repository.AuthRepository;
@@ -43,7 +43,7 @@ public class UserService {
     return user;
   }
 
-  public User register(NewUserRequest newUser) {
+  public User register(UserRequest newUser) {
     User user = new User();
     user.setStatus(true);
 

@@ -9,7 +9,7 @@
         <input type="text" class="form-control text-uppercase" placeholder="BUSCAR POR TEXTO" aria-label="BUSCAR POR TEXTO" aria-describedby="basic-addon1">
       </div>
     </div>
-    <div class="col-3">
+    <div class="col-3" ng-repeat="entity in entities">
       <div class="card borderless rounded-semi-pill">
         <div class="card-body">
           <div class="row">
@@ -17,15 +17,13 @@
               <i class="fa fa-repeat fa-3x"></i>
             </div>
             <div class="col-9 pt-1">
-              <h2 class="text-primary-color">Entidad 1</h2>
+              <h2 class="text-primary-color">{{entity.name | uppercase}}</h2>
             </div>
             <div class="col-12 pt-2">
-              <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni doloremque blanditiis, facilis molestiae iusto provident nobis explicabo repudiandae repellat, praesentium placeat, pariatur totam! Dolore magni similique facere at provident hic.</span>
+              <span class="text-secondary">{{entity.description | uppercase}}</span>
             </div>
             <div class="col-12">
-              <span class="badge bg-light border-primary text-primary me-2">.Net</span>
-              <span class="badge bg-light border-primary text-primary me-2">C#</span>
-              <span class="badge bg-light border-primary text-primary me-2">C++</span>
+              <span class="badge bg-light border-primary text-primary me-2" ng-repeat="tech in e.technologies">{{tech}}</span>
             </div>
             <div class="col-6 mt-2">
               <button class="btn btn-sm btn-light text-danger">
@@ -109,7 +107,28 @@
                   No se tienen Elementos Registrables registrados
                 </div>
                 <div class="col-12" ng-if="newEntity.elements.length">
-
+                  <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="e in newEntity.elements">
+                      <div class="row">
+                        <div class="col-6">
+                          <span class="badge bg-success me-2">
+                            {{e.code | uppercase}}
+                          </span>
+                          <strong>{{e.name | uppercase}}</strong> <br>
+                          <small class="text-secondary">{{e.description | uppercase}}</small>
+                        </div>
+                        <div class="col-4 text-end">
+                          <span class="badge badge-light text-primary" ng-repeat="t in e.technologies">
+                            {{t}}
+                          </span>
+                        </div>
+                        <div class="col-2 pt-2 text-end">
+                          <i class="fa fa-pencil mr-2" ng-click="toggleEntity(e)"></i>
+                          <i class="fa fa-trash text-danger" ng-click="deleteItem(e)"></i>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
                 </div>
                 <div class="col-12" ng-if="newElement">
                   <div class="card">
@@ -151,7 +170,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-12 mt-3 text-center">
+                <div class="col-12 mt-3 text-center" ng-if="!newElement">
                   <button class="btn btn-primary btn-sm" ng-click="toggleElement()">
                     <i class="fa fa-plus me-1"></i>Nuevo Elemento
                   </button>

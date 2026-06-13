@@ -3,6 +3,7 @@ package com.apps.pkador666.quality_api.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.apps.pkador666.quality_api.dto.request.TypeRequest;
 import com.apps.pkador666.quality_api.model.ApiResponse;
 import com.apps.pkador666.quality_api.model.Type;
 import com.apps.pkador666.quality_api.service.TypeService;
@@ -32,7 +33,7 @@ public class TypeController {
   }
 
   @PostMapping
-  public ResponseEntity<ApiResponse<Type>> create(@RequestBody Type newType) {
+  public ResponseEntity<ApiResponse<Type>> create(@RequestBody TypeRequest newType) {
       return ResponseEntity.ok(ApiResponse.success(typeService.create(newType), "Creación correcta"));
   }
   

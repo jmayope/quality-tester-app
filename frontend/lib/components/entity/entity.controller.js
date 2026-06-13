@@ -1,4 +1,4 @@
-app.controller("entityCtrl", ["$scope", function($scope) {
+app.controller("entityCtrl", ["$scope", "mainService", function($scope, mainService) {
 
   $scope.isEntityOpen = false;
   $scope.newEntity = undefined;
@@ -18,7 +18,13 @@ app.controller("entityCtrl", ["$scope", function($scope) {
   }
 
   $scope.getEntities = () => {
-    
+    mainService.findAllEntities().then((result) => {
+      $scope.entities = result.data;
+      $scope.entities.map(e => {
+        e.technologies = e.technologies ? e.technologies.split(',') : []
+      });
+      // console.log(entities);
+    });
   }
 
 
@@ -65,11 +71,53 @@ app.controller("entityCtrl", ["$scope", function($scope) {
 
   $scope.saveEntity = () => {
 
-    Swal.fire({
-      icon: 'success',
-      text: 'Se grabo correctamente la entidad'
-    });
-    $scope.newEntity = undefined;
+    let newEntity = JSON.parse(JSON.stringify($scope.newEntity));
+    delete newEntity.elements;
+    mainService.saveEntities(newEntity).then((result) => {
+      console.log(result);
+      if (result.error.error) {
+        Swal.fire({
+          icon: 'error',
+          text: result.error.message
+        });
+        return;
+      }
+
+      let entityCreated = result.data;
+      let elements = JSON.parse(JSON.stringify($scope.newEntity.elements));
+      elements.map(e => {
+        e.businessId = entityCreated.id;
+        e.technologies = e.technologies ? e.technologies.join(',') : e.technologies;
+      });
+      mainService.saveManyEvaluableElements(elements).then((result) => {
+        console.log(result);
+        if (result.error.error) {
+          Swal.fire({
+            icon: 'error',
+            text: `Hubo un error al momento de grabar las evaluaciones. ER: ${result.error.message}`
+          });
+          return;
+        }
+        
+        Swal.fire({
+          icon: 'success',
+          text: 'Se grabo correctamente la entidad'
+        });
+        $scope.toggleEntity();
+        $scope.getEntities();
+        $scope.newEntity = undefined;
+
+      })
+      .catch((err) => {
+        console.log(err);
+      }) 
+
+    }) 
+    .catch((err) => {
+      console.log(err);
+    })
+
+    
   }
 
   $scope.toggleElement = (element = undefined) => {
@@ -92,8 +140,8 @@ app.controller("entityCtrl", ["$scope", function($scope) {
     $scope.newElement = undefined;
   }
 
-  $scope.saveEntity = () => {
-    console.log($scope.newEntity);
+  deleteItem = (entity) =>  {
+    console.log("Borrar entidad");
   }
 
 }])
