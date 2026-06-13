@@ -31,14 +31,14 @@ app.controller("loginCtrl", ["$scope","mainService","$location","APP_CONFIG", "$
     console.log($scope.credentials);
     mainService.auth($scope.credentials).then((response) => {
       console.log(response);
-      if (response.data.error.error) {
+      if (response.error.error) {
         Swal.fire({
           icon: 'error',
           text: response.data.message
         });
         return;
       }
-      let userLoged = response.data.data;
+      let userLoged = response.data;
       localStorage.setItem(APP_CONFIG.TOKEN_NAME, JSON.stringify(userLoged));
       Swal.close();
       // Disparar evento global

@@ -64,12 +64,22 @@ app.controller("indexCtrl", ["$scope", "$location", "APP_CONFIG", "$timeout", ($
   $scope.selectMenuItem = (menuItem) => {
     $scope.menuSelected = menuItem;
     console.log($scope.menuSelected);
+    localStorage.setItem('menu', JSON.stringify($scope.menuSelected));
+    if(!$scope.$$phase) {
+      $scope.$apply();
+    }
   }
 
   $scope.init = () => {
     console.log("Verificando ruta");
     $scope.loadData();
     console.log($location.$$url);
+    
+    let menuSelected = JSON.parse(localStorage.getItem("menu") || '');
+    console.log(menuSelected);
+    if (menuSelected) {
+      $scope.initView = menuSelected.route;
+    }
     $scope.selectMenuItem($scope.menu.find(m => m.route === $scope.initView || $location.$$url));
   }
 

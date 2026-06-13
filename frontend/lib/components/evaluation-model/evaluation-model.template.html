@@ -225,32 +225,40 @@
             </div>
           </div>
           <div class="row" ng-if="sectionSelected && sectionSelected.id === 3">
-            <div class="col-12 text-center text-secondary" ng-if="newEvaluationModel.sections && !newEvaluationModel.sections.length">
+            <div class="col-12 text-center text-danger" ng-if="newEvaluationModel.sections && !newEvaluationModel.sections.length">
               <i class="fa fa-times fa-3x"></i> <br>
               No se tiene registrado ninguna sección
             </div>
             <div class="col-12" ng-if="newEvaluationModel.sections && newEvaluationModel.sections.length">
-              {{newEvaluationModel | json}}
-              <ul class="list-group">
-                <li class="list-group-item" ng-repeat="s in newEvaluationModel.sections">
-                  <div class="row">
-                    <div class="col-12">
-                      <small class="text-secondary">
-                        {{s.name | uppercase}}
-                      </small>
-                    </div>
-                    <div class="col-12 text-center">
-                      <button class="btn btn-light btn-sm text-primary-color" ng-click="toggleMetric(s)" ng-if="!s.metric">
-                        <i class="fa fa-plus me-1"></i>Agregar
-                      </button>
-                      <span ng-if="s.metric">
-                        <small class="text-secondary">Se aplica: </small><br>
-                        {{s.metric.name | uppercase}}
-                      </span>
-                    </div>
-                  </div>
-                </li>
-              </ul>
+              <div class="row">
+                <div class="col-12 text-center text-danger" ng-if="!metrics.length">
+                  <i class="fa fa-times fa-3x"></i> <br>
+                  No se tiene registrado ninguna métrica.
+                </div>
+                <div class="col-12" ng-if="metrics.length">
+                  {{newEvaluationModel | json}}
+                  <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="s in newEvaluationModel.sections">
+                      <div class="row">
+                        <div class="col-12">
+                          <small class="text-secondary">
+                            {{s.name | uppercase}}
+                          </small>
+                        </div>
+                        <div class="col-12 text-center">
+                          <button class="btn btn-light btn-sm text-primary-color" ng-click="toggleMetric(s)" ng-if="!s.metric">
+                            <i class="fa fa-plus me-1"></i>Agregar
+                          </button>
+                          <span ng-if="s.metric">
+                            <small class="text-secondary">Se aplica: </small><br>
+                            {{s.metric.name | uppercase}}
+                          </span>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </form>
