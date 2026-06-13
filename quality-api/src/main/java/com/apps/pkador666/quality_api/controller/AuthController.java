@@ -3,6 +3,7 @@ package com.apps.pkador666.quality_api.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.apps.pkador666.quality_api.dto.request.UserRequest;
 import com.apps.pkador666.quality_api.model.ApiResponse;
 import com.apps.pkador666.quality_api.model.User;
 import com.apps.pkador666.quality_api.service.UserService;
@@ -22,7 +23,7 @@ public class AuthController {
   }
 
   @PostMapping("register")
-  public ResponseEntity<ApiResponse<User>> register(@RequestBody User newUser) {
+  public ResponseEntity<ApiResponse<User>> register(@RequestBody UserRequest newUser) {
       try {
         User userCreated = userService.register(newUser);
         return ResponseEntity.ok(ApiResponse.success(userCreated, "Registro correcto."));

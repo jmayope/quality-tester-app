@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.apps.pkador666.quality_api.dto.request.BusinessRequest;
 import com.apps.pkador666.quality_api.model.Business;
 import com.apps.pkador666.quality_api.repository.BusinessRepository;
 
@@ -22,11 +23,11 @@ public class BusinessService {
     return businessRepository.findAll();
   }
 
-  public Business create(String name, String description, Boolean status) {
+  public Business create(BusinessRequest business) {
     Business newBusiness = new Business();
-    newBusiness.setName(name);
-    newBusiness.setDescription(description);
-    newBusiness.setStatus(status);
+    newBusiness.setName(business.getName());
+    newBusiness.setDescription(business.getDescription());
+    newBusiness.setStatus(business.getStatus());
     return businessRepository.save(newBusiness);
   }
 

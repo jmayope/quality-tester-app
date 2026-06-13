@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.apps.pkador666.quality_api.dto.request.UserRequest;
 import com.apps.pkador666.quality_api.model.ApiResponse;
 import com.apps.pkador666.quality_api.model.User;
 import com.apps.pkador666.quality_api.repository.UserRepository;
@@ -32,7 +33,7 @@ public class UserController {
   }
 
   @PostMapping
-  public ResponseEntity<ApiResponse<User>> create(@RequestBody User newUser) {
+  public ResponseEntity<ApiResponse<User>> create(@RequestBody UserRequest newUser) {
     User userCreated = userService.register(newUser);
     ApiResponse<User> response = ApiResponse.success(userCreated, "Creación Correcta");
     return ResponseEntity.ok(response);

@@ -1,25 +1,31 @@
 package com.apps.pkador666.quality_api.service;
 
+import com.apps.pkador666.quality_api.repository.PersonRepository;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.apps.pkador666.quality_api.dto.request.NewUserRequest;
+import com.apps.pkador666.quality_api.model.Person;
 import com.apps.pkador666.quality_api.model.User;
 import com.apps.pkador666.quality_api.repository.AuthRepository;
 import com.apps.pkador666.quality_api.repository.UserRepository;
 
 @Service
 public class UserService {
+  private final PersonRepository personRepository;
   private final AuthRepository authRepository;
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
-  public UserService(AuthRepository authRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+  public UserService(AuthRepository authRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, PersonRepository personRepository) {
     this.authRepository = authRepository;
     this.passwordEncoder = passwordEncoder;
     this.userRepository = userRepository;
+    this.personRepository = personRepository;
   }
 
   public List<User> findAll() {
@@ -37,11 +43,13 @@ public class UserService {
     return user;
   }
 
-  public User register(User newUser) {
+  public User register(NewUserRequest newUser) {
     User user = new User();
     user.setStatus(true);
 
-    user.setPerson(newUser.getPerson());
+    Optional<Person> personFound = personRepository.findById(newUser.getPersonId());
+
+    user.setPerson(personFound.get());
     user.setUsername(newUser.getUsername());
     user.setPassword(passwordEncoder.encode(newUser.getPassword()));
     user.setIsAdmin(newUser.getIsAdmin());

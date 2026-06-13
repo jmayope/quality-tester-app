@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.apps.pkador666.quality_api.dto.request.BusinessUserRequest;
 import com.apps.pkador666.quality_api.model.Business;
 import com.apps.pkador666.quality_api.model.BusinessUser;
 import com.apps.pkador666.quality_api.model.User;
@@ -28,13 +29,13 @@ public class BusinessUserService {
     return businessUserRepository.findAll();
   }
 
-  public BusinessUser create(Long businessId, Long userId) {
-    BusinessUser newBusinessUser = new BusinessUser();
-    Optional<Business> businessFound = businessRepository.findById(businessId);
-    newBusinessUser.setBusiness(businessFound.get());;
-    Optional<User> userFound = userRepository.findById(userId);
-    newBusinessUser.setUser(userFound.get());
-    return businessUserRepository.save(newBusinessUser);
+  public BusinessUser create(BusinessUserRequest newBusinessUser) {
+    BusinessUser businessUserCreated = new BusinessUser();
+    Optional<Business> businessFound = businessRepository.findById(newBusinessUser.getBusinessId());
+    businessUserCreated.setBusiness(businessFound.get());;
+    Optional<User> userFound = userRepository.findById(newBusinessUser.getUserId());
+    businessUserCreated.setUser(userFound.get());
+    return businessUserRepository.save(businessUserCreated);
   }
 
   public Boolean deleteOne(Long id) {
