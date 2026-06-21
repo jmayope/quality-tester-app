@@ -1,29 +1,46 @@
-package com.apps.pkador666.quality_api.dto.request;
+package com.apps.pkador666.quality_api.dto.response;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
-import com.apps.pkador666.quality_api.model.EvaluableElement;
-
-public class BusinessRequest {
+public class EvaluationSectionResponse {
+  
   private Optional<Long> id;
+  private Long evaluationModelId;
+  private Long parent;
   private String name;
+  private Long sectionOrder;
   private String description;
   private Optional<Boolean> status;
-  private List<EvaluableElementRequest> elements;
-  private Optional<LocalDateTime> createAt;
+  
   public Optional<Long> getId() {
     return id;
   }
   public void setId(Optional<Long> id) {
     this.id = id;
   }
+  public Long getEvaluationModelId() {
+    return evaluationModelId;
+  }
+  public void setEvaluationModelId(Long evaluationModelId) {
+    this.evaluationModelId = evaluationModelId;
+  }
+  public Long getParent() {
+    return parent;
+  }
+  public void setParent(Long parent) {
+    this.parent = parent;
+  }
   public String getName() {
     return name;
   }
   public void setName(String name) {
     this.name = name;
+  }
+  public Long getSectionOrder() {
+    return sectionOrder;
+  }
+  public void setSectionOrder(Long sectionOrder) {
+    this.sectionOrder = sectionOrder;
   }
   public String getDescription() {
     return description;
@@ -37,20 +54,5 @@ public class BusinessRequest {
   public void setStatus(Optional<Boolean> status) {
     this.status = status;
   }
-  public List<EvaluableElementRequest> getElements() {
-    return elements;
-  }
-  public void setElements(List<EvaluableElementRequest> elements) {
-    this.elements = elements;
-  }
-  public Optional<LocalDateTime> getCreateAt() {
-    return createAt;
-  }
-  public void setCreateAt(Optional<LocalDateTime> createAt) {
-    this.createAt = createAt;
-  }
-
   
-  
-    
 }

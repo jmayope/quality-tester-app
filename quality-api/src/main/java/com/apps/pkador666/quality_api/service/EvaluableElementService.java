@@ -29,7 +29,7 @@ public class EvaluableElementService {
 
   public EvaluableElement create(EvaluableElementRequest evaluableElement) {
     EvaluableElement newEvaluableElement = new EvaluableElement();
-    Optional<Business> businessFound = businessRepository.findById(evaluableElement.getBusinessId());
+    Optional<Business> businessFound = businessRepository.findById(evaluableElement.getBusinessId().get());
     newEvaluableElement.setBusiness(businessFound.get());
     newEvaluableElement.setCode(evaluableElement.getCode());
     newEvaluableElement.setName(evaluableElement.getName());
@@ -45,7 +45,7 @@ public class EvaluableElementService {
 
     evaluableElements.stream().forEach(e -> {
       EvaluableElement newEvaluableElement = new EvaluableElement();
-      Optional<Business> businessFound = businessRepository.findById(e.getBusinessId());
+      Optional<Business> businessFound = businessRepository.findById(e.getBusinessId().get());
       newEvaluableElement.setBusiness(businessFound.get());
       newEvaluableElement.setCode(e.getCode());
       newEvaluableElement.setName(e.getName());
@@ -53,6 +53,28 @@ public class EvaluableElementService {
       newEvaluableElement.setTechnologies(e.getTechnologies());
       newEvaluableElement.setStatus(e.getStatus() == null ? true : e.getStatus().get());
       elements.add(newEvaluableElement);
+    });
+
+    return evaluableElementRepository.saveAll(elements);
+  }
+
+  public List<EvaluableElement> updateMany(List<EvaluableElementRequest> evaluableElements) {
+
+    List<EvaluableElement> elements = new ArrayList<EvaluableElement>();
+
+    evaluableElements.stream().forEach(e -> {
+      EvaluableElement updateEvaluableElement = new EvaluableElement();
+      Optional<Business> businessFound = businessRepository.findById(e.getBusinessId().get());
+      if (e.getId() != null) {
+        updateEvaluableElement.setId(e.getId().get());
+      }
+      updateEvaluableElement.setBusiness(businessFound.get());
+      updateEvaluableElement.setCode(e.getCode());
+      updateEvaluableElement.setName(e.getName());
+      updateEvaluableElement.setDescription(e.getDescription());
+      updateEvaluableElement.setTechnologies(e.getTechnologies());
+      updateEvaluableElement.setStatus(e.getStatus() == null ? true : e.getStatus().get());
+      elements.add(updateEvaluableElement);
     });
 
     return evaluableElementRepository.saveAll(elements);

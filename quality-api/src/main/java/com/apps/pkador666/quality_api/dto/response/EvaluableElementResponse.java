@@ -1,56 +1,88 @@
-package com.apps.pkador666.quality_api.dto.request;
+package com.apps.pkador666.quality_api.dto.response;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
-import com.apps.pkador666.quality_api.model.EvaluableElement;
-
-public class BusinessRequest {
+public class EvaluableElementResponse {
   private Optional<Long> id;
+
+  private Optional<Long> businessId;
+
+  private String code;
+
   private String name;
+
   private String description;
+
+  private String technologies;
+
   private Optional<Boolean> status;
-  private List<EvaluableElementRequest> elements;
+
   private Optional<LocalDateTime> createAt;
+
   public Optional<Long> getId() {
     return id;
   }
+
   public void setId(Optional<Long> id) {
     this.id = id;
   }
+
+  public Optional<Long> getBusinessId() {
+    return businessId;
+  }
+
+  public void setBusinessId(Optional<Long> businessId) {
+    this.businessId = businessId;
+  }
+
+  public String getCode() {
+    return code;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
+  }
+
   public String getName() {
     return name;
   }
+
   public void setName(String name) {
     this.name = name;
   }
+
   public String getDescription() {
     return description;
   }
+
   public void setDescription(String description) {
     this.description = description;
   }
+
+  public String getTechnologies() {
+    return technologies;
+  }
+
+  public void setTechnologies(String technologies) {
+    this.technologies = technologies;
+  }
+
   public Optional<Boolean> getStatus() {
     return status;
   }
+
   public void setStatus(Optional<Boolean> status) {
     this.status = status;
   }
-  public List<EvaluableElementRequest> getElements() {
-    return elements;
-  }
-  public void setElements(List<EvaluableElementRequest> elements) {
-    this.elements = elements;
-  }
+
   public Optional<LocalDateTime> getCreateAt() {
     return createAt;
   }
+
   public void setCreateAt(Optional<LocalDateTime> createAt) {
     this.createAt = createAt;
   }
-
   
   
-    
 }

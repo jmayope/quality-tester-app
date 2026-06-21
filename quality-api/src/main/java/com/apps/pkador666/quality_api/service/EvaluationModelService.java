@@ -1,17 +1,18 @@
 package com.apps.pkador666.quality_api.service;
 
 import com.apps.pkador666.quality_api.repository.EvaluationModelRepository;
-import com.apps.pkador666.quality_api.repository.EvaluationSectionRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.apps.pkador666.quality_api.dto.request.EvaluationModelRequest;
-import com.apps.pkador666.quality_api.model.EvaluationMetric;
+import com.apps.pkador666.quality_api.dto.response.EvaluationMetricResponse;
+import com.apps.pkador666.quality_api.dto.response.EvaluationModelResponse;
+import com.apps.pkador666.quality_api.dto.response.EvaluationSectionResponse;
 import com.apps.pkador666.quality_api.model.EvaluationModel;
-import com.apps.pkador666.quality_api.model.EvaluationSection;
 
 @Service
 public class EvaluationModelService {
@@ -29,8 +30,26 @@ public class EvaluationModelService {
     this.evaluationMetricService = evaluationMetricService;
   }
 
-  public List<EvaluationModel> findAll() {
-    return evaluationModelRepository.findAll();
+  public List<EvaluationModelResponse> findAll() {
+    List<EvaluationModel> evaluations = evaluationModelRepository.findAll();
+    List<EvaluationModelResponse> response = new ArrayList<EvaluationModelResponse>();
+    evaluations.forEach(e -> {
+      EvaluationModelResponse evaluation = new EvaluationModelResponse();
+      evaluation.setId(Optional.of(e.getId()));
+      evaluation.setAbbr(e.getAbbr());
+      evaluation.setCode(e.getCode());
+      evaluation.setName(e.getName());
+      evaluation.setStatus(Optional.of(e.getStatus()));
+      evaluation.setCreatedAt(Optional.of(e.getCreatedAt()));
+      evaluation.setDescription(e.getDescription());
+      List<EvaluationSectionResponse> sections = evaluationSectionService.findByEvaluationModelId(e.getId());
+      evaluation.setSections(sections);
+      List<EvaluationMetricResponse> metrics = evaluationMetricService.findByEvaluationModelId(e.getId());
+      evaluation.setMetrics(metrics);
+      response.add(evaluation);
+    });
+
+    return response;
   }
 
   public EvaluationModel create(EvaluationModelRequest evaluationModel) {

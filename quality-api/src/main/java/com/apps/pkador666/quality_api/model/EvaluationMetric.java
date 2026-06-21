@@ -40,6 +40,14 @@ public class EvaluationMetric {
     this.evaluationModel = evaluationModel;
   }
 
+  public EvaluationSection getEvaluationSection() {
+    return evaluationSection;
+  }
+
+  public void setEvaluationSection(EvaluationSection evaluationSection) {
+    this.evaluationSection = evaluationSection;
+  }
+
   public Metric getMetric() {
     return metric;
   }
@@ -56,5 +64,6 @@ public class EvaluationMetric {
     this.status = status;
   }
 
+  
   
 }

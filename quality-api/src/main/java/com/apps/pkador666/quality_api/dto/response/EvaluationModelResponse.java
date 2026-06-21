@@ -1,19 +1,22 @@
-package com.apps.pkador666.quality_api.dto.request;
+package com.apps.pkador666.quality_api.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public class EvaluationModelRequest {
+import com.apps.pkador666.quality_api.dto.request.EvaluationSectionRequest;
+
+public class EvaluationModelResponse {
+  
   private Optional<Long> id;
   private String code;
   private String abbr;
   private String name;
   private String description;
-  private List<EvaluationSectionRequest> sections;
-  private List<EvaluationMetricRequest> metrics;
+  private List<EvaluationSectionResponse> sections;
+  private List<EvaluationMetricResponse> metrics;
   private Optional<Boolean> status;
-
-
+  private Optional<LocalDateTime> createdAt;
   public Optional<Long> getId() {
     return id;
   }
@@ -44,16 +47,16 @@ public class EvaluationModelRequest {
   public void setDescription(String description) {
     this.description = description;
   }
-  public List<EvaluationSectionRequest> getSections() {
+  public List<EvaluationSectionResponse> getSections() {
     return sections;
   }
-  public void setSections(List<EvaluationSectionRequest> sections) {
+  public void setSections(List<EvaluationSectionResponse> sections) {
     this.sections = sections;
   }
-  public List<EvaluationMetricRequest> getMetrics() {
+  public List<EvaluationMetricResponse> getMetrics() {
     return metrics;
   }
-  public void setMetrics(List<EvaluationMetricRequest> metrics) {
+  public void setMetrics(List<EvaluationMetricResponse> metrics) {
     this.metrics = metrics;
   }
   public Optional<Boolean> getStatus() {
@@ -62,6 +65,13 @@ public class EvaluationModelRequest {
   public void setStatus(Optional<Boolean> status) {
     this.status = status;
   }
+  public Optional<LocalDateTime> getCreatedAt() {
+    return createdAt;
+  }
+  public void setCreatedAt(Optional<LocalDateTime> createdAt) {
+    this.createdAt = createdAt;
+  }
+  
   
   
   

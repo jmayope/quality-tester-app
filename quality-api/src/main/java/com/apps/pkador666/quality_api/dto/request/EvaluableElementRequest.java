@@ -8,7 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 public class EvaluableElementRequest {
   private Optional<Long> id;
 
-  private Long businessId;
+  private Optional<Long> businessId;
 
   private String code;
 
@@ -30,11 +30,11 @@ public class EvaluableElementRequest {
     this.id = id;
   }
 
-  public Long getBusinessId() {
+  public Optional<Long> getBusinessId() {
     return businessId;
   }
 
-  public void setBusinessId(Long businessId) {
+  public void setBusinessId(Optional<Long> businessId) {
     this.businessId = businessId;
   }
 
@@ -86,5 +86,5 @@ public class EvaluableElementRequest {
     this.createAt = createAt;
   }
 
-      
+        
 }

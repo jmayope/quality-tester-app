@@ -47,8 +47,9 @@ public class BusinessService {
     Business newBusiness = new Business();
     newBusiness.setName(business.getName());
     newBusiness.setDescription(business.getDescription());
-    newBusiness.setStatus(business.getStatus());
-    return businessRepository.save(newBusiness);
+    newBusiness.setStatus(business.getStatus().get() == null ? true : false);
+    Business businessCreated = businessRepository.save(newBusiness);
+    return businessCreated;
   }
 
   public Business updateOne(Long id, String name, String description, Boolean status) {
@@ -56,6 +57,7 @@ public class BusinessService {
     businessToUpdate.get().setName(name);
     businessToUpdate.get().setDescription(description);
     businessToUpdate.get().setStatus(status);
+    businessToUpdate.get().setCreateAt(LocalDateTime.now());
     return businessRepository.save(businessToUpdate.get());
   }
 
