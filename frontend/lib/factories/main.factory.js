@@ -45,6 +45,9 @@ app.factory("mainService", ["$http", "APP_CONFIG", function($http, APP_CONFIG) {
     saveEntities: (body) => {
       return $http.post(`${apiUrl}/business`, body).then(response => response.data);
     },
+    updateEntities: (body) => {
+      return $http.put(`${apiUrl}/business`, body).then(response => response.data);
+    },
     saveMetrics: (body) => {
       return $http.post(`${apiUrl}/metrics`, body).then(response => response.data);
     },

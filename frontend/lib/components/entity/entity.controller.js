@@ -10,6 +10,8 @@ app.controller("entityCtrl", ["$scope", "mainService", function($scope, mainServ
     {id: 2, name: "Elementos Evaluables"}
   ];
 
+  $scope.filter = {};
+
   $scope.sectionSelected = undefined;
 
   $scope.init = () => {
@@ -21,9 +23,18 @@ app.controller("entityCtrl", ["$scope", "mainService", function($scope, mainServ
     mainService.findAllEntities().then((result) => {
       $scope.entities = result.data;
       $scope.entities.map(e => {
-        e.technologies = e.technologies ? e.technologies.split(',') : []
+        e.elements.map(v => {
+          v.technologies = v.technologies ? v.technologies.split(',') : [];
+        });
       });
-      // console.log(entities);
+    })
+    .catch((err) => {
+      console.log(err);
+      Swal.fire({
+        icon: 'error',
+        text: `${err.toString()}`
+      });
+      return;
     });
   }
 
@@ -70,35 +81,23 @@ app.controller("entityCtrl", ["$scope", "mainService", function($scope, mainServ
   }
 
   $scope.saveEntity = () => {
-
     let newEntity = JSON.parse(JSON.stringify($scope.newEntity));
-    delete newEntity.elements;
-    mainService.saveEntities(newEntity).then((result) => {
-      console.log(result);
-      if (result.error.error) {
-        Swal.fire({
-          icon: 'error',
-          text: result.error.message
-        });
-        return;
-      }
-
-      let entityCreated = result.data;
-      let elements = JSON.parse(JSON.stringify($scope.newEntity.elements));
-      elements.map(e => {
-        e.businessId = entityCreated.id;
-        e.technologies = e.technologies ? e.technologies.join(',') : e.technologies;
+    if (!$scope.newEntity.editing) {
+      delete newEntity.editing;
+      newEntity.elements.map( e => {
+        e.technologies = e.technologies.join(",");
       });
-      mainService.saveManyEvaluableElements(elements).then((result) => {
+      mainService.saveEntities(newEntity).then((result) => {
         console.log(result);
         if (result.error.error) {
           Swal.fire({
             icon: 'error',
-            text: `Hubo un error al momento de grabar las evaluaciones. ER: ${result.error.message}`
+            text: result.error.message
           });
           return;
         }
         
+        let entityCreated = result.data;
         Swal.fire({
           icon: 'success',
           text: 'Se grabo correctamente la entidad'
@@ -106,16 +105,41 @@ app.controller("entityCtrl", ["$scope", "mainService", function($scope, mainServ
         $scope.toggleEntity();
         $scope.getEntities();
         $scope.newEntity = undefined;
-
-      })
+  
+      }) 
       .catch((err) => {
         console.log(err);
+      })
+    } else {
+      delete newEntity.editing;
+      newEntity.elements.map( e => {
+        e.technologies = e.technologies.join(",");
+        e.businessId = newEntity.id;
+        delete e.business;
+      });
+      mainService.updateEntities(newEntity).then((result) => {
+        console.log(result);
+        if (result.error.error) {
+          Swal.fire({
+            icon: 'error',
+            text: result.error.message
+          });
+          return;
+        }
+        
+        let entityCreated = result.data;
+        Swal.fire({
+          icon: 'success',
+          text: 'Se grabó correctamente la entidad'
+        });
+        $scope.toggleEntity();
+        $scope.getEntities();
+        $scope.newEntity = undefined;
       }) 
-
-    }) 
-    .catch((err) => {
-      console.log(err);
-    })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
 
     
   }
@@ -129,6 +153,7 @@ app.controller("entityCtrl", ["$scope", "mainService", function($scope, mainServ
         $scope.newElement = JSON.parse(JSON.stringify(element));
       } else {
         $scope.newElement = {
+          businessId: $scope.newEntity.id,
           technologies: []
         };
       }
@@ -142,6 +167,7 @@ app.controller("entityCtrl", ["$scope", "mainService", function($scope, mainServ
 
   deleteItem = (entity) =>  {
     console.log("Borrar entidad");
+
   }
 
 }])
