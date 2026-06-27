@@ -57,12 +57,14 @@ public class EvaluationModelController {
       // newEvaluationModel.setStatus(evaluationModel.getStatus() == null ? true : evaluationModel.getStatus().get());
       // newEvaluationModel.setCreatedAt(LocalDateTime.now());
       EvaluationModel evaluationModelCreated = evaluationModelService.create(evaluationModel);
-      evaluationModel.getSections().forEach(s -> {
-        s.setEvaluationModelId(evaluationModelCreated.getId());
-      });
-      evaluationModel.getMetrics().forEach(m -> {
-        m.setEvaluationModelId(evaluationModelCreated.getId());
-      });
+      if (evaluationModel.getSections() != null) {
+        evaluationSectionService.saveSections(evaluationModelCreated, evaluationModel.getSections());
+      }
+      if (evaluationModel.getMetrics() != null) {
+        evaluationModel.getMetrics().forEach(m -> {
+          m.setEvaluationModelId(evaluationModelCreated.getId());
+        });
+      }
 
       // HACER
       // List<EvaluationSectionResponse> sections = evaluationMetricService.createMany(null)

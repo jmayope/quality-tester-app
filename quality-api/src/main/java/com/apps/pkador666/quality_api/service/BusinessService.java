@@ -47,7 +47,7 @@ public class BusinessService {
     Business newBusiness = new Business();
     newBusiness.setName(business.getName());
     newBusiness.setDescription(business.getDescription());
-    newBusiness.setStatus(business.getStatus().get() == null ? true : false);
+    newBusiness.setStatus(business.getStatus() == null ? true : business.getStatus().get());
     Business businessCreated = businessRepository.save(newBusiness);
     return businessCreated;
   }

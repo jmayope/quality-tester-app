@@ -1,5 +1,8 @@
 package com.apps.pkador666.quality_api.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -14,8 +17,17 @@ public class EvaluationSection {
   @JoinColumn(name = "evaluation_model_id", nullable = false)
   private EvaluationModel evaluationModel;
 
-  @Column()
-  private Long parent;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "parent_section_id")
+  private EvaluationSection parent;
+
+  @OneToMany(
+          mappedBy = "parent",
+          cascade = CascadeType.ALL,
+          orphanRemoval = true
+  )
+  @OrderBy("sectionOrder ASC")
+  private List<EvaluationSection> sections = new ArrayList<>();
 
   @Column()
   private String name;
@@ -45,12 +57,20 @@ public class EvaluationSection {
     this.evaluationModel = evaluationModel;
   }
 
-  public Long getParent() {
+  public EvaluationSection getParent() {
     return parent;
   }
 
-  public void setParent(Long parent) {
+  public void setParent(EvaluationSection parent) {
     this.parent = parent;
+  }
+
+  public List<EvaluationSection> getSections() {
+    return sections;
+  }
+
+  public void setSections(List<EvaluationSection> sections) {
+    this.sections = sections;
   }
 
   public String getName() {
@@ -84,5 +104,7 @@ public class EvaluationSection {
   public void setStatus(Boolean status) {
     this.status = status;
   }
+
+    
 
 }

@@ -1,11 +1,13 @@
 package com.apps.pkador666.quality_api.dto.request;
 
+import java.util.List;
 import java.util.Optional;
 
 public class EvaluationSectionRequest {
   private Optional<Long> id;
   private Long evaluationModelId;
-  private Long parent;
+  private List<EvaluationSectionRequest> sections;
+
   private String name;
   private Long sectionOrder;
   private String description;
@@ -22,11 +24,11 @@ public class EvaluationSectionRequest {
   public void setEvaluationModelId(Long evaluationModelId) {
     this.evaluationModelId = evaluationModelId;
   }
-  public Long getParent() {
-    return parent;
+  public List<EvaluationSectionRequest> getSections() {
+    return sections;
   }
-  public void setParent(Long parent) {
-    this.parent = parent;
+  public void setSections(List<EvaluationSectionRequest> sections) {
+    this.sections = sections;
   }
   public String getName() {
     return name;
@@ -52,6 +54,5 @@ public class EvaluationSectionRequest {
   public void setStatus(Optional<Boolean> status) {
     this.status = status;
   }
-  
   
 }
