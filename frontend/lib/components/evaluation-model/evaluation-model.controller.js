@@ -51,29 +51,45 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
   $scope.newSection = undefined;
   $scope.newSubSection = undefined;
   $scope.sectionToAssign = undefined;
+  $scope.sectionToAddSubSection = undefined;
+  $scope.sectionsToShow = [];
+  $scope.evaluationMetrics = [];
+
 
   $scope.sections = [
     {id: 1, name: "General", icon: 'fa fa-cog'},
     {id: 2, name: "Secciones", icon: 'fa fa-table-columns'},
+  ];
+
+  $scope.additionSections = [
     {id: 3, name: "Métricas", icon: 'fa fa-ruler'},
   ];
   $scope.sectionSelected = undefined;
 
-  $scope.toggleEvaluationModal = (item = undefined) => {
+  $scope.toggleEvaluationModal = async (item = undefined) => {
     if ($scope.isEvaluationOpen) {
       $scope.isEvaluationOpen = false;
     } else { 
       $scope.isEvaluationOpen = true;
       $scope.newEvaluationModel = {
         sections: [],
-        evaluationMetrics: []
+        metrics: []
       };
+      $scope.sectionsToShow = $scope.sections;
       $scope.selectSection($scope.sections[0]);
       if (item) {
         $scope.newEvaluationModel = item;
         $scope.newEvaluationModel.sections = $scope.newEvaluationModel.sections || [];
-        $scope.newEvaluationModel.evaluationMetrics = $scope.newEvaluationModel.evaluationMetrics || [];
+        $scope.newEvaluationModel.metrics = $scope.newEvaluationModel.metrics || [];
         $scope.newEvaluationModel.editing = true;
+        $scope.sectionsToShow = [...$scope.sectionsToShow, ...$scope.additionSections];
+        let result = await mainService.findAllEvaluationMetricsByEvaluationModelId($scope.newEvaluationModel.id);
+        console.log(result);
+        console.log($scope.newEvaluationModel);
+        $scope.evaluationMetrics = result.data;
+        $scope.newEvaluationModel.sections.map(s => {
+          s.metric = $scope.evaluationMetrics.find(e => e.evaluationSection.id === s.id).metric || {};
+        })
       }
     }
   }
@@ -173,9 +189,11 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
     if ($scope.newSubSection) {
       $scope.newSubSection = undefined;
     } else {
+      
       if (drop) {
         section.sections.splice(section.sections.indexOf(subsection), 1);
       } else {
+        $scope.sectionToAddSubSection = section;
         $scope.newSubSection = {};
         if (subsection) {
           $scope.newSubSection = JSON.parse(JSON.stringify(subsection));
@@ -192,6 +210,7 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
       section.sections.push($scope.newSubSection);
     }
     $scope.newSubSection = undefined;
+    $scope.sectionToAddSubSection = undefined;
   }
 
   $scope.saveSection = () => {
@@ -199,13 +218,28 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
     $scope.newSection = undefined;
   }
 
-  $scope.toggleMetric = (section = undefined) => {
+  $scope.toggleMetric = async (section = undefined) => {
     if ($scope.isMetricOpen) {
+      let newEvaluationMetric = {
+        evaluationModelId: $scope.newEvaluationModel.id,
+        metricId: $scope.sectionToAssign.metric.id,
+        evaluationSectionId: $scope.sectionToAssign.id,
+        status: true
+      };
+      
+      let result = await mainService.saveEvaluationMetrics([newEvaluationMetric]);
+      console.log(result);
       $scope.isMetricOpen = false;
       $scope.sectionToAssign = undefined;
+      if(!$scope.$$phase) {
+        $scope.$apply();
+      }
     } else {
       $scope.sectionToAssign = section;
       $scope.isMetricOpen = true;
+      $scope.newEvaluationModel.metrics.push({
+        evaluationSectionId: section
+      })
     }
   }
 }]);

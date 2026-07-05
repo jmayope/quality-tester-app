@@ -27,6 +27,10 @@ public class MetricService {
     return metricRepository.findAll();
   }
 
+  public Optional<Metric> findById(Long id) {
+    return metricRepository.findById(id);
+  }
+
   public Metric create(MetricRequest metric) {
     Metric newMetric = new Metric();
 

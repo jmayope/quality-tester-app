@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.apps.pkador666.quality_api.dto.request.EvaluationModelRequest;
 import com.apps.pkador666.quality_api.dto.request.EvaluationSectionRequest;
 import com.apps.pkador666.quality_api.dto.response.EvaluationSectionResponse;
 import com.apps.pkador666.quality_api.model.EvaluationModel;
@@ -27,6 +28,10 @@ public class EvaluationSectionService {
     return evaluationSectionRepository.findAll();
   }
 
+  public Optional<EvaluationSection> findById(Long id) {
+    return evaluationSectionRepository.findById(id);
+  }
+
   @Transactional
     public void saveSections(
             EvaluationModel evaluation,
@@ -39,7 +44,6 @@ public class EvaluationSectionService {
                     evaluation,
                     null
             );
-
             evaluationSectionRepository.save(section);
         }
 
@@ -100,9 +104,11 @@ public class EvaluationSectionService {
 
     response.setId(Optional.of(entity.getId()));
     response.setName(entity.getName());
+    response.setEvaluationModelId(entity.getEvaluationModel().getId());
     response.setDescription(entity.getDescription());
+    response.setParent(entity.getParent() == null ? null : entity.getParent().getId());
     response.setSectionOrder(entity.getSectionOrder());
-    response.setStatus(Optional.of(entity.getStatus()));
+    response.setStatus(Optional.of(entity.getStatus() == null ? true : false));
 
     if (entity.getSections() != null) {
 

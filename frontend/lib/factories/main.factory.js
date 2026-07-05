@@ -39,6 +39,14 @@ app.factory("mainService", ["$http", "APP_CONFIG", function($http, APP_CONFIG) {
       return $http.post(`${apiUrl}/evaluable-elements/list`, body).then(response => response.data);
     },
 
+    saveEvaluationMetrics: (body) => {
+      return $http.post(`${apiUrl}/evaluation-metrics/list`, body).then(response => response.data);
+    },
+
+    findAllEvaluationMetricsByEvaluationModelId: (evaluationModelId) => {
+      return $http.get(`${apiUrl}/evaluation-metrics/by-evaluation-model/${evaluationModelId}`).then(response => response.data);
+    },
+
     findAllEntities: () => {
       return $http.get(`${apiUrl}/business`).then(response => response.data);
     },

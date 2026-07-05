@@ -44,12 +44,16 @@ public class EvaluationModelService {
       evaluation.setDescription(e.getDescription());
       List<EvaluationSectionResponse> sections = evaluationSectionService.findByEvaluationModelId(e.getId());
       evaluation.setSections(sections);
-      List<EvaluationMetricResponse> metrics = evaluationMetricService.findByEvaluationModelId(e.getId());
+      List<EvaluationMetricResponse> metrics = evaluationMetricService.findByEvaluationModelIdEntity(e.getId());
       evaluation.setMetrics(metrics);
       response.add(evaluation);
     });
 
     return response;
+  }
+
+  public Optional<EvaluationModel> findById(Long id) {
+    return evaluationModelRepository.findById(id);
   }
 
   public EvaluationModel create(EvaluationModelRequest evaluationModel) {

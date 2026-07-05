@@ -48,27 +48,10 @@ public class EvaluationModelController {
   @PostMapping
   public ResponseEntity<ApiResponse<EvaluationModelResponse>> save(@RequestBody EvaluationModelRequest evaluationModel) {
     try {
-      // evaluationModelService.create(evaluationModel)
-      // EvaluationModel newEvaluationModel = new EvaluationModel();
-      // newEvaluationModel.setAbbr(evaluationModel.getAbbr());
-      // newEvaluationModel.setCode(evaluationModel.getCode());
-      // newEvaluationModel.setDescription(evaluationModel.getDescription());
-      // newEvaluationModel.setName(evaluationModel.getName());
-      // newEvaluationModel.setStatus(evaluationModel.getStatus() == null ? true : evaluationModel.getStatus().get());
-      // newEvaluationModel.setCreatedAt(LocalDateTime.now());
       EvaluationModel evaluationModelCreated = evaluationModelService.create(evaluationModel);
       if (evaluationModel.getSections() != null) {
         evaluationSectionService.saveSections(evaluationModelCreated, evaluationModel.getSections());
       }
-      if (evaluationModel.getMetrics() != null) {
-        evaluationModel.getMetrics().forEach(m -> {
-          m.setEvaluationModelId(evaluationModelCreated.getId());
-        });
-      }
-
-      // HACER
-      // List<EvaluationSectionResponse> sections = evaluationMetricService.createMany(null)
-
       EvaluationModelResponse evaluation = new EvaluationModelResponse();
 
       return ResponseEntity.ok(ApiResponse.success(evaluation, "Listado Correcto"));

@@ -36,19 +36,38 @@
                     </small>
                   </div>
                 </div>
-                <div class="col-12 text-end mb-3 mt-3">
+                <div class="col-6">
                   <small>
-                    <i class="fa fa-calendar me-1"></i>{{e.createdAt | date:'dd/MM/yyyy'}} <br>
+                    <i class="fa fa-calendar me-1"></i>{{e.createdAt | date:'dd/MM/yyyy'}}
+                  </small>
+                </div>
+                <div class="col-6 text-end">
+                  <small>
                     <i class="fa fa-clock me-1"></i>{{e.createdAt | date:'hh:mm a'}}    
                   </small>
                 </div>
+              </div>
+            </div>
+            <ul class="list-group list-group-flush" ng-if="e.sections && e.sections.length">
+              <caption class="ps-3">Secciones en la Evaluación</caption>
+              <li class="list-group-item" ng-repeat="s in e.sections">
+                {{s.sectionOrder | uppercase}} - {{s.name | uppercase}}
+                <ul class="list-group">
+                  <li class="list-group-item" ng-repeat="h in s.sections">
+                    {{h.sectionOrder}} - {{h.name}}
+                  </li>
+                </ul>
+              </li>
+            </ul>
+            <div class="card-footer">
+              <div class="row">
                 <div class="col-6">
-                  <button class="btn btn-sm btn-light text-primary me-2" ng-click="toggleEvaluationModal(e)">
-                    <e class="fa fa-pencil"></e>
+                  <button class="btn btn-sm btn-light text-secondary" ng-click="toggleEvaluationModal(e)">
+                    <i class="fa fa-edit"></i>
                   </button>
                 </div>
                 <div class="col-6 text-end">
-                  <button class="btn btn-sm btn-light text-danger" ng-click="deleteEvaluationModel(e)">
+                  <button class="btn btn-sm btn-light text-danger">
                     <i class="fa fa-trash"></i>
                   </button>
                 </div>
@@ -82,7 +101,7 @@
           <div class="row mb-3">
             <div class="col-12">
               <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" ng-repeat="s in sections" class="btn" ng-class="{'btn-light text-primary': sectionSelected && sectionSelected.id !== s.id, 'btn-primary': sectionSelected && sectionSelected.id === s.id}" ng-click="selectSection(s)">
+                <button type="button" ng-repeat="s in sectionsToShow" class="btn" ng-class="{'btn-light text-primary': sectionSelected && sectionSelected.id !== s.id, 'btn-primary': sectionSelected && sectionSelected.id === s.id}" ng-click="selectSection(s)">
                   <i class="{{s.icon}} me-1"></i>{{s.name}}
                 </button>
               </div>
@@ -176,7 +195,7 @@
                     <div class="col-12" ng-if="s.showDetail">
                       <ul class="list-group">
                         <li class="list-group-item text-center" ng-if="!newSubSection">
-                          <button class="btn btn-sm btn-light text-primary" ng-click="toggleSubSection()">
+                          <button class="btn btn-sm btn-light text-primary" ng-click="toggleSubSection(s)">
                             <i class="fa fa-plus me-1"></i>Agregar Subsección
                           </button>
                         </li>
@@ -191,14 +210,14 @@
                             </div>
                           </div>
                         </li>
-                        <li class="list-group-item" ng-if="newSubSection">
+                        <li class="list-group-item" ng-if="newSubSection && sectionToAddSubSection.name === s.name">
                           <div class="row">
                             <div class="col-12">
                               <strong>Nueva Sub Sección</strong>
                             </div>
                             <div class="col-3">
                               <small class="text-secondary">Orden</small>
-                              <input type="number" name="order-ss" ng-model="newSubSection.order" class="form-control form-control-sm">
+                              <input type="number" name="sectionOrder-ss" ng-model="newSubSection.sectionOrder" class="form-control form-control-sm">
                             </div>
                             <div class="col-9">
                               <small class="text-secondary">Nombre</small>
@@ -224,7 +243,7 @@
               </ul>
             </div>
           </div>
-          <div class="row" ng-if="sectionSelected && sectionSelected.id === 3">
+          <div class="row" ng-if="sectionSelected && sectionSelected.id === 3 && newEvaluationModel.id">
             <div class="col-12 text-center text-danger" ng-if="newEvaluationModel.sections && !newEvaluationModel.sections.length">
               <i class="fa fa-times fa-3x"></i> <br>
               No se tiene registrado ninguna sección
@@ -236,7 +255,6 @@
                   No se tiene registrado ninguna métrica.
                 </div>
                 <div class="col-12" ng-if="metrics.length">
-                  {{newEvaluationModel | json}}
                   <ul class="list-group">
                     <li class="list-group-item" ng-repeat="s in newEvaluationModel.sections">
                       <div class="row">
