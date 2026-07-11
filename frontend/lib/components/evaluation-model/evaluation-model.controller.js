@@ -88,7 +88,7 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
         console.log($scope.newEvaluationModel);
         $scope.evaluationMetrics = result.data;
         $scope.newEvaluationModel.sections.map(s => {
-          s.metric = $scope.evaluationMetrics.find(e => e.evaluationSection.id === s.id).metric || {};
+          s.metric = ($scope.evaluationMetrics.find(e => e.evaluationSection.id === s.id) || {}).metric;
         })
       }
     }
@@ -241,5 +241,20 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
         evaluationSectionId: section
       })
     }
+  }
+
+  $scope.export = async () => {
+    let responseReport = await mainService.getReportOfEvaluationModels();
+    
+    const blob = new Blob([responseReport], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'reporte_modelos.pdf';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
   }
 }]);

@@ -64,7 +64,11 @@ app.controller("loginCtrl", ["$scope","mainService","$location","APP_CONFIG", "$
     $scope.showPassword = !$scope.showPassword;
   }
 
-  $scope.register = () => {
+  $scope.register = async () => {
     console.log($scope.newRegister);
+    let newPerson = structuredClone($scope.newRegister.person);
+    let resultPerson = await mainService.savePeople(newPerson);
+    console.log(resultPerson);
+
   }
 }])

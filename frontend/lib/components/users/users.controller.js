@@ -6,14 +6,13 @@ app.controller("usersCtrl", ["$scope", "mainService", function($scope, mainServi
     $scope.getUsers();
   }
 
-  $scope.getUsers = () => {
-    mainService.findAllUsers()
-    .then((response) => {
-      console.log(response);
-      $scope.users = response.data.data;
-    })
-    .catch((err) => {
-      console.log("Error => ", err);
-    })
+  $scope.getUsers = async () => {
+    let resultUsers = await mainService.findAllUsers();
+    console.log(resultUsers);
+    $scope.users = resultUsers.data;
+
+    if(!$scope.$$phase) {
+      $scope.$apply();
+    }
   }
 }]);

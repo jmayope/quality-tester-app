@@ -1,4 +1,29 @@
-app.factory("mainService", ["$http", "APP_CONFIG", function($http, APP_CONFIG) {
+app.factory("authInterceptor", ["$q", "$window", function($q, $window) {
+  return {
+    request: function(config) {
+      const token = $window.localStorage.getItem("token") || 'ApxEQ+svJ/BvQ8JtSJdDsnwv/gOXedkcox0XU8+snS3w6b4nSgDoyEms+0jGopE4SIRVvlqJmzPHqZYbkP0sxwgAAAB1eyJvcmlnaW4iOiJodHRwczovL3d3dy5mYWNlYm9vay5jb206NDQzIiwiZmVhdHVyZSI6IkNyYXNoUmVwb3J0aW5nU3RvcmFnZUFQSSIsImV4cGlyeSI6MTc3NjcyOTYwMCwiaXNTdWJkb21haW4iOnRydWV9';
+
+      if (token) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+
+      return config;
+    },
+    requestError: function(rejection) {
+      return $q.reject(rejection);
+    },
+    responseError: function(rejection) {
+      // Opcional: manejar 401 globalmente (token vencido, etc.)
+      if (rejection.status === 401) {
+        // ej: redirigir a login
+        // $window.location.href = "/login";
+      }
+      return $q.reject(rejection);
+    }
+  };
+}])
+.factory("mainService", ["$http", "APP_CONFIG", function($http, APP_CONFIG) {
 
   let apiUrl = `${APP_CONFIG.API_URL}`;
 
@@ -56,6 +81,9 @@ app.factory("mainService", ["$http", "APP_CONFIG", function($http, APP_CONFIG) {
     updateEntities: (body) => {
       return $http.put(`${apiUrl}/business`, body).then(response => response.data);
     },
+    savePeople: (body) => {
+      return $http.post(`${apiUrl}/people`, body).then(response => response.data);
+    },
     saveMetrics: (body) => {
       return $http.post(`${apiUrl}/metrics`, body).then(response => response.data);
     },
@@ -68,6 +96,13 @@ app.factory("mainService", ["$http", "APP_CONFIG", function($http, APP_CONFIG) {
     saveListMetricScales: (body) => {
       return $http.post(`${apiUrl}/metric-scales/list`, body).then(response => response.data);
     },
+    getReportOfEvaluationModels: () => {
+      return $http.get(`${apiUrl}/evaluation-models/report`, {responseType: "blob"}).then(response => response.data);
+    }
   }
 
-}])
+}]);
+
+app.config(["$httpProvider", function($httpProvider) {
+  $httpProvider.interceptors.push("authInterceptor");
+}]);

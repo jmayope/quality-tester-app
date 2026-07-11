@@ -28,7 +28,7 @@ public class PersonService {
     newPerson.setEmail(person.getEmail());
     newPerson.setBirthDate(person.getBirthDate());
     newPerson.setGender(person.getGender());
-    newPerson.setStatus(person.getStatus().get() == null ? true : person.getStatus().get());
+    newPerson.setStatus(person.getStatus() == null ? true : person.getStatus().get());
     
     return personRepository.save(newPerson);
   }

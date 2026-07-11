@@ -14,14 +14,18 @@ import com.apps.pkador666.quality_api.service.EvaluationMetricService;
 import com.apps.pkador666.quality_api.service.EvaluationModelService;
 import com.apps.pkador666.quality_api.service.EvaluationSectionService;
 
+import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.http.MediaType;
 
 
 
@@ -44,6 +48,19 @@ public class EvaluationModelController {
   public ResponseEntity<ApiResponse<List<EvaluationModelResponse>>> findAll() {
       return ResponseEntity.ok(ApiResponse.success(evaluationModelService.findAll(), "Listado Correcto"));
   }
+
+  @GetMapping("/report")
+  public ResponseEntity<InputStreamResource> descargarReporteUsuarios() {
+        ByteArrayInputStream pdf = evaluationModelService.generateReport();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=reporte_usuarios.pdf");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(pdf));
+    }
 
   @PostMapping
   public ResponseEntity<ApiResponse<EvaluationModelResponse>> save(@RequestBody EvaluationModelRequest evaluationModel) {

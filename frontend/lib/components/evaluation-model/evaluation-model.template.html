@@ -7,6 +7,9 @@
       <div class="input-group">
         <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
         <input type="text" name="text" ng-model="filter.text" class="form-control text-uppercase" placeholder="BUSCAR POR TEXTO" aria-label="BUSCAR POR TEXTO" aria-describedby="basic-addon1">
+        <button class="btn btn-success" ng-if="evaluationModels.length" ng-click="export()">
+          <i class="fa fa-download me-1"></i>Exportar
+        </button>
       </div>
     </div>
     <div class="col-12 mt-3">
