@@ -21,6 +21,11 @@ public class PersonService {
     return personRepository.findAll();
   }
 
+  public List<Person> findByText(String text) {
+    String textToSearch = text.toLowerCase();
+    return personRepository.findAll().stream().filter( p-> p.getFullName().toLowerCase().contains(textToSearch) || p.getEmail().toLowerCase().contains(textToSearch)).toList();
+  }
+
   public Person create(PersonRequest person) {
     Person newPerson = new Person();
 

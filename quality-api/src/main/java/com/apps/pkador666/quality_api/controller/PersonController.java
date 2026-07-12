@@ -1,11 +1,13 @@
 package com.apps.pkador666.quality_api.controller;
 
+import java.io.FilterReader;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.apps.pkador666.quality_api.dto.request.FilterRequest;
 import com.apps.pkador666.quality_api.dto.request.PersonRequest;
 import com.apps.pkador666.quality_api.model.ApiResponse;
 import com.apps.pkador666.quality_api.model.Person;
@@ -34,9 +36,15 @@ public class PersonController {
   }
 
   @PostMapping
-  public ResponseEntity<ApiResponse<Person>> postMethodName(@RequestBody PersonRequest person) {
+  public ResponseEntity<ApiResponse<Person>> create(@RequestBody PersonRequest person) {
       Person personCreated = personService.create(person);
       return ResponseEntity.ok(ApiResponse.success(personCreated, "Registro Correcto"));
+  }
+
+  @PostMapping("/filter")
+  public ResponseEntity<ApiResponse<List<Person>>> filterByText(@RequestBody FilterRequest filter) {
+      List<Person> persons = personService.findByText(filter.getText());
+      return ResponseEntity.ok(ApiResponse.success(persons, "Registro Correcto"));
   }
   
   

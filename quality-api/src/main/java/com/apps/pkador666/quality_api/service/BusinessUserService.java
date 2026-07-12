@@ -35,6 +35,7 @@ public class BusinessUserService {
     businessUserCreated.setBusiness(businessFound.get());;
     Optional<User> userFound = userRepository.findById(newBusinessUser.getUserId());
     businessUserCreated.setUser(userFound.get());
+    businessUserCreated.setStatus(newBusinessUser.getStatus());
     return businessUserRepository.save(businessUserCreated);
   }
 

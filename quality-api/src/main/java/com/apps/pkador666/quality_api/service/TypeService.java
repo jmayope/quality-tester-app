@@ -21,13 +21,17 @@ public class TypeService {
     return typeRepository.findAll();
   }
 
+  public List<Type> findAllByCategory(String category) {
+    return typeRepository.findAll().stream().filter(t -> t.getCategory().equals(category)).toList();
+  }
+
   public Type create(TypeRequest type) {
     Type newType = new Type();
     newType.setCategory(type.getCategory());
     newType.setCode(type.getCode());
     newType.setName(type.getName());
     newType.setStatus(type.getStatus().get() == null ? true : type.getStatus().get());
-    newType.setAdditionalFields(type.getAdditionalFields().get() == null ? null : type.getAdditionalFields().get());
+    newType.setAdditionalFields(type.getAdditionalFields() == null ? null : type.getAdditionalFields().get());
     return typeRepository.save(newType);
   }
 

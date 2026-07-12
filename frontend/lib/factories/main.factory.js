@@ -34,6 +34,9 @@ app.factory("authInterceptor", ["$q", "$window", function($q, $window) {
     findAllTypes: () => {
       return $http.get(`${apiUrl}/types`).then(response => response.data);
     },
+    findAllTypesByCategory: (category) => {
+      return $http.get(`${apiUrl}/types/by-category/${category}`).then(response => response.data);
+    },
     findAllMetrics: () => {
       return $http.get(`${apiUrl}/metrics`).then(response => response.data);
     },
@@ -48,6 +51,9 @@ app.factory("authInterceptor", ["$q", "$window", function($q, $window) {
     },
     updateEvaluation: (body) => {
       return $http.put(`${apiUrl}/evaluation-models/update`, body).then(response => response.data);
+    },
+    findAllPersonsBy: (filter) => {
+      return $http.post(`${apiUrl}/people/filter`, filter).then(response => response.data);
     },
 
     saveEvaluation: (body) => {
@@ -84,6 +90,13 @@ app.factory("authInterceptor", ["$q", "$window", function($q, $window) {
     savePeople: (body) => {
       return $http.post(`${apiUrl}/people`, body).then(response => response.data);
     },
+    saveUsers: (body) => {
+      return $http.post(`${apiUrl}/users`, body).then(response => response.data);
+    },
+    saveBusinessUsers: (body) => {
+      return $http.post(`${apiUrl}/business-users`, body).then(response => response.data);
+    },
+
     saveMetrics: (body) => {
       return $http.post(`${apiUrl}/metrics`, body).then(response => response.data);
     },

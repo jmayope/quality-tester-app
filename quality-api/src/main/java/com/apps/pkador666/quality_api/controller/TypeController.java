@@ -8,11 +8,12 @@ import com.apps.pkador666.quality_api.model.ApiResponse;
 import com.apps.pkador666.quality_api.model.Type;
 import com.apps.pkador666.quality_api.service.TypeService;
 
+
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -30,6 +31,11 @@ public class TypeController {
   @GetMapping
   public ResponseEntity<ApiResponse<List<Type>>> findAll() {
       return ResponseEntity.ok(ApiResponse.success(typeService.findAll(), "Listado correcto"));
+  }
+
+  @GetMapping("/by-category/{category}")
+  public ResponseEntity<ApiResponse<List<Type>>> findAllByCategory(@PathVariable("category") String category) {
+      return ResponseEntity.ok(ApiResponse.success(typeService.findAllByCategory(category), "Listado correcto"));
   }
 
   @PostMapping
