@@ -43,10 +43,13 @@ app.controller("loginCtrl", ["$scope","mainService","$location","APP_CONFIG", "$
       Swal.close();
       // Disparar evento global
       $rootScope.$broadcast("userLogged");
-      localStorage.setItem('menu', JSON.stringify(APP_CONFIG.MENU[0]))
-      $location.path("/entity");
+      $scope.menu = APP_CONFIG.MENU;
+      $scope.menu = $scope.menu.filter(m => m.roleAlloweds && m.roleAlloweds.length).filter(m => m.roleAlloweds.includes(userLoged.userType));
+      localStorage.setItem('menu', JSON.stringify($scope.menu[0]))
+      $location.path($scope.menu[0].route);
     })
     .catch((err) => {
+      console.log(err);
       Swal.close();
       Swal.fire({
         icon: 'error',

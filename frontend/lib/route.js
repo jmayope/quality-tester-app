@@ -23,6 +23,14 @@ angular.module('qualityApp')
       templateUrl: './lib/components/users/users.template.html',
       controller: 'usersCtrl',
     })
+    .when('/evaluation-score-capture', {
+      templateUrl: './lib/components/evaluation-score-capture/evaluation-score-capture.template.html',
+      controller: 'evaluationScoreCaptureCtrl',
+    })
+    .when('/report', {
+      templateUrl: './lib/components/report/report.template.html',
+      controller: 'reportCtrl',
+    })
     // .when('/offer', {
     //   templateUrl: 'components/offer/offer.template.html',
     //   controller: 'offerCtrl',

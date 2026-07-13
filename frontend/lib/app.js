@@ -38,17 +38,47 @@ app.constant("APP_CONFIG", {
   ],
   MENU: [
     {id: 1, name: 'Entidades', route: '/entity'},
-    {id: 2, name: 'Módelos', route: '/evaluation-model'},
+    {id: 2, name: 'Módelos', route: '/evaluation-model', roleAlloweds: ['P', 'E']},
     {id: 3, name: 'Variables Globales', route: '/global-vars'},
-    {id: 4, name: 'Usuarios', route: '/users'},
+    {id: 3, name: 'Reportes', route: '/report', roleAlloweds: ['R']},
+    {id: 4, name: 'Usuarios', route: '/users', roleAlloweds: ['P']},
   ]
 })
 
 app.controller("indexCtrl", ["$scope", "$location", "APP_CONFIG", "$timeout", ($scope, $location, APP_CONFIG, $timeout) => {
   $scope.menu = APP_CONFIG.MENU;
   $scope.initView = undefined;
-  $scope.$on("userLogged", function () {
 
+  $scope.init = () => {
+    console.log("Verificando ruta");
+    $scope.loadData();
+    console.log($location.$$url);
+    let menuSelected = JSON.parse(localStorage.getItem("menu") || 'null');
+    console.log(menuSelected);
+    if (menuSelected) {
+      $scope.initView = menuSelected.route;
+    }
+    
+
+    // Valiadación de Menu
+    // $scope.userLoged = JSON.parse(localStorage.getItem(APP_CONFIG.TOKEN_NAME) || '{}');
+    console.log($scope.userLoged);
+    if ($scope.userLoged && $scope.userLoged.userType) {
+      $scope.menu = $scope.menu.filter(m => m.roleAlloweds && m.roleAlloweds.length).filter(m => m.roleAlloweds.includes($scope.userLoged.userType));
+      $scope.selectMenuItem($scope.menu[0]);
+      if(!$scope.$$phase) {
+        $scope.$apply();
+      }
+      return;
+    }
+
+    $scope.selectMenuItem($scope.menu.find(m => m.route === $location.$$url));
+    // if ($scope.userLoged && $scope.userLoged) {
+    //   $scope.menu = $scope.menu.filter()
+    // }
+  }
+
+  $scope.$on("userLogged", function () {
     console.log("Usuario logueado");
     // actualizar datos
     $scope.initView = $scope.initView || "/entity";
@@ -57,7 +87,7 @@ app.controller("indexCtrl", ["$scope", "$location", "APP_CONFIG", "$timeout", ($
 
   $scope.userLoged = {};
   $scope.loadData = function () {
-    $scope.userLoged = JSON.parse(localStorage.getItem(APP_CONFIG.TOKEN_NAME) || 'undefined');
+    $scope.userLoged = JSON.parse(localStorage.getItem(APP_CONFIG.TOKEN_NAME) || 'null');
   };
 
   $scope.menuSelected = undefined;
@@ -70,18 +100,7 @@ app.controller("indexCtrl", ["$scope", "$location", "APP_CONFIG", "$timeout", ($
     }
   }
 
-  $scope.init = () => {
-    console.log("Verificando ruta");
-    $scope.loadData();
-    console.log($location.$$url);
-    
-    let menuSelected = JSON.parse(localStorage.getItem("menu") || '{}');
-    console.log(menuSelected);
-    if (menuSelected) {
-      $scope.initView = menuSelected.route;
-    }
-    $scope.selectMenuItem($scope.menu.find(m => m.route === $location.$$url));
-  }
+  
 
   $scope.logout = () => {
     Swal.fire({
@@ -95,6 +114,7 @@ app.controller("indexCtrl", ["$scope", "$location", "APP_CONFIG", "$timeout", ($
       $timeout(() => {
         if (choice.isConfirmed) {
           localStorage.removeItem(APP_CONFIG.TOKEN_NAME);
+          localStorage.removeItem('menu');
           $scope.userLoged = {};
           $location.path("/login");
         }
