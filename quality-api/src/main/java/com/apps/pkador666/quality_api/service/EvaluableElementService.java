@@ -27,6 +27,10 @@ public class EvaluableElementService {
     return evaluableElementRepository.findAll();
   }
 
+  public Optional<EvaluableElement> findById(Long id) {
+    return evaluableElementRepository.findAll().stream().filter(e -> e.getId().equals(id)).findFirst();
+  }
+
   public EvaluableElement create(EvaluableElementRequest evaluableElement) {
     EvaluableElement newEvaluableElement = new EvaluableElement();
     Optional<Business> businessFound = businessRepository.findById(evaluableElement.getBusinessId().get());

@@ -20,7 +20,7 @@ app.controller("loginCtrl", ["$scope","mainService","$location","APP_CONFIG", "$
     }
   }
 
-  $scope.login = () => {
+  $scope.login = async () => {
     Swal.fire({
       html: APP_CONFIG.SPINNER_LOADING,
       allowEnterKey: false,
@@ -29,34 +29,31 @@ app.controller("loginCtrl", ["$scope","mainService","$location","APP_CONFIG", "$
       showConfirmButton: false
     });
     console.log($scope.credentials);
-    mainService.auth($scope.credentials).then((response) => {
-      console.log(response);
-      if (response.error.error) {
-        Swal.fire({
-          icon: 'error',
-          text: response.data.message
-        });
-        return;
-      }
-      let userLoged = response.data;
-      localStorage.setItem(APP_CONFIG.TOKEN_NAME, JSON.stringify(userLoged));
-      Swal.close();
-      // Disparar evento global
-      $rootScope.$broadcast("userLogged");
-      $scope.menu = APP_CONFIG.MENU;
-      $scope.menu = $scope.menu.filter(m => m.roleAlloweds && m.roleAlloweds.length).filter(m => m.roleAlloweds.includes(userLoged.userType));
-      localStorage.setItem('menu', JSON.stringify($scope.menu[0]))
-      $location.path($scope.menu[0].route);
-    })
-    .catch((err) => {
-      console.log(err);
-      Swal.close();
+    let response = await mainService.auth($scope.credentials);
+    console.log(response);
+    if (response.error.error) {
       Swal.fire({
         icon: 'error',
-        title: err.data.message
+        text: response.data.message
       });
       return;
-    })
+    }
+
+    let userLoged = response.data;
+    
+    let resultBusinessUsers = await mainService.findAllBusinessUsers();
+    userLoged.businessUser = resultBusinessUsers.data.find(bu => bu.user.id == userLoged.id);
+    localStorage.setItem(APP_CONFIG.TOKEN_NAME, JSON.stringify(userLoged));
+    Swal.close();
+    // Disparar evento global
+    $rootScope.$broadcast("userLogged");
+    $scope.menu = APP_CONFIG.MENU;
+    $scope.menu = $scope.menu.filter(m => m.roleAlloweds && m.roleAlloweds.length).filter(m => m.roleAlloweds.includes(userLoged.userType));
+    localStorage.setItem('menu', JSON.stringify($scope.menu[0]))
+    $location.path($scope.menu[0].route);
+    if(!$scope.$$phase) {
+      $scope.$apply();
+    }
   }
 
   $scope.toggleRegister = () => {

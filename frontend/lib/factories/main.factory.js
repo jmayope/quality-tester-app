@@ -55,29 +55,27 @@ app.factory("authInterceptor", ["$q", "$window", function($q, $window) {
     findAllPersonsBy: (filter) => {
       return $http.post(`${apiUrl}/people/filter`, filter).then(response => response.data);
     },
-
     saveEvaluation: (body) => {
       return $http.post(`${apiUrl}/evaluation-models`, body).then(response => response.data);
     },
     findAllEvaluableElements: () => {
       return $http.get(`${apiUrl}/evaluable-elements`).then(response => response.data);
     },
+    findEvaluableElementById: (id) => {
+      return $http.get(`${apiUrl}/evaluable-elements/${id}`).then(response => response.data);
+    },
     saveEvaluableElements: (body) => {
       return $http.post(`${apiUrl}/evaluable-elements`, body).then(response => response.data);
     },
-
     saveManyEvaluableElements: (body) => {
       return $http.post(`${apiUrl}/evaluable-elements/list`, body).then(response => response.data);
     },
-
     saveEvaluationMetrics: (body) => {
       return $http.post(`${apiUrl}/evaluation-metrics/list`, body).then(response => response.data);
     },
-
     findAllEvaluationMetricsByEvaluationModelId: (evaluationModelId) => {
       return $http.get(`${apiUrl}/evaluation-metrics/by-evaluation-model/${evaluationModelId}`).then(response => response.data);
     },
-
     findAllEntities: () => {
       return $http.get(`${apiUrl}/business`).then(response => response.data);
     },
@@ -93,10 +91,24 @@ app.factory("authInterceptor", ["$q", "$window", function($q, $window) {
     saveUsers: (body) => {
       return $http.post(`${apiUrl}/users`, body).then(response => response.data);
     },
+    findEvaluationModelById: (id) => {
+      return $http.get(`${apiUrl}/evaluation-models/${id}`).then(response => response.data);
+    },
+    findAllBusinessUsers: () => {
+      return $http.get(`${apiUrl}/business-users`).then(response => response.data);
+    },
     saveBusinessUsers: (body) => {
       return $http.post(`${apiUrl}/business-users`, body).then(response => response.data);
     },
-
+    saveEvaluationResults: (body) => {
+      return $http.post(`${apiUrl}/evaluation-results`, body).then(response => response.data)
+    },
+    findEvaluationSectionsByEvaluationModelId: (id) => {
+      return $http.get(`${apiUrl}/evaluation-sections/by-evaluation-model/${id}`).then(response => response.data);
+    },
+    findEvaluationResultById: (id) => {
+      return $http.get(`${apiUrl}/evaluation-results/${id}`).then(response => response.data);
+    },
     saveMetrics: (body) => {
       return $http.post(`${apiUrl}/metrics`, body).then(response => response.data);
     },

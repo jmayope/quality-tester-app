@@ -6,7 +6,7 @@
           <div>
             <div class="text-muted mb-1" style="font-size:.78rem;"><i class="bi bi-diagram-3 me-1"></i>Modelo de
               evaluación</div>
-            <h1 class="h5 fw-bold mb-0">Atención al cliente — Contact Center</h1>
+            <h1 class="h5 fw-bold mb-0">{{evaluationResult.evaluationModel.name | uppercase}}</h1>
           </div>
           <span class="badge bg-brand-soft text-brand px-3 py-2" style="font-size:.75rem;"><i
               class="bi bi-record-circle me-1"></i>Evaluación en curso</span>
@@ -17,77 +17,63 @@
             <div class="text-muted" style="font-size:.75rem;">Evaluado</div>
             <div class="d-flex align-items-center gap-2 mt-1">
               <span class="avatar-sm">JS</span>
-              <span class="fw-semibold" style="font-size:.88rem;">Jorge Salas</span>
+              <span class="fw-semibold" style="font-size:.88rem;">{{evaluationResult.evaluableElement.name | uppercase}}</span>
             </div>
           </div>
           <div class="col-6 col-md-3">
             <div class="text-muted" style="font-size:.75rem;">Evaluador</div>
-            <div class="fw-semibold mt-1" style="font-size:.88rem;">Mariana Ríos</div>
+            <div class="fw-semibold mt-1" style="font-size:.88rem;">{{userLoged.person.fullName | uppercase}}</div>
           </div>
           <div class="col-6 col-md-3">
-            <div class="text-muted" style="font-size:.75rem;">Referencia / Canal</div>
-            <div class="fw-semibold mt-1" style="font-size:.88rem;">Llamada #48291</div>
+            <div class="text-muted" style="font-size:.75rem;">Referencia / Empresa</div>
+            <div class="fw-semibold mt-1" style="font-size:.88rem;">{{userLoged.businessUser.business.name | uppercase}}</div>
           </div>
           <div class="col-6 col-md-3">
             <div class="text-muted" style="font-size:.75rem;">Fecha</div>
-            <div class="fw-semibold mt-1" style="font-size:.88rem;">18 jul 2026</div>
+            <div class="fw-semibold mt-1" style="font-size:.88rem;">{{evaluationResult.createdAt | date: 'dd/MM/yyyy'}}</div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="row g-4">
+    <div class="row">
       <!-- Sections column -->
       <div class="col-lg-8 order-2 order-lg-1">
-
         <!-- Section 1 -->
-        <div class="card section-card mb-3" id="section-1" data-section="1">
-          <div class="card-header d-flex align-items-center gap-3" data-bs-toggle="collapse" data-bs-target="#body-1">
-            <span class="section-index">1</span>
+        <div class="card section-card mb-3" ng-repeat="s in evaluationModelSections" id="section-1" data-section="1">
+          <div class="card-header d-flex align-items-center gap-3  hand" data-bs-toggle="collapse" data-bs-target="#body-1" ng-click="toggleDetail(s)">
+            <span class="section-index">{{$index + 1}}</span>
             <div class="flex-grow-1">
-              <div class="fw-semibold" style="font-size:.92rem;">Saludo y presentación</div>
-              <div class="text-muted" style="font-size:.75rem;">3 características · Peso 20%</div>
+              <div class="fw-semibold" style="font-size:.92rem;">{{s.name | uppercase}}</div>
+              <div class="text-muted" style="font-size:.75rem;">{{s.description | uppercase}} Sub secciones: {{s.sections.length}}</div>
             </div>
-            <span class="badge rounded-pill bg-light text-muted section-score-badge" style="font-size:.75rem;">0%</span>
-            <i class="bi bi-chevron-down chevron"></i>
+            <span class="badge rounded-pill bg-light text-muted section-score-badge" style="font-size:.75rem;">{{(s.evaluated || 0)}} %</span>
+            <i class="fa chevron" ng-class="{'fa-chevron-down': !s.showDetail, 'fa-chevron-up': s.showDetail}"></i>
           </div>
-          <div class="collapse show" id="body-1">
+          <div class="collapse show" id="body-1" ng-if="s.showDetail">
             <div class="card-body">
-
-              <div class="eval-item" data-max="10">
+              <div class="eval-item mb-2" ng-repeat="i in s.sections" data-max="10">
                 <div class="d-flex justify-content-between align-items-start gap-2">
                   <div>
-                    <div class="fw-semibold" style="font-size:.88rem;">Saludo cordial y protocolo inicial</div>
+                    <div class="fw-semibold" style="font-size:.88rem;">{{i.name | uppercase}}</div>
                     <span class="metric-badge mt-1 d-inline-block">Cumple / No cumple</span>
                   </div>
                   <span class="points-tag">— / 10</span>
                 </div>
                 <div class="d-flex gap-2 mt-2">
-                  <button type="button" class="opt-btn" data-points="10" onclick="selectOption(this)">Sí</button>
-                  <button type="button" class="opt-btn" data-points="0" onclick="selectOption(this)">No</button>
+                  <button type="button" class="btn btn-sm btn-light text-primary" data-points="10" onclick="selectOption(this)">Sí</button>
+                  <button type="button" class="btn btn-sm btn-light text-primary" data-points="0" onclick="selectOption(this)">No</button>
                 </div>
-                <a href="#" class="comment-toggle d-inline-block mt-2" onclick="toggleComment(event,this)"><i
-                    class="bi bi-chat-left-text me-1"></i>Agregar comentario</a>
-                <textarea class="form-control form-control-sm mt-2 d-none" rows="2"
-                  placeholder="Observación sobre este ítem..."></textarea>
-              </div>
-
-              <div class="eval-item" data-max="10">
-                <div class="d-flex justify-content-between align-items-start gap-2">
-                  <div>
-                    <div class="fw-semibold" style="font-size:.88rem;">Identificación correcta del agente</div>
-                    <span class="metric-badge mt-1 d-inline-block">Cumple / No cumple</span>
+                <div class="row">
+                  <div class="col-12 text-end">
+                    <button class="btn btn-sm btn-light" ng-class="{'text-primary': !i.addComment, 'text-danger': i.addComment}" ng-click="toggleComment(i)">
+                      <i class="fa me-1" ng-class="{'fa-plus': !i.addComment, 'fa-times': i.addComment}"></i>{{i.addComment ? 'Quitar comentario': 'Agregar comentario'}}
+                    </button>
                   </div>
-                  <span class="points-tag">— / 10</span>
+                  <div class="col-12 mt-3" ng-if="i.addComment">
+                    <textarea class="form-control form-control-sm no-resize" name="comment-{{$index}}" ng-model="i.obs" rows="3" placeholder="Observación sobre este ítem..."></textarea>
+                  </div>
                 </div>
-                <div class="d-flex gap-2 mt-2">
-                  <button type="button" class="opt-btn" data-points="10" onclick="selectOption(this)">Sí</button>
-                  <button type="button" class="opt-btn" data-points="0" onclick="selectOption(this)">No</button>
-                </div>
-                <a href="#" class="comment-toggle d-inline-block mt-2" onclick="toggleComment(event,this)"><i
-                    class="bi bi-chat-left-text me-1"></i>Agregar comentario</a>
-                <textarea class="form-control form-control-sm mt-2 d-none" rows="2"
-                  placeholder="Observación sobre este ítem..."></textarea>
               </div>
 
               <div class="eval-item" data-max="10">
@@ -105,202 +91,6 @@
                   <button type="button" class="opt-btn" data-points="6" onclick="selectOption(this)">6</button>
                   <button type="button" class="opt-btn" data-points="8" onclick="selectOption(this)">8</button>
                   <button type="button" class="opt-btn" data-points="10" onclick="selectOption(this)">10</button>
-                </div>
-                <a href="#" class="comment-toggle d-inline-block mt-2" onclick="toggleComment(event,this)"><i
-                    class="bi bi-chat-left-text me-1"></i>Agregar comentario</a>
-                <textarea class="form-control form-control-sm mt-2 d-none" rows="2"
-                  placeholder="Observación sobre este ítem..."></textarea>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <!-- Section 2 -->
-        <div class="card section-card mb-3" id="section-2" data-section="2">
-          <div class="card-header d-flex align-items-center gap-3" data-bs-toggle="collapse" data-bs-target="#body-2">
-            <span class="section-index">2</span>
-            <div class="flex-grow-1">
-              <div class="fw-semibold" style="font-size:.92rem;">Indagación de necesidades</div>
-              <div class="text-muted" style="font-size:.75rem;">3 características · Peso 25%</div>
-            </div>
-            <span class="badge rounded-pill bg-light text-muted section-score-badge" style="font-size:.75rem;">0%</span>
-            <i class="bi bi-chevron-down chevron"></i>
-          </div>
-          <div class="collapse" id="body-2">
-            <div class="card-body">
-
-              <div class="eval-item" data-max="10">
-                <div class="d-flex justify-content-between align-items-start gap-2">
-                  <div>
-                    <div class="fw-semibold" style="font-size:.88rem;">Uso de preguntas abiertas</div>
-                    <span class="metric-badge mt-1 d-inline-block">Categoría</span>
-                  </div>
-                  <span class="points-tag">— / 10</span>
-                </div>
-                <div class="d-flex gap-2 mt-2">
-                  <button type="button" class="opt-btn cat-bajo" data-points="3"
-                    onclick="selectOption(this)">Bajo</button>
-                  <button type="button" class="opt-btn cat-medio" data-points="6"
-                    onclick="selectOption(this)">Medio</button>
-                  <button type="button" class="opt-btn cat-alto" data-points="10"
-                    onclick="selectOption(this)">Alto</button>
-                </div>
-                <a href="#" class="comment-toggle d-inline-block mt-2" onclick="toggleComment(event,this)"><i
-                    class="bi bi-chat-left-text me-1"></i>Agregar comentario</a>
-                <textarea class="form-control form-control-sm mt-2 d-none" rows="2"
-                  placeholder="Observación sobre este ítem..."></textarea>
-              </div>
-
-              <div class="eval-item" data-max="10">
-                <div class="d-flex justify-content-between align-items-start gap-2">
-                  <div>
-                    <div class="fw-semibold" style="font-size:.88rem;">Escucha activa</div>
-                    <span class="metric-badge mt-1 d-inline-block">Escala 0–10</span>
-                  </div>
-                  <span class="points-tag">— / 10</span>
-                </div>
-                <div class="d-flex flex-wrap gap-2 mt-2">
-                  <button type="button" class="opt-btn" data-points="0" onclick="selectOption(this)">0</button>
-                  <button type="button" class="opt-btn" data-points="2" onclick="selectOption(this)">2</button>
-                  <button type="button" class="opt-btn" data-points="4" onclick="selectOption(this)">4</button>
-                  <button type="button" class="opt-btn" data-points="6" onclick="selectOption(this)">6</button>
-                  <button type="button" class="opt-btn" data-points="8" onclick="selectOption(this)">8</button>
-                  <button type="button" class="opt-btn" data-points="10" onclick="selectOption(this)">10</button>
-                </div>
-                <a href="#" class="comment-toggle d-inline-block mt-2" onclick="toggleComment(event,this)"><i
-                    class="bi bi-chat-left-text me-1"></i>Agregar comentario</a>
-                <textarea class="form-control form-control-sm mt-2 d-none" rows="2"
-                  placeholder="Observación sobre este ítem..."></textarea>
-              </div>
-
-              <div class="eval-item" data-max="10">
-                <div class="d-flex justify-content-between align-items-start gap-2">
-                  <div>
-                    <div class="fw-semibold" style="font-size:.88rem;">Confirmación de la necesidad detectada</div>
-                    <span class="metric-badge mt-1 d-inline-block">Cumple / No cumple</span>
-                  </div>
-                  <span class="points-tag">— / 10</span>
-                </div>
-                <div class="d-flex gap-2 mt-2">
-                  <button type="button" class="opt-btn" data-points="10" onclick="selectOption(this)">Sí</button>
-                  <button type="button" class="opt-btn" data-points="0" onclick="selectOption(this)">No</button>
-                </div>
-                <a href="#" class="comment-toggle d-inline-block mt-2" onclick="toggleComment(event,this)"><i
-                    class="bi bi-chat-left-text me-1"></i>Agregar comentario</a>
-                <textarea class="form-control form-control-sm mt-2 d-none" rows="2"
-                  placeholder="Observación sobre este ítem..."></textarea>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <!-- Section 3 -->
-        <div class="card section-card mb-3" id="section-3" data-section="3">
-          <div class="card-header d-flex align-items-center gap-3" data-bs-toggle="collapse" data-bs-target="#body-3">
-            <span class="section-index">3</span>
-            <div class="flex-grow-1">
-              <div class="fw-semibold" style="font-size:.92rem;">Manejo de objeciones</div>
-              <div class="text-muted" style="font-size:.75rem;">2 características · Peso 30%</div>
-            </div>
-            <span class="badge rounded-pill bg-light text-muted section-score-badge" style="font-size:.75rem;">0%</span>
-            <i class="bi bi-chevron-down chevron"></i>
-          </div>
-          <div class="collapse" id="body-3">
-            <div class="card-body">
-
-              <div class="eval-item" data-max="10">
-                <div class="d-flex justify-content-between align-items-start gap-2">
-                  <div>
-                    <div class="fw-semibold" style="font-size:.88rem;">Empatía frente a la objeción</div>
-                    <span class="metric-badge mt-1 d-inline-block">Categoría</span>
-                  </div>
-                  <span class="points-tag">— / 10</span>
-                </div>
-                <div class="d-flex gap-2 mt-2">
-                  <button type="button" class="opt-btn cat-bajo" data-points="3"
-                    onclick="selectOption(this)">Bajo</button>
-                  <button type="button" class="opt-btn cat-medio" data-points="6"
-                    onclick="selectOption(this)">Medio</button>
-                  <button type="button" class="opt-btn cat-alto" data-points="10"
-                    onclick="selectOption(this)">Alto</button>
-                </div>
-                <a href="#" class="comment-toggle d-inline-block mt-2" onclick="toggleComment(event,this)"><i
-                    class="bi bi-chat-left-text me-1"></i>Agregar comentario</a>
-                <textarea class="form-control form-control-sm mt-2 d-none" rows="2"
-                  placeholder="Observación sobre este ítem..."></textarea>
-              </div>
-
-              <div class="eval-item" data-max="10">
-                <div class="d-flex justify-content-between align-items-start gap-2">
-                  <div>
-                    <div class="fw-semibold" style="font-size:.88rem;">Argumentación y solución ofrecida</div>
-                    <span class="metric-badge mt-1 d-inline-block">Escala 0–10</span>
-                  </div>
-                  <span class="points-tag">— / 10</span>
-                </div>
-                <div class="d-flex flex-wrap gap-2 mt-2">
-                  <button type="button" class="opt-btn" data-points="0" onclick="selectOption(this)">0</button>
-                  <button type="button" class="opt-btn" data-points="2" onclick="selectOption(this)">2</button>
-                  <button type="button" class="opt-btn" data-points="4" onclick="selectOption(this)">4</button>
-                  <button type="button" class="opt-btn" data-points="6" onclick="selectOption(this)">6</button>
-                  <button type="button" class="opt-btn" data-points="8" onclick="selectOption(this)">8</button>
-                  <button type="button" class="opt-btn" data-points="10" onclick="selectOption(this)">10</button>
-                </div>
-                <a href="#" class="comment-toggle d-inline-block mt-2" onclick="toggleComment(event,this)"><i
-                    class="bi bi-chat-left-text me-1"></i>Agregar comentario</a>
-                <textarea class="form-control form-control-sm mt-2 d-none" rows="2"
-                  placeholder="Observación sobre este ítem..."></textarea>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <!-- Section 4 -->
-        <div class="card section-card mb-3" id="section-4" data-section="4">
-          <div class="card-header d-flex align-items-center gap-3" data-bs-toggle="collapse" data-bs-target="#body-4">
-            <span class="section-index">4</span>
-            <div class="flex-grow-1">
-              <div class="fw-semibold" style="font-size:.92rem;">Cierre y despedida</div>
-              <div class="text-muted" style="font-size:.75rem;">2 características · Peso 25%</div>
-            </div>
-            <span class="badge rounded-pill bg-light text-muted section-score-badge" style="font-size:.75rem;">0%</span>
-            <i class="bi bi-chevron-down chevron"></i>
-          </div>
-          <div class="collapse" id="body-4">
-            <div class="card-body">
-
-              <div class="eval-item" data-max="10">
-                <div class="d-flex justify-content-between align-items-start gap-2">
-                  <div>
-                    <div class="fw-semibold" style="font-size:.88rem;">Resumen claro de acuerdos</div>
-                    <span class="metric-badge mt-1 d-inline-block">Cumple / No cumple</span>
-                  </div>
-                  <span class="points-tag">— / 10</span>
-                </div>
-                <div class="d-flex gap-2 mt-2">
-                  <button type="button" class="opt-btn" data-points="10" onclick="selectOption(this)">Sí</button>
-                  <button type="button" class="opt-btn" data-points="0" onclick="selectOption(this)">No</button>
-                </div>
-                <a href="#" class="comment-toggle d-inline-block mt-2" onclick="toggleComment(event,this)"><i
-                    class="bi bi-chat-left-text me-1"></i>Agregar comentario</a>
-                <textarea class="form-control form-control-sm mt-2 d-none" rows="2"
-                  placeholder="Observación sobre este ítem..."></textarea>
-              </div>
-
-              <div class="eval-item" data-max="10">
-                <div class="d-flex justify-content-between align-items-start gap-2">
-                  <div>
-                    <div class="fw-semibold" style="font-size:.88rem;">Despedida cordial</div>
-                    <span class="metric-badge mt-1 d-inline-block">Cumple / No cumple</span>
-                  </div>
-                  <span class="points-tag">— / 10</span>
-                </div>
-                <div class="d-flex gap-2 mt-2">
-                  <button type="button" class="opt-btn" data-points="10" onclick="selectOption(this)">Sí</button>
-                  <button type="button" class="opt-btn" data-points="0" onclick="selectOption(this)">No</button>
                 </div>
                 <a href="#" class="comment-toggle d-inline-block mt-2" onclick="toggleComment(event,this)"><i
                     class="bi bi-chat-left-text me-1"></i>Agregar comentario</a>

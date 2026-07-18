@@ -14,7 +14,7 @@
     </div>
     <div class="col-12 mt-3">
       <div class="row">
-        <div class="col-4 mb-3">
+        <div class="col-4 mb-3" ng-if="userLoged.isAdmin">
           <div class="card borderless" ng-click="toggleEvaluationModal()">
             <div class="card-body text-center hand mt-3 mb-3 text-secondary">
               <i class="fa fa-plus-circle fa-3x"></i><br>
@@ -24,7 +24,7 @@
             </div>
           </div>
         </div>
-        <div class="col-4 mb-3" ng-repeat="e in evaluationModels | filter:filter.text">
+        <div class="col-4 mb-3" ng-class="{'hand': !userLoged.isAdmin}" ng-click="toggleUsageModel(e)" ng-repeat="e in evaluationModels | filter:filter.text">
           <div class="card borderless">
             <div class="card-header">
               <span class="float-end badge" ng-class="{'bg-danger': !e.status, 'bg-success': e.status}">{{e.status ? 'Activo' : 'Inactivo'}}</span>
@@ -39,6 +39,8 @@
                     </small>
                   </div>
                 </div>
+              </div>
+              <div class="row">
                 <div class="col-6">
                   <small>
                     <i class="fa fa-calendar me-1"></i>{{e.createdAt | date:'dd/MM/yyyy'}}
@@ -62,7 +64,7 @@
                 </ul>
               </li>
             </ul>
-            <div class="card-footer">
+            <div class="card-footer"  ng-if="userLoged.isAdmin">
               <div class="row">
                 <div class="col-6">
                   <button class="btn btn-sm btn-light text-secondary" ng-click="toggleEvaluationModal(e)">
@@ -327,6 +329,63 @@
             </button>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade"
+     ng-class="{'show d-block': isUsageModelOpen}"
+     tabindex="-1"
+     role="dialog"
+     style="background: rgba(0,0,0,0.5);"
+     ng-if="isUsageModelOpen">
+
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nueva Aplicación de Módelo</h5>
+        <button type="button" class="btn-close" ng-click="toggleUsageModel()"></button>
+      </div>
+      <div class="modal-body">
+        <form name="evaluationResultForm">
+          <div class="row" ng-if="evaluationModelSelected">
+            <div class="col-12">
+              <div class="alert alert-light">
+                <div class="row">
+                  <div class="col-12">
+                    <small class="text-secondary">Nombre del Modelo</small><br>
+                    {{evaluationModelSelected.code | uppercase}}: {{evaluationModelSelected.name | uppercase}}
+                  </div>
+                  <div class="col-12">
+                    <small class="text-secondary"># Secciones</small><br>
+                    {{evaluationModelSelected.sections.length}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <small class="text-secondary">Elemento a Evaluar</small><br>
+              <select name="evaluableElementId" ng-model="newEvaluationResult.evaluableElementId" class="form-select" required>
+                <option ng-value="undefined">--SELECCIONE ELEMENTO--</option>
+                <option ng-repeat="e in evaluableElements" ng-value="e.id">{{e.name}}</option>
+              </select>
+            </div>
+            <div class="col-12 mt-3">
+              <div class="alert alert-info">
+                <i class="fa fa-info me-1"></i>Al momento de Aplicar el Módelo; irá a la interfaz de Calificación de Módelo 
+              </div>
+            </div>
+            <div class="col-12 text-center">
+              <button class="btn btn-sm bg-danger text-white me-5" type="button" ng-click="toggleUsageModel()">
+                <i class="fa fa-save me-1"></i>Cancelar
+              </button>
+              <button class="btn btn-sm bg-primary-color mr-5" type="button" ng-disabled="evaluationResultForm.$invalid" ng-click="saveEvaluationResult()">
+                <i class="fa fa-save me-1"></i>Asignar
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>

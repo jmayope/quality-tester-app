@@ -1,32 +1,54 @@
-app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", function($scope, mainService, $timeout)  {
+app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", "APP_CONFIG", "$location", function($scope, mainService, $timeout, APP_CONFIG, $location)  {
   
+  $scope.userLoged = undefined;
+  $scope.evaluationModels = [];
+  $scope.metrics = [];
+  $scope.newEvaluationModel = {};
+  $scope.filter = {};
+  $scope.isEvaluationOpen = false;
+  $scope.isMetricOpen = false;
+  $scope.newSection = undefined;
+  $scope.newSubSection = undefined;
+  $scope.sectionToAssign = undefined;
+  $scope.sectionToAddSubSection = undefined;
+  $scope.sectionsToShow = [];
+  $scope.evaluationMetrics = [];
+  $scope.isUsageModelOpen = false;
+  $scope.newEvaluationResult = undefined;
+  $scope.evaluationModelSelected = undefined;
+  $scope.allEvaluableElements = [];
+  $scope.evaluableElements = [];
+
   $scope.init = () => {
     console.log("Iniciando ");
+    $scope.userLoged = JSON.parse(localStorage.getItem(APP_CONFIG.TOKEN_NAME));
     $scope.getEvaluationModels();
   }
   
-  $scope.getEvaluationModels = () => {
-    mainService.findAllEvaluations().then((result) => {
-      console.log(result.data);
-      $scope.evaluationModels = result.data;
-      console.log(result);
-      $scope.evaluationModels.sort((a, b) => a.id - b.id);
-      $scope.getMetrics();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  $scope.getEvaluationModels = async () => {
+    let resultEvaluations = await mainService.findAllEvaluations();
+    console.log(resultEvaluations.data);
+    $scope.evaluationModels = resultEvaluations.data;
+    console.log(resultEvaluations);
+    $scope.evaluationModels.sort((a, b) => a.id - b.id);
+    if (!$scope.userLoged.isAdmin) {
+      $scope.getEvaluableElements();
+    }
+    $scope.getMetrics();
   }
 
-  $scope.getMetrics = () => {
-    mainService.findAllMetrics()
-    .then((metrics) => {
-      $scope.metrics = metrics.data;
-      $scope.getMetricScales();
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+  $scope.getEvaluableElements = async () => {
+    let resultEvaluableElements = await mainService.findAllEvaluableElements();
+    $scope.allEvaluableElements = resultEvaluableElements.data;
+    console.log($scope.allEvaluableElements);
+    $scope.evaluableElements = $scope.allEvaluableElements.filter(e => e.business.id === $scope.userLoged.businessUser.business.id);
+    console.log($scope.evaluableElements);
+  }
+
+  $scope.getMetrics = async () => {
+    let resultMetrics = await mainService.findAllMetrics();
+    $scope.metrics = resultMetrics.data;
+    $scope.getMetricScales();
   }
 
   $scope.getMetricScales = () => {
@@ -41,19 +63,7 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
       console.log(err);
     })
   }
-
-  $scope.evaluationModels = [];
-  $scope.metrics = [];
-  $scope.newEvaluationModel = {};
-  $scope.filter = {};
-  $scope.isEvaluationOpen = false;
-  $scope.isMetricOpen = false;
-  $scope.newSection = undefined;
-  $scope.newSubSection = undefined;
-  $scope.sectionToAssign = undefined;
-  $scope.sectionToAddSubSection = undefined;
-  $scope.sectionsToShow = [];
-  $scope.evaluationMetrics = [];
+  
 
 
   $scope.sections = [
@@ -256,5 +266,33 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", func
     link.click();
     link.remove();
     window.URL.revokeObjectURL(url);
+  }
+
+  $scope.toggleUsageModel = (evaluation) => {
+    if (!$scope.userLoged.isAdmin) {
+      if ($scope.isUsageModelOpen) {
+        $scope.isUsageModelOpen = false;
+        $scope.evaluationModelSelected = undefined;
+      } else {
+        $scope.isUsageModelOpen = true;
+        $scope.evaluationModelSelected = evaluation;
+        $scope.newEvaluationResult = {
+          state: "R",
+          userId: $scope.userLoged.id,
+          evaluationModelId: evaluation.id
+        };
+      }
+    }
+  }
+
+  $scope.saveEvaluationResult = async () => {
+    console.log($scope.newEvaluationResult);
+    let resultEvaluationResult = await mainService.saveEvaluationResults($scope.newEvaluationResult);
+    console.log(resultEvaluationResult);
+    let evaluationResultId = resultEvaluationResult.data.id;
+    $location.path(`/evaluation-score-capture/${evaluationResultId}`);
+    if(!$scope.$$phase) {
+      $scope.$apply();
+    }
   }
 }]);

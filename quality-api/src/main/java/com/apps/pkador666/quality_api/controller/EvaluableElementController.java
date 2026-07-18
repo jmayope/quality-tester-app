@@ -9,9 +9,11 @@ import com.apps.pkador666.quality_api.model.EvaluableElement;
 import com.apps.pkador666.quality_api.service.EvaluableElementService;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -29,6 +31,11 @@ public class EvaluableElementController {
   @GetMapping
   public ResponseEntity<ApiResponse<List<EvaluableElement>>> findAll() {
       return ResponseEntity.ok(ApiResponse.success(evaluableElementService.findAll(), "Listado Correcto"));
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<ApiResponse<Optional<EvaluableElement>>> findById(@PathVariable("id") Long id) {
+      return ResponseEntity.ok(ApiResponse.success(evaluableElementService.findById(id), "Item correcto"));
   }
 
   @PostMapping

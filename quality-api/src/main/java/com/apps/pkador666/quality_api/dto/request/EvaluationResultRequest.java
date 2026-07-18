@@ -7,9 +7,9 @@ import com.apps.pkador666.quality_api.model.EvaluationModel;
 public class EvaluationResultRequest {
   private Long id;
   private Long evaluationModelId;
+  private Long evaluableElementId;
   private Long userId;
   private String state;
-  
   public Long getId() {
     return id;
   }
@@ -21,6 +21,12 @@ public class EvaluationResultRequest {
   }
   public void setEvaluationModelId(Long evaluationModelId) {
     this.evaluationModelId = evaluationModelId;
+  }
+  public Long getEvaluableElementId() {
+    return evaluableElementId;
+  }
+  public void setEvaluableElementId(Long evaluableElementId) {
+    this.evaluableElementId = evaluableElementId;
   }
   public Long getUserId() {
     return userId;

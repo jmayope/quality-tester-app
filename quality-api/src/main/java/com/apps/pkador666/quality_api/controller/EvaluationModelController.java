@@ -17,11 +17,13 @@ import com.apps.pkador666.quality_api.service.EvaluationSectionService;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,17 +38,20 @@ public class EvaluationModelController {
   
   private final EvaluationModelService evaluationModelService;
   private final EvaluationSectionService evaluationSectionService;
-  private final EvaluationMetricService evaluationMetricService;
 
-  public EvaluationModelController(EvaluationModelService evaluationModelService, EvaluationSectionService evaluationSectionService, EvaluationMetricService evaluationMetricService) {
+  public EvaluationModelController(EvaluationModelService evaluationModelService, EvaluationSectionService evaluationSectionService) {
     this.evaluationModelService = evaluationModelService;
     this.evaluationSectionService = evaluationSectionService;
-    this.evaluationMetricService = evaluationMetricService;
   }
 
   @GetMapping
   public ResponseEntity<ApiResponse<List<EvaluationModelResponse>>> findAll() {
       return ResponseEntity.ok(ApiResponse.success(evaluationModelService.findAll(), "Listado Correcto"));
+  }
+
+  @GetMapping("{id}")
+  public ResponseEntity<ApiResponse<Optional<EvaluationModel>>> findById(@PathVariable("id") Long id) {
+      return ResponseEntity.ok(ApiResponse.success(evaluationModelService.findById(id), "Listado Correcto"));
   }
 
   @GetMapping("/report")

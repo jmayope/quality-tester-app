@@ -18,6 +18,10 @@ public class EvaluationResult {
   private EvaluationModel evaluationModel;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "evaluation_evaluable_id", nullable = false)
+  private EvaluableElement evaluableElement;
+
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
@@ -42,6 +46,14 @@ public class EvaluationResult {
 
   public void setEvaluationModel(EvaluationModel evaluationModel) {
     this.evaluationModel = evaluationModel;
+  }
+
+  public EvaluableElement getEvaluableElement() {
+    return evaluableElement;
+  }
+
+  public void setEvaluableElement(EvaluableElement evaluableElement) {
+    this.evaluableElement = evaluableElement;
   }
 
   public User getUser() {
@@ -69,5 +81,4 @@ public class EvaluationResult {
   }
 
   
-
 }

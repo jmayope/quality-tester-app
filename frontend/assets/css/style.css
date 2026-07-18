@@ -65,3 +65,7 @@ dialog::backdrop {
 .borderless {
   border: none;
 }
+
+.no-resize {
+  resize: none;
+}

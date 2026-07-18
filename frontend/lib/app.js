@@ -53,7 +53,14 @@ app.controller("indexCtrl", ["$scope", "$location", "APP_CONFIG", "$timeout", ($
     console.log("Verificando ruta");
     $scope.loadData();
     console.log($location.$$url);
-    let menuSelected = JSON.parse(localStorage.getItem("menu") || 'null');
+    let menuSelected = undefined;
+    console.log(localStorage.getItem("menu"));
+    if (localStorage.getItem("menu") == "undefined") {
+      menuSelected = $scope.menu.find(m => m.route == $location.$$url);
+    } else {
+      menuSelected = JSON.parse(localStorage.getItem("menu") || 'null');
+
+    }
     console.log(menuSelected);
     if (menuSelected) {
       $scope.initView = menuSelected.route;

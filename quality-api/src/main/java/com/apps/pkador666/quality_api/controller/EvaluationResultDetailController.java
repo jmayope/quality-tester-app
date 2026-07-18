@@ -39,6 +39,7 @@ public class EvaluationResultDetailController {
       return ResponseEntity.ok(ApiResponse.success(evaluationResultDetailService.findByEvaluationResultId(evaluationResultId), "Listado correct"));
   }
   
+  @PostMapping
   public ResponseEntity<ApiResponse<EvaluationResultDetail>> save(@RequestBody EvaluationResultDetail details) {
     try {
       return ResponseEntity.ok(ApiResponse.success(evaluationResultDetailService.create(details), "Guardado correcto"));
