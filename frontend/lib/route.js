@@ -31,34 +31,6 @@ angular.module('qualityApp')
       templateUrl: './lib/components/report/report.template.html',
       controller: 'reportCtrl',
     })
-    // .when('/offer', {
-    //   templateUrl: 'components/offer/offer.template.html',
-    //   controller: 'offerCtrl',
-    // })
-    // .when('/residue-management', {
-    //   templateUrl: 'components/residue-management/residue-management.template.html',
-    //   controller: 'residueManagementCtrl',
-    // })
-    // .when('/select-role', {
-    //   templateUrl: 'components/select-role/select-role.template.html',
-    //   controller: 'selectRoleCtrl',
-    // })
-    // .when('/dashboard', {
-    //   templateUrl: 'components/dashboard/dashboard.template.html',
-    //   controller: 'dashboardCtrl',
-    // })
-    // .when('/report', {
-    //   templateUrl: 'components/report/report.template.html',
-    //   controller: 'reportCtrl',
-    // })
-    // .when('/select-entity', {
-    //   templateUrl: 'components/select-entity/select-entity.template.html',
-    //   controller: 'selectEntityCtrl',
-    // })
-    // .when('/waste-manifest', {
-    //   templateUrl: 'components/waste-manifest/waste-manifest.template.html',
-    //   controller: 'wasteManifestCtrl',
-    // })
     .otherwise({
       redirectTo: '/login'
     });
