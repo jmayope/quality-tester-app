@@ -32,6 +32,10 @@ public class UserService {
     return userRepository.findAll();
   }
 
+  public Optional<User> findById(Long id) {
+    return userRepository.findById(id);
+  }
+
   public User authenticate(String username, String password) {
     User user = authRepository.findByUsername(username)
       .orElseThrow(() -> new BadCredentialsException("Usuario no encontrado"));
