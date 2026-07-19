@@ -3,10 +3,12 @@ package com.apps.pkador666.quality_api.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.apps.pkador666.quality_api.dto.request.EvaluationResultRequest;
 import com.apps.pkador666.quality_api.dto.request.EvaluationSectionRequest;
 import com.apps.pkador666.quality_api.dto.response.EvaluationSectionResponse;
 import com.apps.pkador666.quality_api.model.ApiResponse;
 import com.apps.pkador666.quality_api.model.EvaluationModel;
+import com.apps.pkador666.quality_api.model.EvaluationResult;
 import com.apps.pkador666.quality_api.model.EvaluationSection;
 import com.apps.pkador666.quality_api.service.EvaluationModelService;
 import com.apps.pkador666.quality_api.service.EvaluationSectionService;
@@ -41,5 +43,14 @@ public class EvaluationSectionController {
   @GetMapping("/by-evaluation-model/{evaluationModelId}")
   public ResponseEntity<ApiResponse<List<EvaluationSectionResponse>>> findByEvaluationModelId(@PathVariable("evaluationModelId") Long evaluationModelId) {
     return ResponseEntity.ok(ApiResponse.success(evaluationSectionService.findByEvaluationModelId(evaluationModelId), "Listado correcto"));
+  }
+
+  @PostMapping
+  public ResponseEntity<ApiResponse<EvaluationSection>> save(@RequestBody EvaluationSectionRequest evaluationResult) {
+    try {
+      return ResponseEntity.ok(ApiResponse.success(evaluationSectionService.create(evaluationResult), "Guardado correcto"));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(ApiResponse.validation("Error al momento de registro", e.getMessage()));
+    }
   }
 }

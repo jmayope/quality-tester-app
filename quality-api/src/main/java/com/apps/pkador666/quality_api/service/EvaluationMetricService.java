@@ -104,20 +104,20 @@ public class EvaluationMetricService {
 
 }
 
-  public List<EvaluationMetric> findByEvaluationModelId(Long evaluationModelId) {
+  public List<EvaluationMetricResponse> findByEvaluationModelId(Long evaluationModelId) {
+    List<EvaluationMetricResponse> response = new ArrayList<EvaluationMetricResponse>();
     List<EvaluationMetric> founds = evaluationMetricRepository.findAll().stream().filter(e -> e.getEvaluationModel().getId() == evaluationModelId).toList();
-    // List<EvaluationMetricResponse> response = new ArrayList<EvaluationMetricResponse>();
-    // founds.stream().forEach(e -> {
-    //   EvaluationMetricResponse metric = new EvaluationMetricResponse();
-    //   metric.setId(Optional.of(e.getId()));
-    //   metric.setEvaluationModelId(e.getEvaluationModel().getId());
-    //   metric.setEvaluationSectionId(e.getEvaluationSection().getId());
-    //   metric.setMetricId(e.getMetric().getId());
-    //   metric.setStatus(Optional.of(e.getStatus()));
-    //   response.add(metric);
-    // });
+    founds.stream().forEach(e -> {
+      EvaluationMetricResponse metric = new EvaluationMetricResponse();
+      metric.setId(Optional.of(e.getId()));
+      metric.setEvaluationModelId(e.getEvaluationModel().getId());
+      metric.setEvaluationSectionId(e.getEvaluationSection().getId());
+      metric.setMetricId(e.getMetric().getId());
+      metric.setStatus(Optional.of(e.getStatus()));
+      response.add(metric);
+    });
 
-    return founds;
+    return response;
   }
 
   public List<EvaluationMetricResponse> findByEvaluationModelIdEntity(Long evaluationModelId) {

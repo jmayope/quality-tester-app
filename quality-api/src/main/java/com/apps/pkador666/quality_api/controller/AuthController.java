@@ -39,7 +39,7 @@ public class AuthController {
       User userAuthenticated = userService.authenticate(user.getUsername(), user.getPassword());
       return ResponseEntity.ok(ApiResponse.success(userAuthenticated, "Usuario autenticado exitosamente."));
     } catch (RuntimeException e) {
-      return ResponseEntity.badRequest().body(ApiResponse.validation("Credenciales incorrectas.", e.getMessage()));
+      return ResponseEntity.ok(ApiResponse.validation("Credenciales incorrectas.", e.getMessage()));
     }
   }
   

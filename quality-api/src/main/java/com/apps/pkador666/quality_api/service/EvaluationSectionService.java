@@ -19,9 +19,14 @@ import jakarta.transaction.Transactional;
 @Service
 public class EvaluationSectionService {
   private final EvaluationSectionRepository evaluationSectionRepository;
+  private final EvaluationModelRepository evaluationModelRepository;
 
-  public EvaluationSectionService(EvaluationSectionRepository evaluationSectionRepository) {
+  public EvaluationSectionService(
+    EvaluationSectionRepository evaluationSectionRepository,
+    EvaluationModelRepository evaluationModelRepository
+  ) {
     this.evaluationSectionRepository = evaluationSectionRepository;
+    this.evaluationModelRepository = evaluationModelRepository;
   }
 
   public List<EvaluationSection> findAll() {
@@ -30,6 +35,21 @@ public class EvaluationSectionService {
 
   public Optional<EvaluationSection> findById(Long id) {
     return evaluationSectionRepository.findById(id);
+  }
+
+  public EvaluationSection create(EvaluationSectionRequest evaluationSection) {
+    EvaluationSection newEvaluationSection = new EvaluationSection();
+    newEvaluationSection.setName(evaluationSection.getName());
+    newEvaluationSection.setDescription(evaluationSection.getDescription());
+    newEvaluationSection.setSectionOrder(evaluationSection.getSectionOrder());
+    Optional<EvaluationModel> evaluationModel = evaluationModelRepository.findById(evaluationSection.getEvaluationModelId());
+    newEvaluationSection.setEvaluationModel(evaluationModel.get());
+    if (evaluationSection.getParent() != null) {
+      Optional<EvaluationSection> parent = evaluationSectionRepository.findById(evaluationSection.getParent().get());
+      newEvaluationSection.setParent(parent.get());
+    }
+    newEvaluationSection.setStatus(evaluationSection.getStatus() == null ? true : evaluationSection.getStatus().get());
+    return evaluationSectionRepository.save(newEvaluationSection);
   }
 
   @Transactional
@@ -95,8 +115,7 @@ public class EvaluationSectionService {
     return roots.stream()
             .map(this::toResponse)
             .toList();
-
-}
+  }
 
   private EvaluationSectionResponse toResponse(EvaluationSection entity) {
 

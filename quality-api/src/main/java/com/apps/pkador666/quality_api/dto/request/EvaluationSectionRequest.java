@@ -7,7 +7,7 @@ public class EvaluationSectionRequest {
   private Optional<Long> id;
   private Long evaluationModelId;
   private List<EvaluationSectionRequest> sections;
-
+  private Optional<Long> parent; 
   private String name;
   private Long sectionOrder;
   private String description;
@@ -29,6 +29,12 @@ public class EvaluationSectionRequest {
   }
   public void setSections(List<EvaluationSectionRequest> sections) {
     this.sections = sections;
+  }
+  public Optional<Long> getParent() {
+    return parent;
+  }
+  public void setParent(Optional<Long> parent) {
+    this.parent = parent;
   }
   public String getName() {
     return name;
@@ -54,5 +60,6 @@ public class EvaluationSectionRequest {
   public void setStatus(Optional<Boolean> status) {
     this.status = status;
   }
+  
   
 }

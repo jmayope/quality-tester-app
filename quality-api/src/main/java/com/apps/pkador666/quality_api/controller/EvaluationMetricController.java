@@ -35,7 +35,7 @@ public class EvaluationMetricController {
   }
 
   @GetMapping("by-evaluation-model/{evaluationModelId}")
-  public ResponseEntity<ApiResponse<List<EvaluationMetric>>> findByEvaluationModelId(@PathVariable("evaluationModelId") Long evaluationModelId) {
+  public ResponseEntity<ApiResponse<List<EvaluationMetricResponse>>> findByEvaluationModelId(@PathVariable("evaluationModelId") Long evaluationModelId) {
     return ResponseEntity.ok(ApiResponse.success(evaluationMetricService.findByEvaluationModelId(evaluationModelId), "Listado por Modelo de Evaluacion"));
   }
   
