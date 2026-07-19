@@ -12,6 +12,7 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", "APP
   $scope.sectionToAssign = undefined;
   $scope.sectionToAddSubSection = undefined;
   $scope.sectionsToShow = [];
+  $scope.allEvaluationMetrics = [];
   $scope.evaluationMetrics = [];
   $scope.isUsageModelOpen = false;
   $scope.newEvaluationResult = undefined;
@@ -29,7 +30,12 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", "APP
     let resultEvaluations = await mainService.findAllEvaluations();
     console.log(resultEvaluations.data);
     $scope.evaluationModels = resultEvaluations.data;
-    console.log(resultEvaluations);
+    $scope.evaluationModels.map(e => {
+      e.sections.map(s => {
+        s.evaluationMetric = e.metrics.find(x => x.evaluationSectionId === s.id);
+      })
+    })
+    console.log($scope.evaluationModels);
     $scope.evaluationModels.sort((a, b) => a.id - b.id);
     if (!$scope.userLoged.isAdmin) {
       $scope.getEvaluableElements();
@@ -48,6 +54,14 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", "APP
   $scope.getMetrics = async () => {
     let resultMetrics = await mainService.findAllMetrics();
     $scope.metrics = resultMetrics.data;
+    $scope.evaluationModels.map(e => {
+      e.sections.map(s => {
+        if (s.evaluationMetric) {
+          s.metric = $scope.metrics.find(m => m.id === s.evaluationMetric.metricId);
+        }
+      });
+    });
+    console.log($scope.evaluationModels);
     $scope.getMetricScales();
   }
 
@@ -93,13 +107,6 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", "APP
         $scope.newEvaluationModel.metrics = $scope.newEvaluationModel.metrics || [];
         $scope.newEvaluationModel.editing = true;
         $scope.sectionsToShow = [...$scope.sectionsToShow, ...$scope.additionSections];
-        let result = await mainService.findAllEvaluationMetricsByEvaluationModelId($scope.newEvaluationModel.id);
-        console.log(result);
-        console.log($scope.newEvaluationModel);
-        $scope.evaluationMetrics = result.data;
-        $scope.newEvaluationModel.sections.map(s => {
-          s.metric = ($scope.evaluationMetrics.find(e => e.evaluationSection.id === s.id) || {}).metric;
-        })
       }
     }
   }
@@ -191,6 +198,7 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", "APP
           $scope.newSection = JSON.parse(JSON.stringify(section));
           $scope.newSection.sections = $scope.newSection.sections || [];
         }
+        $scope.newSection.evaluationModelId = $scope.newEvaluationModel.id;
       }
     }
   }
@@ -209,6 +217,9 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", "APP
           $scope.newSubSection = JSON.parse(JSON.stringify(subsection));
           $scope.newSubSection.editing = true;
         }
+        $scope.newSection = {
+          evaluationModelId: $scope.newEvaluationModel.id
+        };
       }
     }
   }
@@ -223,9 +234,20 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", "APP
     $scope.sectionToAddSubSection = undefined;
   }
 
-  $scope.saveSection = () => {
+  $scope.saveSection = async () => {
+    if ($scope.newEvaluationModel.id) {
+      // Ingresar a la BD
+      let newSection = $scope.newSection;
+      console.log(newSection);
+      let resultSection = await mainService.saveEvaluationSections(newSection);
+      console.log(resultSection);
+      $scope.newSection.id = resultSection.data.id;
+    }
     $scope.newEvaluationModel.sections.push($scope.newSection);
     $scope.newSection = undefined;
+    if(!$scope.$$phase) {
+      $scope.$apply();
+    }
   }
 
   $scope.toggleMetric = async (section = undefined) => {

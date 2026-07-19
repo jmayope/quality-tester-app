@@ -103,6 +103,9 @@ app.factory("authInterceptor", ["$q", "$window", function($q, $window) {
     saveEvaluationResults: (body) => {
       return $http.post(`${apiUrl}/evaluation-results`, body).then(response => response.data)
     },
+    saveEvaluationSections: (body) => {
+      return $http.post(`${apiUrl}/evaluation-sections`, body).then(response => response.data)
+    },
     findEvaluationSectionsByEvaluationModelId: (id) => {
       return $http.get(`${apiUrl}/evaluation-sections/by-evaluation-model/${id}`).then(response => response.data);
     },

@@ -38,7 +38,13 @@ app.controller("loginCtrl", ["$scope","mainService","$location","APP_CONFIG", "$
       });
       return;
     }
-
+    if (!response.data) {
+      Swal.fire({
+        icon: 'error',
+        text: response.message
+      });
+      return;
+    }
     let userLoged = response.data;
     
     let resultBusinessUsers = await mainService.findAllBusinessUsers();
@@ -48,7 +54,10 @@ app.controller("loginCtrl", ["$scope","mainService","$location","APP_CONFIG", "$
     // Disparar evento global
     $rootScope.$broadcast("userLogged");
     $scope.menu = APP_CONFIG.MENU;
-    $scope.menu = $scope.menu.filter(m => m.roleAlloweds && m.roleAlloweds.length).filter(m => m.roleAlloweds.includes(userLoged.userType));
+    if (!userLoged.isAdmin) {
+      $scope.menu = $scope.menu.filter(m => m.roleAlloweds && m.roleAlloweds.length).filter(m => m.roleAlloweds.includes(userLoged.userType));
+    }
+    console.log($scope.menu);
     localStorage.setItem('menu', JSON.stringify($scope.menu[0]))
     $location.path($scope.menu[0].route);
     if(!$scope.$$phase) {
