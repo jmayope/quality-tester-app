@@ -27,6 +27,10 @@ angular.module('qualityApp')
       templateUrl: './lib/components/evaluation-score-capture/evaluation-score-capture.template.html',
       controller: 'evaluationScoreCaptureCtrl',
     })
+    .when('/evaluation-score-capture', {
+      templateUrl: './lib/components/evaluation-score-capture/evaluation-score-capture.template.html',
+      controller: 'evaluationScoreCaptureCtrl',
+    })
     .when('/report', {
       templateUrl: './lib/components/report/report.template.html',
       controller: 'reportCtrl',

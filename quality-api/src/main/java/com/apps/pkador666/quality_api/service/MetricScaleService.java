@@ -38,10 +38,10 @@ public class MetricScaleService {
     metricScaleCreated.setMetric(metricFound.get());
     metricScaleCreated.setScaleType(scaleTypeFound.get());
     metricScaleCreated.setName(metricScale.getName());
-    metricScaleCreated.setValue(metricScale.getValue().get() == null ? 0 : metricScale.getValue().get());
-    metricScaleCreated.setFrom(metricScale.getFrom().get() == null ? 0 : metricScale.getFrom().get());
-    metricScaleCreated.setUntil(metricScale.getUntil().get() == null ? 0 : metricScale.getUntil().get());
-    metricScaleCreated.setStatus(metricScale.getStatus().get() == null ? true : metricScale.getStatus().get());
+    metricScaleCreated.setValue(metricScale.getValue() == null ? 0 : metricScale.getValue().get());
+    metricScaleCreated.setFrom(metricScale.getFrom() == null ? 0 : metricScale.getFrom().get());
+    metricScaleCreated.setUntil(metricScale.getUntil() == null ? 0 : metricScale.getUntil().get());
+    metricScaleCreated.setStatus(metricScale.getStatus() == null ? true : metricScale.getStatus().get());
 
     return metricScaleRepository.save(metricScaleCreated);
   }
@@ -58,10 +58,10 @@ public class MetricScaleService {
       metricScaleCreated.setMetric(metricFound.get());
       metricScaleCreated.setScaleType(scaleTypeFound.get());
       metricScaleCreated.setName(m.getName());
-      metricScaleCreated.setValue(m.getValue().get() == null ? 0 : m.getValue().get());
-      metricScaleCreated.setFrom(m.getFrom().get() == null ? 0 : m.getFrom().get());
-      metricScaleCreated.setUntil(m.getUntil().get() == null ? 0 : m.getUntil().get());
-      metricScaleCreated.setStatus(m.getStatus().get() == null ? true : m.getStatus().get());
+      metricScaleCreated.setValue(m.getValue() == null ? 0 : m.getValue().get());
+      metricScaleCreated.setFrom(m.getFrom() == null ? 0 : m.getFrom().get());
+      metricScaleCreated.setUntil(m.getUntil() == null ? 0 : m.getUntil().get());
+      metricScaleCreated.setStatus(m.getStatus() == null ? true : m.getStatus().get());
       newMetricScales.add(metricScaleCreated);
     });
 

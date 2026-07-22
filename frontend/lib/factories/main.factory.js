@@ -112,6 +112,9 @@ app.factory("authInterceptor", ["$q", "$window", function($q, $window) {
     findEvaluationResultById: (id) => {
       return $http.get(`${apiUrl}/evaluation-results/${id}`).then(response => response.data);
     },
+    findAllEvaluationResults: () => {
+      return $http.get(`${apiUrl}/evaluation-results`).then(response => response.data);
+    },
     saveMetrics: (body) => {
       return $http.post(`${apiUrl}/metrics`, body).then(response => response.data);
     },

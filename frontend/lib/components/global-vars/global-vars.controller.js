@@ -97,13 +97,17 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function
   }
 
   $scope.selectMeditionType = () => {
-    if ($scope.newItem.meditionType) {
-      $scope.newMetric.meditionType = $scope.newItem.meditionType;
+    if ($scope.newItem.meditionTypeId) {
+      $scope.newMetric.scales = [];
       $scope.newScale = undefined;
+      let meditionTypeFound = $scope.meditionTypes.find(mt => mt.code === $scope.newItem.meditionTypeId);
+      if (meditionTypeFound) {
+        $scope.newMetric.meditionTypeId = meditionTypeFound.id;
+      }
       console.log($scope.newMetric);
-      switch ($scope.newItem.meditionType.code) {
+      switch ($scope.newItem.meditionTypeId) {
         case '2':
-          $scope.newMetric.meditionType.scales = [];
+          $scope.newMetric.scales = [];
           break;
         default:
           break;
@@ -116,7 +120,7 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function
       $scope.newScale = undefined;
     } else {
       if (drop) {
-        $scope.newMetric.meditionType.scales.splice($scope.newMetric.meditionType.scales.indexOf(scale), 1);
+        $scope.newMetric.scales.splice($scope.newMetric.scales.indexOf(scale), 1);
       } else {
         $scope.newScale = {};
         if (scale) {
@@ -130,8 +134,8 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function
   $scope.saveScale = () => {
     switch ($scope.newScale.type) {
       case '2':
-        console.log($scope.newMetric.meditionType.scales.find(s => $scope.newScale.to >= s.to || $scope.newScale.of <= s.of));
-        if ($scope.newMetric.meditionType.scales.find(s => $scope.newScale.to <= s.to || $scope.newScale.to <= s.of || $scope.newScale.of <= s.to || $scope.newScale.of <= s.of)) {
+        console.log($scope.newMetric.scales.find(s => $scope.newScale.to >= s.to || $scope.newScale.of <= s.of));
+        if ($scope.newMetric.scales.find(s => $scope.newScale.to <= s.to || $scope.newScale.to <= s.of || $scope.newScale.of <= s.to || $scope.newScale.of <= s.of)) {
           Swal.fire({
             icon: 'warning',
             text: 'Verifica los datos ingresados estas causando conflicto con los rangos'
@@ -140,8 +144,8 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function
         }
         break;
       case '1':
-        console.log($scope.newMetric.meditionType.scales.find(s => $scope.newScale.to >= s.to || $scope.newScale.of <= s.of));
-        if ($scope.newMetric.meditionType.scales.find(s => $scope.newScale.to <= s.value || $scope.newScale.of <= s.value)) {
+        console.log($scope.newMetric.scales.find(s => $scope.newScale.to >= s.to || $scope.newScale.of <= s.of));
+        if ($scope.newMetric.scales.find(s => $scope.newScale.to <= s.value || $scope.newScale.of <= s.value)) {
           Swal.fire({
             icon: 'warning',
             text: 'Verifica los datos ingresados estas causando conflicto con los rangos'
@@ -152,11 +156,11 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function
       default:
         break;
     }
-    $scope.newMetric.meditionType.scales.push($scope.newScale);
+    $scope.newMetric.scales.push($scope.newScale);
     $scope.newScale = undefined;
   }
 
-  $scope.saveItem = (type) => {
+  $scope.saveItem = async (type) => {
     Swal.fire({
       html: APP_CONFIG.SPINNER_LOADING,
       text: 'Guardando información',
@@ -167,69 +171,36 @@ app.controller('globalVarsCtrl', ["$scope", "APP_CONFIG","mainService", function
     });
     switch (type) {
       case 'metric':
-        $scope.newMetric.minValue =$scope.newMetric.meditionType.minValue;
-        $scope.newMetric.maxValue =$scope.newMetric.meditionType.maxValue;
         console.log($scope.newItem);
         console.log($scope.newMetric);
         let newMetric = structuredClone($scope.newMetric);
         // newMetric.meditionType = newMetric.meditionType.id;
         newMetric.status = newMetric.status || true;
-        let scales = newMetric.meditionType.scales || [];
-        delete newMetric.meditionType.scales;
-        delete newMetric.meditionType.minValue;
-        delete newMetric.meditionType.maxValue;
-        // Necesitas crear Tipos
-        mainService.saveMetrics(newMetric)
-        .then((data) => {
+        let scales = structuredClone(newMetric.scales || []);
+        
+        scales = scales.map(s => {
+          s.scaleTypeId = s.scaleType.id;
+          delete s.scaleType;
+          return s;
+        });
 
-          if (!data.data) {
-            Swal.fire({
-              icon: 'error',
-              text: 'Hubo un error al momento de crear la Metrica'
-            });
-            return;
-          }
-          if (scales.length) {
-            scales.map(s => {
-              s.metric = data.data;
-              s.status = true;
-            });
-            mainService.saveListMetricScales(scales)
-            .then((metricScalesCreateds) => {
-              Swal.close();
-              $scope.toggleItem();
-              
-              Swal.fire({
-                icon: 'success',
-                text: 'Se guardo la metrica correctamente'
-              });
-              $scope.getMetrics();
-              console.log(data);
-              console.log(metricScalesCreateds);
-            })
-            .catch((err) => {
-              console.log(err);
-            })
-          } else {
-            Swal.close();
-            $scope.toggleItem();
-            
-            Swal.fire({
-              icon: 'success',
-              text: 'Se guardo la metrica correctamente'
-            });
-            $scope.getMetrics();
-            console.log(data);
-          }
-        })
-        .catch((err) => {
-          Swal.close();
+        newMetric.scales = scales;
+        let resultNewMetric = await mainService.saveMetrics(newMetric);
+
+        if (!resultNewMetric.data) {
           Swal.fire({
             icon: 'error',
-            text: err.message
+            text: 'Hubo un error al momento de crear la Metrica'
           });
-          console.log(err);
-        })
+          return;
+        }
+        
+        Swal.fire({
+          icon: 'success',
+          text: 'Se guardo la metrica correctamente'
+        });
+        $scope.getMetrics();
+        $scope.toggleItem();
         break;
       case 'type':
         mainService.saveTypes($scope.newType)

@@ -1,6 +1,7 @@
 package com.apps.pkador666.quality_api.dto.request;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public class MetricRequest {
@@ -12,6 +13,8 @@ public class MetricRequest {
   private Optional<Double> minValue;
   private Optional<Double> maxValue;
   private Optional<Boolean> status;
+  private List<ScaleRequest> scales;
+  
   public Optional<Long> getId() {
     return id;
   }
@@ -60,6 +63,13 @@ public class MetricRequest {
   public void setStatus(Optional<Boolean> status) {
     this.status = status;
   }
+  public List<ScaleRequest> getScales() {
+    return scales;
+  }
+  public void setScales(List<ScaleRequest> scales) {
+    this.scales = scales;
+  }
+
   
-  
+    
 }

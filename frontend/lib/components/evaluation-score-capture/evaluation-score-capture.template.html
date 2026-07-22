@@ -1,15 +1,79 @@
 <div class="container" ng-init="init()">
-  <div class="row">
+  <div class="row" ng-if="viewList">
+    <div class="col-6 mb-3">
+      <span class="font-lg">Evaluaciones</span>
+    </div>
+    <div class="col-6 mb-3">
+      <div class="input-group">
+        <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+        <input type="text" name="text" ng-model="filter.text" class="form-control text-uppercase"
+          placeholder="BUSCAR POR TEXTO" aria-label="BUSCAR POR TEXTO" aria-describedby="basic-addon1">
+        <!-- <button class="btn btn-success" ng-if="evaluationModels.length" ng-click="export()">
+          <i class="fa fa-download me-1"></i>Exportar
+        </button> -->
+      </div>
+    </div>
+    <div class="col-4" ng-repeat="r in evaluationResults | filter:filter.text">
+      <div class="card hand" ng-click="goToEvaluation(r)">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-8">
+              <small>
+                {{r.evaluableElement.code | uppercase}} | {{r.evaluableElement.name | uppercase}}
+              </small>
+            </div>
+            <div class="col-4 text-end">
+              <span class="badge bg-success">
+                ID #{{r.id}}
+              </span>
+            </div>
+            <div class="col-12">
+              <small class="text-secondary">
+                {{r.evaluableElement.business.name | uppercase}}
+              </small>
+            </div>
+            <div class="col-12 mb-3 text-end">
+              <span class="badge bg-primary ms-2" ng-repeat="t in r.evaluableElement.technologies">
+                {{t}}
+              </span>
+            </div>
+            <div class="col-6">
+              <small>
+                <i class="fa fa-circle me-1"></i>{{r.stateName | uppercase}}
+              </small>
+            </div>
+            <div class="col-6 text-end">
+              <small>
+                <i class="fa fa-calendar me-1"></i>{{r.createdAt | date:'dd/MM/yyyy'}} <br>
+                <i class="fa fa-clock me-1"></i>{{r.createdAt | date: 'HH:mm a'}}
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="!viewList">
+    <div class="row mb-2">
+      <div class="col-4">
+        <button class="btn btn-sm btn-light text-danger me-1" ng-click="back()">
+          <i class="fa fa-arrow-left me-1"></i>Volver a las Evaluaciones
+        </button>
+      </div>
+      <div class="col-4"></div>
+    </div>
     <div class="card mb-4">
       <div class="card-body">
-        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
-          <div>
-            <div class="text-muted mb-1" style="font-size:.78rem;"><i class="bi bi-diagram-3 me-1"></i>Modelo de
-              evaluación</div>
+        <div class="row">
+          <div class="col-8">
+            <span class="text-secondary">
+              <i class="fa fa-pie-chart me-1"></i>Modelo de evaluación
+            </span>
             <h1 class="h5 fw-bold mb-0">{{evaluationResult.evaluationModel.name | uppercase}}</h1>
           </div>
-          <span class="badge bg-brand-soft text-brand px-3 py-2" style="font-size:.75rem;"><i
-              class="bi bi-record-circle me-1"></i>Evaluación en curso</span>
+          <div class="col-4 text-end">
+            <span class="badge bg-success"><i class="fa fa-circle me-1"></i>{{evaluationResult.stateName}}</span>
+          </div>
         </div>
         <hr>
         <div class="row g-3">
@@ -17,7 +81,8 @@
             <div class="text-muted" style="font-size:.75rem;">Evaluado</div>
             <div class="d-flex align-items-center gap-2 mt-1">
               <span class="avatar-sm">JS</span>
-              <span class="fw-semibold" style="font-size:.88rem;">{{evaluationResult.evaluableElement.name | uppercase}}</span>
+              <span class="fw-semibold" style="font-size:.88rem;">{{evaluationResult.evaluableElement.name |
+                uppercase}}</span>
             </div>
           </div>
           <div class="col-6 col-md-3">
@@ -26,11 +91,19 @@
           </div>
           <div class="col-6 col-md-3">
             <div class="text-muted" style="font-size:.75rem;">Referencia / Empresa</div>
-            <div class="fw-semibold mt-1" style="font-size:.88rem;">{{userLoged.businessUser.business.name | uppercase}}</div>
+            <div class="fw-semibold mt-1" style="font-size:.88rem;">{{userLoged.businessUser.business.name | uppercase}}
+            </div>
           </div>
           <div class="col-6 col-md-3">
             <div class="text-muted" style="font-size:.75rem;">Fecha</div>
-            <div class="fw-semibold mt-1" style="font-size:.88rem;">{{evaluationResult.createdAt | date: 'dd/MM/yyyy'}}</div>
+            <div class="fw-semibold mt-1" style="font-size:.88rem;">{{evaluationResult.createdAt | date: 'dd/MM/yyyy'}}
+            </div>
+          </div>
+          <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75"
+            aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar progress-bar-striped progress-bar-animated"
+              ng-class="{'bg-danger': evaluatesPercent <= 20, 'bg-warning': evaluatesPercent > 20 && evaluatesPercent < 50, 'bg-info': evaluatesPercent >50 && evaluatesPercent <= 80, 'bg-primary': evaluatesPercent > 80}"
+              ng-style="{'width': evaluatesPercent + '%'}"></div>
           </div>
         </div>
       </div>
@@ -41,64 +114,141 @@
       <div class="col-lg-8 order-2 order-lg-1">
         <!-- Section 1 -->
         <div class="card section-card mb-3" ng-repeat="s in evaluationModelSections" id="section-1" data-section="1">
-          <div class="card-header d-flex align-items-center gap-3  hand" data-bs-toggle="collapse" data-bs-target="#body-1" ng-click="toggleDetail(s)">
+          <div class="card-header d-flex align-items-center gap-3 hand" ng-class="{'bg-primary': s.evaluated}"
+            data-bs-toggle="collapse" data-bs-target="#body-1" ng-click="toggleDetail(s)">
             <span class="section-index">{{$index + 1}}</span>
             <div class="flex-grow-1">
               <div class="fw-semibold" style="font-size:.92rem;">{{s.name | uppercase}}</div>
-              <div class="text-muted" style="font-size:.75rem;">{{s.description | uppercase}} Sub secciones: {{s.sections.length}}</div>
+              <div class="text-muted" style="font-size:.75rem;">{{s.description | uppercase}}<span class="ms-2"
+                  ng-if="s.sections.length">Sub secciones: {{s.sections.length}}</span></div>
             </div>
-            <span class="badge rounded-pill bg-light text-muted section-score-badge" style="font-size:.75rem;">{{(s.evaluated || 0)}} %</span>
+            <span class="badge rounded-pill bg-light text-muted section-score-badge"
+              style="font-size:.75rem;">{{(s.evaluated || 0)}} %</span>
             <i class="fa chevron" ng-class="{'fa-chevron-down': !s.showDetail, 'fa-chevron-up': s.showDetail}"></i>
           </div>
           <div class="collapse show" id="body-1" ng-if="s.showDetail">
-            <div class="card-body">
-              <div class="eval-item mb-2" ng-repeat="i in s.sections" data-max="10">
-                <div class="d-flex justify-content-between align-items-start gap-2">
-                  <div>
-                    <div class="fw-semibold" style="font-size:.88rem;">{{i.name | uppercase}}</div>
-                    <span class="metric-badge mt-1 d-inline-block">Cumple / No cumple</span>
+            <div class="card-body" ng-if="!s.sections.length">
+              <div class="row">
+                <div class="col-12" ng-if="s.metric.meditionType.code === '1'">
+                  <div class="row">
+                    <div class="col-10">
+                      <small>
+                        {{s.metric.category.name | uppercase}}
+                      </small> |
+                      <small>
+                        {{s.metric.metricAttribute.name | uppercase}}
+                      </small>
+                    </div>
+                    <div class="col-2">
+                      Evalua:
+                    </div>
+                    <div class="col-12">
+                      <div class="row">
+                        <div class="col text-center" ng-repeat="mt in s.list">
+                          <button class="btn-light text-dark rounded-circle">
+                            {{mt.name}}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <span class="points-tag">— / 10</span>
                 </div>
-                <div class="d-flex gap-2 mt-2">
-                  <button type="button" class="btn btn-sm btn-light text-primary" data-points="10" onclick="selectOption(this)">Sí</button>
-                  <button type="button" class="btn btn-sm btn-light text-primary" data-points="0" onclick="selectOption(this)">No</button>
+                <div class="col-12" ng-if="s.metric.meditionType.code === '2'">
+                  <div class="row">
+                    <div class="col-10 mb-2">
+                      <small>
+                        {{s.metric.category.name | uppercase}}
+                      </small> |
+                      <small>
+                        {{s.metric.metricAttribute.name | uppercase}}
+                      </small>
+                    </div>
+                    <div class="col-2">
+                      Evalua:
+                    </div>
+                    <div class="col-2"></div>
+                    <div class="col" ng-repeat="mt in s.scales">
+                      <div class="card hand"
+                        ng-class="{'bg-primary text-white': s.metricScaleSelected.id === mt.id, 'text-secondary': s.metricScaleSelected.id !== mt.id }"
+                        ng-click="toggleMetricScaleSelected(mt, s)">
+                        <div class="card-body text-center">
+                          <i class="fa me-1"
+                            ng-class="{'fa-check-circle': s.metricScaleSelected.id === mt.id, 'fa-circle': s.metricScaleSelected.id !== mt.id}"></i>{{mt.name
+                          | uppercase}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-2"></div>
+                  </div>
                 </div>
-                <div class="row">
-                  <div class="col-12 text-end">
-                    <button class="btn btn-sm btn-light" ng-class="{'text-primary': !i.addComment, 'text-danger': i.addComment}" ng-click="toggleComment(i)">
-                      <i class="fa me-1" ng-class="{'fa-plus': !i.addComment, 'fa-times': i.addComment}"></i>{{i.addComment ? 'Quitar comentario': 'Agregar comentario'}}
-                    </button>
+                <div class="col-12" ng-if="s.metric.meditionType.code === '3'">
+                  <div class="row">
+                    <div class="col-10 mb-2">
+                      <small>
+                        {{s.metric.category.name | uppercase}}
+                      </small> |
+                      <small>
+                        {{s.metric.metricAttribute.name | uppercase}}
+                      </small>
+                    </div>
+                    <div class="col-2">
+                      ¿Cumple?
+                    </div>
+                    <div class="col-3"></div>
+                    <div class="col" ng-repeat="mt in s.optionsBinary">
+                      <div class="card hand"
+                        ng-class="{'bg-primary text-white': s.metricScaleSelected.id === mt.id, 'text-secondary': s.metricScaleSelected.id !== mt.id }"
+                        ng-click="toggleMetricScaleSelected(mt, s)">
+                        <div class="card-body text-center">
+                          <i class="fa me-1"
+                            ng-class="{'fa-check-circle': s.metricScaleSelected.id === mt.id, 'fa-circle': s.metricScaleSelected.id !== mt.id}"></i>{{mt.name
+                          | uppercase}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-3"></div>
                   </div>
-                  <div class="col-12 mt-3" ng-if="i.addComment">
-                    <textarea class="form-control form-control-sm no-resize" name="comment-{{$index}}" ng-model="i.obs" rows="3" placeholder="Observación sobre este ítem..."></textarea>
-                  </div>
+                </div>
+                <div class="col-12 mt-2 text-end">
+                  <button class="btn btn-light text-danger" ng-click="clearSelection(s)">
+                    <i class="fa fa-times me-1"></i>Limpiar Selección
+                  </button>
                 </div>
               </div>
-
-              <div class="eval-item" data-max="10">
-                <div class="d-flex justify-content-between align-items-start gap-2">
-                  <div>
-                    <div class="fw-semibold" style="font-size:.88rem;">Tono de voz y disposición</div>
-                    <span class="metric-badge mt-1 d-inline-block">Escala 0–10</span>
-                  </div>
-                  <span class="points-tag">— / 10</span>
-                </div>
-                <div class="d-flex flex-wrap gap-2 mt-2">
-                  <button type="button" class="opt-btn" data-points="0" onclick="selectOption(this)">0</button>
-                  <button type="button" class="opt-btn" data-points="2" onclick="selectOption(this)">2</button>
-                  <button type="button" class="opt-btn" data-points="4" onclick="selectOption(this)">4</button>
-                  <button type="button" class="opt-btn" data-points="6" onclick="selectOption(this)">6</button>
-                  <button type="button" class="opt-btn" data-points="8" onclick="selectOption(this)">8</button>
-                  <button type="button" class="opt-btn" data-points="10" onclick="selectOption(this)">10</button>
-                </div>
-                <a href="#" class="comment-toggle d-inline-block mt-2" onclick="toggleComment(event,this)"><i
-                    class="bi bi-chat-left-text me-1"></i>Agregar comentario</a>
-                <textarea class="form-control form-control-sm mt-2 d-none" rows="2"
-                  placeholder="Observación sobre este ítem..."></textarea>
-              </div>
-
             </div>
+            <ul class="list-group list-group-flush" ng-if="s.sections.length" ng-repeat="i in s.sections">
+              <li class="list-group-item">
+                <div class="row">
+                  <div class="col-12">
+                    {{i.name | uppercase}}
+                  </div>
+                  <div class="col-12" ng-if="s.metric.meditionType.code === '1'">
+                    <div class="row">
+                      <div class="col-10">
+                        <small>
+                          {{s.metric.category.name | uppercase}}
+                        </small> |
+                        <small>
+                          {{s.metric.metricAttribute.name | uppercase}}
+                        </small>
+                      </div>
+                      <div class="col-2">
+                        Evalua:
+                      </div>
+                      <div class="col-12">
+                        <div class="row">
+                          <div class="col text-center" ng-repeat="mt in i.list">
+                            <button class="btn-light px-3 py-2 text-dark rounded-circle">
+                              {{mt.name}}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
 
@@ -121,12 +271,14 @@
             <div class="card-body text-center">
               <div class="ring" id="scoreRing" style="--pct:0;">
                 <div class="ring-inner">
-                  <div class="fw-bold" id="ringScore" style="font-size:1.3rem;">0%</div>
+                  <div class="fw-bold" id="ringScore" style="font-size:1.3rem;">{{evaluatesPercent | number:1.2-2}}%
+                  </div>
                   <div class="text-muted" style="font-size:.65rem;">puntaje</div>
                 </div>
               </div>
               <div class="mt-3" style="font-size:.8rem;">
-                <span class="text-muted" id="answeredCount">0 de 12</span> ítems evaluados
+                <span class="text-muted" id="answeredCount">{{itemEvaluates.length}} de
+                  {{evaluationModelSections.length}}</span> ítems evaluados
               </div>
               <div class="text-muted mt-1" style="font-size:.75rem;">Umbral de aprobación: 80%</div>
             </div>
@@ -137,26 +289,20 @@
               <span class="fw-semibold" style="font-size:.88rem;">Progreso por sección</span>
             </div>
             <div class="card-body py-2" id="sectionNav">
-              <div class="nav-section-item" onclick="scrollToSection(1)" data-nav="1">
-                <span class="dot">1</span>
-                <span>Saludo y presentación</span>
-                <span class="sec-score">0%</span>
-              </div>
-              <div class="nav-section-item" onclick="scrollToSection(2)" data-nav="2">
-                <span class="dot">2</span>
-                <span>Indagación de necesidades</span>
-                <span class="sec-score">0%</span>
-              </div>
-              <div class="nav-section-item" onclick="scrollToSection(3)" data-nav="3">
-                <span class="dot">3</span>
-                <span>Manejo de objeciones</span>
-                <span class="sec-score">0%</span>
-              </div>
-              <div class="nav-section-item" onclick="scrollToSection(4)" data-nav="4">
-                <span class="dot">4</span>
-                <span>Cierre y despedida</span>
-                <span class="sec-score">0%</span>
-              </div>
+              <ol>
+                <li ng-repeat="s in evaluationModelSections">
+                  <small ng-class="{'text-primary': s.evaluated === 100}">
+                    {{s.name | uppercase}} - {{s.evaluated || 0}}%
+                  </small>
+                  <ol ng-if="s.sections">
+                    <li ng-repeat="i in s.sections">
+                      <small ng-class="{'text-primary': s.evaluated === 100}">
+                        {{i.name | uppercase}} - {{i.evaluated || 0}}%
+                      </small>
+                    </li>
+                  </ol>
+                </li>
+              </ol>
             </div>
           </div>
         </div>

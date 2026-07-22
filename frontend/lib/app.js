@@ -39,6 +39,7 @@ app.constant("APP_CONFIG", {
   MENU: [
     {id: 1, name: 'Entidades', route: '/entity'},
     {id: 2, name: 'Módelos', route: '/evaluation-model', roleAlloweds: ['P', 'E']},
+    {id: 2, name: 'Evaluaciones', route: '/evaluation-score-capture', roleAlloweds: ['P', 'E']},
     {id: 3, name: 'Variables Globales', route: '/global-vars'},
     {id: 3, name: 'Reportes', route: '/report', roleAlloweds: ['R']},
     {id: 4, name: 'Usuarios', route: '/users', roleAlloweds: ['P']},
@@ -55,9 +56,13 @@ app.controller("indexCtrl", ["$scope", "$location", "APP_CONFIG", "$timeout", ($
     console.log($location.$$url);
     let menuSelected = undefined;
     console.log(localStorage.getItem("menu"));
+    console.log(typeof localStorage.getItem("menu"));
     if (localStorage.getItem("menu") == "undefined") {
+      console.log("aqui");
       menuSelected = $scope.menu.find(m => m.route == $location.$$url);
+      console.log(menuSelected);
     } else {
+      console.log("aqui2");
       menuSelected = JSON.parse(localStorage.getItem("menu") || 'null');
 
     }
@@ -66,23 +71,14 @@ app.controller("indexCtrl", ["$scope", "$location", "APP_CONFIG", "$timeout", ($
       $scope.initView = menuSelected.route;
     }
     
-
-    // Valiadación de Menu
-    // $scope.userLoged = JSON.parse(localStorage.getItem(APP_CONFIG.TOKEN_NAME) || '{}');
-    console.log($scope.userLoged);
     if ($scope.userLoged && $scope.userLoged.userType) {
       $scope.menu = $scope.menu.filter(m => m.roleAlloweds && m.roleAlloweds.length).filter(m => m.roleAlloweds.includes($scope.userLoged.userType));
-      $scope.selectMenuItem($scope.menu[0]);
-      if(!$scope.$$phase) {
-        $scope.$apply();
-      }
-      return;
+      console.log($scope.menu);
+      $scope.selectMenuItem($scope.menu.find(m => m.route === $scope.initView));
     }
-
-    $scope.selectMenuItem($scope.menu.find(m => m.route === $location.$$url));
-    // if ($scope.userLoged && $scope.userLoged) {
-    //   $scope.menu = $scope.menu.filter()
-    // }
+    if(!$scope.$$phase) {
+      $scope.$apply();
+    }
   }
 
   $scope.$on("userLogged", function () {
@@ -99,6 +95,7 @@ app.controller("indexCtrl", ["$scope", "$location", "APP_CONFIG", "$timeout", ($
 
   $scope.menuSelected = undefined;
   $scope.selectMenuItem = (menuItem) => {
+    $scope.menuSelected = undefined;
     $scope.menuSelected = menuItem;
     console.log($scope.menuSelected);
     localStorage.setItem('menu', JSON.stringify($scope.menuSelected));

@@ -19,13 +19,30 @@
           </li>
           <li class="list-group-item" ng-repeat="m in metrics | filter:filter.metricText">
             <div class="row">
-              <div class="col-5">
+              <div class="col-4">
                 <small class="text-secondary">
                   {{m.name | uppercase}}
                 </small>
               </div>
-              <div class="col-4">
-                <div ng-if="m.scales.length">
+              <div class="col-6">
+                <div ng-if="!m.scales || (m.scales && !m.scales.length)">
+                  <div class="row" ng-if="m.meditionType.code == '3'">
+                    <div class="col-12">
+                      <small class="text-secondary">Decisión</small><br>
+                      Si/No
+                    </div>
+                  </div>
+                  <div class="row" ng-if="m.meditionType.code !== '3' && m.minValue">
+                    <div class="col-12">
+                      <small class="text-secondary">Valores</small>
+                    </div>
+                    <div class="col-12">
+                      De {{m.minValue}} a {{m.maxValue}}
+                    </div>
+                  </div>
+                </div>
+                <div ng-if="m.scales && m.scales.length">
+                  <small class="text-secondary">Rango:</small> <br>
                   <span class="badge bg-light text-primary-color" ng-repeat="s in m.scales">
                     <small>{{s.name | uppercase}}:</small>&nbsp;
                     <span ng-if="s.scaleType.code === '2'">{{s.from}} a {{s.until}}</span>
@@ -33,7 +50,7 @@
                   </span>
                 </div>
               </div>
-              <div class="col-3 text-end">
+              <div class="col-2 text-end pt-2">
                 <i class="fa fa-pencil text-primary hand me-2"></i>
                 <i class="fa fa-trash text-danger hand"></i>
               </div>
@@ -106,16 +123,16 @@
           <div class="row" ng-if="newItem.type === 'metric'">
             <div class="col-12">
               <small class="text-secondary">Categoria</small>
-              <select name="category" ng-model="newMetric.category" class="form-select form-select-sm" required>
+              <select name="categoryId" ng-model="newMetric.categoryId" class="form-select form-select-sm" required>
                 <option ng-value="undefined">--SELECCIONE--</option>
-                <option ng-repeat="c in categories" ng-value="c">{{c.name | uppercase}}</option>
+                <option ng-repeat="c in categories" ng-value="c.id">{{c.name | uppercase}}</option>
               </select>
             </div>
             <div class="col 12">
               <small class="text-secondary">Atributo</small>
-              <select name="metricAttribute" ng-model="newMetric.metricAttribute" class="form-select form-select-sm" required>
+              <select name="metricAttributeId" ng-model="newMetric.metricAttributeId" class="form-select form-select-sm" required>
                 <option ng-value="undefined">--SELECCIONE--</option>
-                <option ng-repeat="a in attributes" ng-value="a">{{a.name | uppercase}}</option>
+                <option ng-repeat="a in attributes" ng-value="a.id">{{a.name | uppercase}}</option>
               </select>
             </div>
             <div class="col-12">
@@ -124,24 +141,24 @@
             </div>
             <div class="col-12">
               <small class="text-secondary">Tipo de Medición</small>
-              <select name="meditionType" ng-change="selectMeditionType()" ng-model="newItem.meditionType" class="form-select form-select-sm" required>
+              <select name="meditionTypeId" ng-change="selectMeditionType()" ng-model="newItem.meditionTypeId" class="form-select form-select-sm" required>
                 <option ng-value="undefined">--SELECCIONE--</option>
-                <option ng-repeat="m in meditionTypes" ng-value="m">{{m.name}}</option>
+                <option ng-repeat="m in meditionTypes" ng-value="m.code">{{m.name}}</option>
               </select>
             </div>
-            <div class="col-12 mt-2" ng-if="newItem.meditionType.code === '1'">
+            <div class="col-12 mt-2" ng-if="newItem.meditionTypeId === '1'">
               <div class="row">
                 <div class="col-6">
                   <small class="text-secondary">Valor Mínimo</small>
-                  <input type="number" name="minValue" ng-model="newMetric.meditionType.minValue" class="form-control form-control-sm" required>
+                  <input type="number" name="minValue" ng-model="newMetric.minValue" class="form-control form-control-sm" required>
                 </div>
                 <div class="col-6">
                   <small class="text-secondary">Valor Máximo</small>
-                  <input type="number" name="maxValue" ng-model="newMetric.meditionType.maxValue" class="form-control form-control-sm" required>
+                  <input type="number" name="maxValue" ng-model="newMetric.maxValue" class="form-control form-control-sm" required>
                 </div>
               </div>
             </div>
-            <div class="col-12 mt-2" ng-if="newItem.meditionType.code === '2'">
+            <div class="col-12 mt-2" ng-if="newItem.meditionTypeId === '2'">
               <div class="row">
                 <div class="col-12">
                   <ul class="list-group">
@@ -198,7 +215,7 @@
                         </div>
                       </div>
                     </li>
-                    <li class="list-group-item" ng-repeat="s in newMetric.meditionType.scales">
+                    <li class="list-group-item" ng-repeat="s in newMetric.scales">
                       <div class="row">
                         <div class="col-4">
                           <small class="text-secondary">Escala</small><br>
