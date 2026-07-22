@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="col-4" ng-repeat="r in evaluationResults | filter:filter.text">
-      <div class="card hand" ng-click="goToEvaluation(r)">
+      <div class="card">
         <div class="card-body">
           <div class="row">
             <div class="col-8">
@@ -47,6 +47,20 @@
                 <i class="fa fa-calendar me-1"></i>{{r.createdAt | date:'dd/MM/yyyy'}} <br>
                 <i class="fa fa-clock me-1"></i>{{r.createdAt | date: 'HH:mm a'}}
               </small>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="row">
+            <div class="col-6">
+              <button class="btn btn-light text-success btn-sm" ng-if="r.state !== 'C'" ng-click="goToEvaluation(r)">
+                <i class="fa fa-layout me-1"></i> Evaluar
+              </button>
+            </div>
+            <div class="col-6 text-end">
+              <button class="btn btn-primary btn-sm" ng-if="r.state === 'C'">
+                <i class="fa fa-download me-1"></i>Exportar
+              </button>
             </div>
           </div>
         </div>
@@ -195,7 +209,7 @@
                       ¿Cumple?
                     </div>
                     <div class="col-3"></div>
-                    <div class="col" ng-repeat="mt in s.optionsBinary">
+                    <div class="col" ng-repeat="mt in s.scales">
                       <div class="card hand"
                         ng-class="{'bg-primary text-white': s.metricScaleSelected.id === mt.id, 'text-secondary': s.metricScaleSelected.id !== mt.id }"
                         ng-click="toggleMetricScaleSelected(mt, s)">
@@ -209,7 +223,7 @@
                     <div class="col-3"></div>
                   </div>
                 </div>
-                <div class="col-12 mt-2 text-end">
+                <div class="col-12 mt-2 text-end" ng-if="evaluationResult.state !== 'C'">
                   <button class="btn btn-light text-danger" ng-click="clearSelection(s)">
                     <i class="fa fa-times me-1"></i>Limpiar Selección
                   </button>
@@ -237,8 +251,8 @@
                       </div>
                       <div class="col-12">
                         <div class="row">
-                          <div class="col text-center" ng-repeat="mt in i.list">
-                            <button class="btn-light px-3 py-2 text-dark rounded-circle">
+                          <div class="col text-center" ng-repeat="mt in i.scales">
+                            <button class="btn px-3 py-2 text-dark rounded-circle" ng-class="{'btn-primary text-white': i.metricScaleSelected.id === mt.id, 'btn-light': i.metricScaleSelected.id !== mt.id}" ng-click="toggleMetricScaleSelected(mt, s, i)">
                               {{mt.name}}
                             </button>
                           </div>
@@ -253,15 +267,21 @@
         </div>
 
         <!-- General comment -->
-        <div class="card mb-3">
+        <!-- <div class="card mb-3">
           <div class="card-body">
             <label class="fw-semibold mb-2 d-block" style="font-size:.88rem;"><i
                 class="bi bi-card-text me-1"></i>Observación general de la evaluación</label>
             <textarea class="form-control" rows="3"
               placeholder="Resumen general, hallazgos u oportunidades de mejora..."></textarea>
           </div>
+        </div> -->
+        <div class="row mt-3" ng-if="evaluationResult.state !== 'C'">
+          <div class="col-12 text-center">
+            <button class="btn btn-primary" ng-click="finishEvaluation()">
+              <i class="fa fa-save me-1"></i>Finalizar Evaluación
+            </button>
+          </div>
         </div>
-
       </div>
 
       <!-- Sidebar -->

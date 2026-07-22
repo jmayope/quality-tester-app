@@ -52,6 +52,9 @@ app.factory("authInterceptor", ["$q", "$window", function($q, $window) {
     updateEvaluation: (body) => {
       return $http.put(`${apiUrl}/evaluation-models/update`, body).then(response => response.data);
     },
+    updateEvaluationResult: (id, body) => {
+      return $http.put(`${apiUrl}/evaluation-results/${id}`, body).then(response => response.data);
+    },
     findAllPersonsBy: (filter) => {
       return $http.post(`${apiUrl}/people/filter`, filter).then(response => response.data);
     },
@@ -102,6 +105,9 @@ app.factory("authInterceptor", ["$q", "$window", function($q, $window) {
     },
     saveEvaluationResults: (body) => {
       return $http.post(`${apiUrl}/evaluation-results`, body).then(response => response.data)
+    },
+    saveEvaluationResultDetails: (body) => {
+      return $http.post(`${apiUrl}/evaluation-result-details`, body).then(response => response.data)
     },
     saveEvaluationSections: (body) => {
       return $http.post(`${apiUrl}/evaluation-sections`, body).then(response => response.data)

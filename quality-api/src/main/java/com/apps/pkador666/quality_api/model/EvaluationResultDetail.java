@@ -20,7 +20,7 @@ public class EvaluationResultDetail {
   private Long evaluationSectionId;
 
   @Column()
-  private String score;
+  private Double score;
 
   @Column()
   private String obs;
@@ -56,11 +56,11 @@ public class EvaluationResultDetail {
     this.evaluationSectionId = evaluationSectionId;
   }
 
-  public String getScore() {
+  public Double getScore() {
     return score;
   }
 
-  public void setScore(String score) {
+  public void setScore(Double score) {
     this.score = score;
   }
 
@@ -88,6 +88,5 @@ public class EvaluationResultDetail {
     this.createdAt = createdAt;
   }
 
-  
-  
+    
 }
