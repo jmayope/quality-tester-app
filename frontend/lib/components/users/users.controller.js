@@ -125,6 +125,7 @@ app.controller("usersCtrl", ["$scope", "mainService", function($scope, mainServi
   $scope.saveUser = async () => {
     console.log($scope.newRecord);
     let newUser = structuredClone($scope.newRecord.user);
+    newUser.personId = $scope.personSelected.id;
     let resultUser = await mainService.saveUsers(newUser);
     console.log(resultUser);
     let newBusinessUser = structuredClone($scope.newRecord.entityUser);
