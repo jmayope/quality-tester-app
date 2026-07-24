@@ -102,7 +102,7 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", "APP
       $scope.sectionsToShow = $scope.sections;
       $scope.selectSection($scope.sections[0]);
       if (item) {
-        $scope.newEvaluationModel = item;
+        $scope.newEvaluationModel = structuredClone(item);
         $scope.newEvaluationModel.sections = $scope.newEvaluationModel.sections || [];
         $scope.newEvaluationModel.metrics = $scope.newEvaluationModel.metrics || [];
         $scope.newEvaluationModel.editing = true;
@@ -217,21 +217,32 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", "APP
           $scope.newSubSection = JSON.parse(JSON.stringify(subsection));
           $scope.newSubSection.editing = true;
         }
-        $scope.newSection = {
-          evaluationModelId: $scope.newEvaluationModel.id
+        $scope.newSubSection = {
+          evaluationModelId: $scope.newEvaluationModel.id,
+          parent: section.id
         };
       }
     }
   }
 
-  $scope.saveSubSection = (section) => {
+  $scope.saveSubSection = async (section) => {
     if ($scope.newSubSection.editing) {
       console.log("Actualizar");
     } else {
+      if ($scope.newSubSection.parent) {
+        let newSubSection = $scope.newSubSection;
+        let resultSubSection = await mainService.saveEvaluationSections(newSubSection);
+        console.log(resultSubSection);
+        $scope.newSubSection.id = resultSubSection.data.id;
+        $scope.getEvaluationModels();
+      }
       section.sections.push($scope.newSubSection);
     }
     $scope.newSubSection = undefined;
     $scope.sectionToAddSubSection = undefined;
+    if(!$scope.$$phase) {
+      $scope.$apply();
+    }
   }
 
   $scope.saveSection = async () => {
@@ -242,6 +253,7 @@ app.controller('evaluationModelCtrl', ["$scope", "mainService", "$timeout", "APP
       let resultSection = await mainService.saveEvaluationSections(newSection);
       console.log(resultSection);
       $scope.newSection.id = resultSection.data.id;
+      $scope.getEvaluationModels();
     }
     $scope.newEvaluationModel.sections.push($scope.newSection);
     $scope.newSection = undefined;

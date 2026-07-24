@@ -22,6 +22,11 @@ public class EvaluationResultDetailService {
   }
 
   public EvaluationResultDetail create(EvaluationResultDetail evaluationResult) {
+    List<EvaluationResultDetail> previous = 
+      evaluationResultDetailRepository.findAll().stream().filter(e -> 
+        e.getEvaluationResultId().equals(evaluationResult.getEvaluationResultId()) && e.getEvaluationSectionId().equals(evaluationResult.getEvaluationSectionId())
+      ).toList();
+    evaluationResultDetailRepository.deleteAll(previous);
     return evaluationResultDetailRepository.save(evaluationResult);
   }
 

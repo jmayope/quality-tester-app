@@ -52,6 +52,9 @@ app.factory("authInterceptor", ["$q", "$window", function($q, $window) {
     updateEvaluation: (body) => {
       return $http.put(`${apiUrl}/evaluation-models/update`, body).then(response => response.data);
     },
+    exportEvaluationResult: (id) => {
+      return $http.get(`${apiUrl}/evaluation-results/export/${id}`, {responseType: "blob"}).then(response => response.data);
+    },
     updateEvaluationResult: (id, body) => {
       return $http.put(`${apiUrl}/evaluation-results/${id}`, body).then(response => response.data);
     },
@@ -100,6 +103,9 @@ app.factory("authInterceptor", ["$q", "$window", function($q, $window) {
     findAllBusinessUsers: () => {
       return $http.get(`${apiUrl}/business-users`).then(response => response.data);
     },
+    findAllBusinessUsersByBusinessId: (businessId) => {
+      return $http.get(`${apiUrl}/business-users/by-business/${businessId}`).then(response => response.data);
+    },
     saveBusinessUsers: (body) => {
       return $http.post(`${apiUrl}/business-users`, body).then(response => response.data);
     },
@@ -114,6 +120,9 @@ app.factory("authInterceptor", ["$q", "$window", function($q, $window) {
     },
     findEvaluationSectionsByEvaluationModelId: (id) => {
       return $http.get(`${apiUrl}/evaluation-sections/by-evaluation-model/${id}`).then(response => response.data);
+    },
+    findEvaluationResultDetailByEvaluationId: (id) => {
+      return $http.get(`${apiUrl}/evaluation-result-details/by-evaluation-result/${id}`).then(response => response.data);
     },
     findEvaluationResultById: (id) => {
       return $http.get(`${apiUrl}/evaluation-results/${id}`).then(response => response.data);

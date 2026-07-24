@@ -159,4 +159,8 @@ app.controller("usersCtrl", ["$scope", "mainService", function($scope, mainServi
       $scope.$apply();
     }
   }
+
+  $scope.toggleShowPassword = () => {
+    $scope.newRecord.user.showPassword = !$scope.newRecord.user.showPassword;
+  }
 }]);

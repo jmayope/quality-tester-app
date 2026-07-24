@@ -15,7 +15,7 @@
     <div class="col-12 mt-3">
       <div class="row">
         <div class="col-4 mb-3" ng-if="userLoged.isAdmin">
-          <div class="card borderless" ng-click="toggleEvaluationModal()">
+          <div class="card border-dashed" ng-click="toggleEvaluationModal()">
             <div class="card-body text-center hand mt-3 mb-3 text-secondary">
               <i class="fa fa-plus-circle fa-3x"></i><br>
               <span class="font-lg">
@@ -25,7 +25,7 @@
           </div>
         </div>
         <div class="col-4 mb-3" ng-class="{'hand': !userLoged.isAdmin}" ng-click="toggleUsageModel(e)" ng-repeat="e in evaluationModels | filter:filter.text">
-          <div class="card borderless">
+          <div class="card borderless" style="box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);">
             <div class="card-header">
               <span class="float-end badge" ng-class="{'bg-danger': !e.status, 'bg-success': e.status}">{{e.status ? 'Activo' : 'Inactivo'}}</span>
               <strong>{{e.name | uppercase}}</strong> <br><span class="badge bg-primary">{{e.code | uppercase}}</span>
@@ -53,13 +53,13 @@
                 </div>
               </div>
             </div>
+            <small class="text-secondary ps-3" ng-if="e.sections && e.sections.length">Secciones en la Evaluación</small>
             <ul class="list-group list-group-flush" ng-if="e.sections && e.sections.length">
-              <caption class="ps-3">Secciones en la Evaluación</caption>
               <li class="list-group-item" ng-repeat="s in e.sections">
                 {{s.sectionOrder | uppercase}} - {{s.name | uppercase}}
                 <ul class="list-group">
                   <li class="list-group-item" ng-repeat="h in s.sections">
-                    {{h.sectionOrder}} - {{h.name}}
+                    {{h.sectionOrder}} - {{h.name | uppercase}}
                   </li>
                 </ul>
               </li>
@@ -72,9 +72,9 @@
                   </button>
                 </div>
                 <div class="col-6 text-end">
-                  <button class="btn btn-sm btn-light text-danger">
+                  <!-- <button class="btn btn-sm btn-light text-danger">
                     <i class="fa fa-trash"></i>
-                  </button>
+                  </button> -->
                 </div>
               </div>
             </div>
@@ -226,7 +226,7 @@
                             </div>
                             <div class="col-9">
                               <small class="text-secondary">Nombre</small>
-                              <input type="text" name="name-ss" ng-model="newSubSection.name" class="form-control form-control-sm">
+                              <input type="text" name="name-ss" ng-model="newSubSection.name" class="form-control form-control-sm text-uppercase">
                             </div>
                             <div class="col-6 mt-3">
                               <button class="btn btn-sm btn-light text-danger">

@@ -1,14 +1,5 @@
 package com.apps.pkador666.quality_api.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.apps.pkador666.quality_api.dto.request.EvaluationResultRequest;
-import com.apps.pkador666.quality_api.model.ApiResponse;
-import com.apps.pkador666.quality_api.model.EvaluationResult;
-import com.apps.pkador666.quality_api.model.EvaluationResultDetail;
-import com.apps.pkador666.quality_api.service.EvaluationResultService;
-
 import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +11,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.apps.pkador666.quality_api.dto.request.EvaluationResultRequest;
+import com.apps.pkador666.quality_api.model.ApiResponse;
+import com.apps.pkador666.quality_api.model.EvaluationResult;
+import com.apps.pkador666.quality_api.service.EvaluationResultService;
 
 
 
@@ -65,7 +62,7 @@ public class EvaluationResultController {
     }
   }
 
-  @GetMapping("report/{id}")
+  @GetMapping("/export/{id}")
   public ResponseEntity<InputStreamResource> descargarReporteUsuarios(@PathVariable("id") Long id) {
         ByteArrayInputStream pdf = evaluationResultService.generateStatsReport(id);
 

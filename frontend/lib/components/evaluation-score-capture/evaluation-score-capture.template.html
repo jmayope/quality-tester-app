@@ -54,11 +54,11 @@
           <div class="row">
             <div class="col-6">
               <button class="btn btn-light text-success btn-sm" ng-if="r.state !== 'C'" ng-click="goToEvaluation(r)">
-                <i class="fa fa-layout me-1"></i> Evaluar
+                <i class="fa fa-star me-1"></i> Evaluar
               </button>
             </div>
             <div class="col-6 text-end">
-              <button class="btn btn-primary btn-sm" ng-if="r.state === 'C'">
+              <button class="btn btn-primary btn-sm" ng-click="export(r)" ng-if="r.state === 'C'">
                 <i class="fa fa-download me-1"></i>Exportar
               </button>
             </div>
@@ -252,12 +252,69 @@
                       <div class="col-12">
                         <div class="row">
                           <div class="col text-center" ng-repeat="mt in i.scales">
-                            <button class="btn px-3 py-2 text-dark rounded-circle" ng-class="{'btn-primary text-white': i.metricScaleSelected.id === mt.id, 'btn-light': i.metricScaleSelected.id !== mt.id}" ng-click="toggleMetricScaleSelected(mt, s, i)">
+                            <button class="btn px-3 py-2 text-dark rounded-circle"
+                              ng-class="{'btn-primary text-white': i.metricScaleSelected.id === mt.id, 'btn-light': i.metricScaleSelected.id !== mt.id}"
+                              ng-click="toggleMetricScaleSelected(mt, s, i)">
                               {{mt.name}}
                             </button>
                           </div>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                  <div class="col-12" ng-if="s.metric.meditionType.code === '2'">
+                    <div class="row">
+                      <div class="col-10 mb-2">
+                        <small>
+                          {{s.metric.category.name | uppercase}}
+                        </small> |
+                        <small>
+                          {{s.metric.metricAttribute.name | uppercase}}
+                        </small>
+                      </div>
+                      <div class="col-2">
+                        Evalua:
+                      </div>
+                      <div class="col-2"></div>
+                      <div class="col" ng-repeat="mt in s.scales">
+                        <div class="card hand"
+                          ng-class="{'bg-primary text-white': i.metricScaleSelected.id === mt.id, 'text-secondary': i.metricScaleSelected.id !== mt.id }"
+                          ng-click="toggleMetricScaleSelected(mt, s, i)">
+                          <div class="card-body text-center">
+                            <i class="fa me-1"
+                              ng-class="{'fa-check-circle': i.metricScaleSelected.id === mt.id, 'fa-circle': i.metricScaleSelected.id !== mt.id}"></i>{{mt.name
+                            | uppercase}}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-2"></div>
+                    </div>
+                  </div>
+                  <div class="col-12" ng-if="s.metric.meditionType.code === '3'">
+                    <div class="row">
+                      <div class="col-10 mb-2">
+                        <small>
+                          {{s.metric.category.name | uppercase}}
+                        </small> |
+                        <small>
+                          {{s.metric.metricAttribute.name | uppercase}}
+                        </small>
+                      </div>
+                      <div class="col-2">
+                        ¿Cumple?
+                      </div>
+                      <div class="col-3"></div>
+                      <div class="col" ng-repeat="mt in s.scales">
+                        <div class="card hand"
+                          ng-class="{'bg-primary text-white': i.metricScaleSelected.id === mt.id, 'text-secondary': i.metricScaleSelected.id !== mt.id }"
+                          ng-click="toggleMetricScaleSelected(mt, s, i)">
+                          <div class="card-body text-center">
+                            <i class="fa me-1"
+                              ng-class="{'fa-check-circle': i.metricScaleSelected.id === mt.id, 'fa-circle': i.metricScaleSelected.id !== mt.id}"></i>{{mt.name | uppercase}}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-3"></div>
                     </div>
                   </div>
                 </div>

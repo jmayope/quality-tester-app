@@ -34,7 +34,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <a class="btn me-3" ng-class="{'btn-primary': menuSelected && menuSelected.id !== m.id, 'btn-light text-primary': menuSelected && menuSelected.id === m.id}" ng-repeat="m in menu" href="#!{{m.route}}" ng-click="selectMenuItem(m)">
+          <a class="btn me-3 btn-primary" ng-class="{'btn-primary': menuSelected && menuSelected.id !== m.id, 'btn-light text-primary': menuSelected && menuSelected.id === m.id}" ng-repeat="m in menu" href="#!{{m.route}}" ng-click="selectMenuItem(m)">
             <i class="fa fa-circle me-1"></i>{{m.name}}
           </a>
           <!-- <ul class="navbar-nav">

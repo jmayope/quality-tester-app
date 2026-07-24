@@ -1,26 +1,21 @@
 package com.apps.pkador666.quality_api.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.apps.pkador666.quality_api.dto.request.EvaluationResultRequest;
-import com.apps.pkador666.quality_api.dto.request.EvaluationSectionRequest;
-import com.apps.pkador666.quality_api.dto.response.EvaluationSectionResponse;
-import com.apps.pkador666.quality_api.model.ApiResponse;
-import com.apps.pkador666.quality_api.model.EvaluationModel;
-import com.apps.pkador666.quality_api.model.EvaluationResult;
-import com.apps.pkador666.quality_api.model.EvaluationSection;
-import com.apps.pkador666.quality_api.service.EvaluationModelService;
-import com.apps.pkador666.quality_api.service.EvaluationSectionService;
-
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.apps.pkador666.quality_api.dto.request.EvaluationSectionRequest;
+import com.apps.pkador666.quality_api.dto.response.EvaluationSectionResponse;
+import com.apps.pkador666.quality_api.model.ApiResponse;
+import com.apps.pkador666.quality_api.model.EvaluationSection;
+import com.apps.pkador666.quality_api.service.EvaluationModelService;
+import com.apps.pkador666.quality_api.service.EvaluationSectionService;
 
 
 
@@ -46,7 +41,7 @@ public class EvaluationSectionController {
   }
 
   @PostMapping
-  public ResponseEntity<ApiResponse<EvaluationSection>> save(@RequestBody EvaluationSectionRequest evaluationResult) {
+  public ResponseEntity<ApiResponse<EvaluationSectionResponse>> save(@RequestBody EvaluationSectionRequest evaluationResult) {
     try {
       return ResponseEntity.ok(ApiResponse.success(evaluationSectionService.create(evaluationResult), "Guardado correcto"));
     } catch (Exception e) {

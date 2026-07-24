@@ -29,6 +29,10 @@ public class BusinessUserService {
     return businessUserRepository.findAll();
   }
 
+  public List<BusinessUser> findByBusinessId(Long id) {
+    return businessUserRepository.findAll().stream().filter(b -> b.getBusiness().getId().equals(id)).toList();
+  }
+
   public BusinessUser create(BusinessUserRequest newBusinessUser) {
     BusinessUser businessUserCreated = new BusinessUser();
     Optional<Business> businessFound = businessRepository.findById(newBusinessUser.getBusinessId());

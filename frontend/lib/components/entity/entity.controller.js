@@ -1,10 +1,29 @@
-app.controller("entityCtrl", ["$scope", "mainService", function($scope, mainService) {
+app.controller("entityCtrl", ["$scope", "mainService", "$timeout", function($scope, mainService, $timeout) {
 
   $scope.isEntityOpen = false;
+  $scope.isBusinessUserOpen = false;
   $scope.newEntity = undefined;
   $scope.newElement = undefined;
   $scope.newTechnology = undefined;
   $scope.entities = [];
+  $scope.businessUsers = [];
+
+  $scope.isUserOpen = false;
+  $scope.personFounds = [];
+  $scope.businessSelected = undefined;
+  $scope.search = {};
+  $scope.genders = [
+    {id: true, name: 'Masculino', icon: 'fa fa-male'},
+    {id: false, name: 'Femenino', icon: 'fa fa-female'},
+  ];
+  $scope.userTypes = [];
+  $scope.newRecord = {
+    entityUser: {},
+    user: {}
+  };
+
+  $scope.personSelected = undefined;
+
   $scope.sections = [
     {id: 1, name: "Datos Generales"},
     {id: 2, name: "Elementos Evaluables"}
@@ -133,7 +152,7 @@ app.controller("entityCtrl", ["$scope", "mainService", function($scope, mainServ
           text: 'Se grabó correctamente la entidad'
         });
         $scope.toggleEntity();
-        $scope.getEntities();
+        $scope.get();
         $scope.newEntity = undefined;
       }) 
       .catch((err) => {
@@ -168,6 +187,152 @@ app.controller("entityCtrl", ["$scope", "mainService", function($scope, mainServ
   deleteItem = (entity) =>  {
     console.log("Borrar entidad");
 
+  }
+
+
+  $scope.toggleBusinessUser = async (business, reOpen = false) => {
+    if ($scope.isBusinessUserOpen && !reOpen) {
+      $scope.isBusinessUserOpen = undefined;
+    } else {
+      $scope.isBusinessUserOpen = true;
+      $scope.businessUsers = [];
+      $scope.businessSelected = business;
+      let resultBusinessUsers = await mainService.findAllBusinessUsersByBusinessId(business.id);
+      console.log(resultBusinessUsers);
+      $scope.businessUsers = resultBusinessUsers.data;
+      $scope.getUserTypes();
+      
+      if(!$scope.$$phase) {
+        $scope.$apply();
+      }
+    }
+  }
+
+  $scope.getBusinessUsers = async () => {
+    let resultBusinessUsers = await mainService.findAllBusinessUsersByBusinessId(business.id);
+    console.log(resultBusinessUsers);
+    $scope.businessUsers = resultBusinessUsers.data;
+    if(!$scope.$$phase) {
+      $scope.$apply();
+    }
+  }
+
+
+  $scope.getUserTypes = async () => {
+    let resultTypes = await mainService.findAllTypesByCategory("TIPO_USUARIO");
+    console.log(resultTypes);
+    $scope.userTypes = resultTypes.data;
+  }
+
+
+  $scope.toggleUser = async (item = undefined) => {
+    if ($scope.isUserOpen) {
+      $scope.isUserOpen = false;
+    } else {
+      $scope.isUserOpen = true;
+      $scope.newRecord = {
+        entityUser: {},
+        user: {}
+      };
+      if (item) {
+        $scope.newRecord.user = structuredClone(item);
+        $scope.newRecord.editing = true;
+      }
+
+      $scope.newRecord.entityUser.businessId = $scope.businessSelected.id;
+    }
+  }
+
+  $scope.togglePerson = async () => {
+    if ($scope.isPersonOpen) {
+      $scope.isPersonOpen = false;
+    } else {
+      $scope.isPersonOpen = true;
+      $scope.newPerson = {};
+    }
+  }
+
+  $scope.searchPerson = async () => {
+    if ($scope.search.done) {
+      $scope.search.done = false;
+      $scope.personSelected = undefined;
+      $scope.personFounds = [];
+    } else {
+      let filter = $scope.search;
+      $scope.search.proccesing = true;
+      $scope.search.done = false;
+      let resultPerson = await mainService.findAllPersonsBy(filter);
+      $scope.search.proccesing = false;
+      $scope.personFounds = resultPerson.data;
+      $scope.search.done = true; 
+    }
+    if(!$scope.$$phase) {
+      $scope.$apply();
+    }
+  }
+
+  $scope.selectPerson = async (p) => {
+    $scope.personSelected = structuredClone(p);
+    $scope.newRecord.user.personId = p.id;
+  }
+
+  $scope.toggleGender = async (gender) => {
+    $scope.newPerson.gender = gender.id;
+  }
+  
+  $scope.validatePassword = async () => {
+    if ($scope.newRecord.user.password && $scope.newRecord.confirmPassword) {
+      $scope.newRecord.passwordEquals = $scope.newRecord.user.password === $scope.newRecord.confirmPassword;
+    }
+    console.log($scope.newRecord);
+    if(!$scope.$$phase) {
+      $scope.$apply();
+    }
+  }
+
+  $scope.saveUser = async () => {
+    console.log($scope.newRecord);
+    let newUser = structuredClone($scope.newRecord.user);
+    newUser.personId = $scope.personSelected.id;
+    let resultUser = await mainService.saveUsers(newUser);
+    console.log(resultUser);
+    let newBusinessUser = structuredClone($scope.newRecord.entityUser);
+    newBusinessUser.userId = resultUser.data.id;
+    newBusinessUser.status = $scope.newRecord.user.status;
+    let resultEntityUser = await mainService.saveBusinessUsers(newBusinessUser);
+    console.log(resultEntityUser);
+    Swal.fire({
+      icon: 'success',
+      text: 'Se grabó correctamente el usuario'
+    });
+    $scope.toggleUser();
+    $scope.toggleBusinessUser($scope.businessSelected, true);
+    if(!$scope.$$phase) {
+      $scope.$apply();
+    }
+  }
+
+  $scope.savePerson = async () => {
+    console.log($scope.newPerson);
+    let newPerson = structuredClone($scope.newPerson);
+    let resultPerson = await mainService.savePeople(newPerson);
+    console.log(resultPerson);
+    Swal.fire({
+      icon: 'success',
+      text: 'Persona creada correctamente'
+    });
+    $scope.search.done = true;
+    $scope.search.proccesing = false;
+    $scope.personFounds = [resultPerson.data];
+    $scope.personSelected = resultPerson.data;
+    $scope.togglePerson();
+    if(!$scope.$$phase) {
+      $scope.$apply();
+    }
+  }
+
+  $scope.toggleShowPassword = () => {
+    $scope.newRecord.user.showPassword = !$scope.newRecord.user.showPassword;
   }
 
 }])

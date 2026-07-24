@@ -13,6 +13,7 @@ app.controller('evaluationScoreCaptureCtrl', ["$scope", "APP_CONFIG","mainServic
   $scope.evaluationStates = [];
   $scope.filter = {};
   $scope.itemEvaluates = [];
+  $scope.evaluationResultScores = [];
   $scope.evaluatesPercent = 0;
   $scope.optionsBinary = [
     {id: 1, value: 0, name: 'NO' },
@@ -109,7 +110,44 @@ app.controller('evaluationScoreCaptureCtrl', ["$scope", "APP_CONFIG","mainServic
         }
       }
     })
+
+    $scope.evaluationModelSections.map(s => {
+      s.sections.map(x => {
+        console.log("llego aqui");
+        let resultFound = $scope.evaluationResultScores.find(y => y.evaluationSectionId === x.id);
+        if (resultFound) {
+          switch (s.metric.meditionType.code) {
+            case "1":
+            case "3":
+              x.metricScaleSelected = s.scales.find(c => c.value === resultFound.score);
+              break;
+            case "2":
+              x.metricScaleSelected = s.scales.find(c => {
+                switch (c.scaleType.code) {
+                  case "1":
+                    return c.value === resultFound.score;
+                  case "2":
+                    return resultFound.score >= c.from && resultFound.score <= c.until;
+                  default:
+                    break;
+                }
+              });
+              break;
+            default:
+              break;
+          }
+        }
+        x.wasEvaluated = x.metricScaleSelected !== undefined;
+      })
+      $scope.recalculateEvaluates();
+    })
+
     console.log($scope.evaluationModelSections);
+
+
+    if(!$scope.$$phase) {
+      $scope.$apply();
+    }
   }
 
   $scope.getEvaluationResult = async () => {
@@ -128,10 +166,14 @@ app.controller('evaluationScoreCaptureCtrl', ["$scope", "APP_CONFIG","mainServic
       return;
     }
     
+    let resultEvaluationResultDetails = await mainService.findEvaluationResultDetailByEvaluationId($scope.evaluationResult.id);
+    console.log(resultEvaluationResultDetails);
+    $scope.evaluationResultScores = resultEvaluationResultDetails.data;
+
     let resultEvaluationSections = await mainService.findEvaluationSectionsByEvaluationModelId($scope.evaluationResult.evaluationModel.id);
     console.log(resultEvaluationSections);
     $scope.evaluationModelSections = resultEvaluationSections.data;
-
+    
     let resultEvaluationMetrics = await mainService.findAllEvaluationMetricsByEvaluationModelId($scope.evaluationResult.evaluationModel.id);
     $scope.evaluationMetrics = resultEvaluationMetrics.data;
     console.log($scope.evaluationMetrics);
@@ -183,10 +225,11 @@ app.controller('evaluationScoreCaptureCtrl', ["$scope", "APP_CONFIG","mainServic
         child.evaluated = 100;
         item = child;
       }
+      console.log(mt);
       let newEvaluationResultDetail = {
         evaluationResultId: $scope.evaluationResult.id,
         evaluationSectionId: item.id,
-        score: mt.value == 0 ? mt.until : mt.value,
+        score: mt.until && mt.value == 0 ? mt.until : mt.value,
         obs: 'INGRESO AUTOMATICO',
         status: true
       };
@@ -240,11 +283,27 @@ app.controller('evaluationScoreCaptureCtrl', ["$scope", "APP_CONFIG","mainServic
         if (choice.isConfirmed) {
           let resultEvaluationResult = await mainService.updateEvaluationResult($scope.evaluationResult.id, {state: "C"});
           $location.path(`/evaluation-score-capture`);
+          if(!$scope.$$phase) {
+            $scope.$apply();
+          }
         }
       }, 100);
     })
   }
 
+  $scope.export = async (evaluationResult) => {
+    let resultExport = await mainService.exportEvaluationResult(evaluationResult.id);
+    console.log(resultExport);
+    const blob = new Blob([resultExport], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
 
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'reporte_modelos.pdf';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  }
 
 }]);

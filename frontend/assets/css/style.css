@@ -66,6 +66,10 @@ dialog::backdrop {
   border: none;
 }
 
+.border-dashed {
+  border: 3px #cacaca dashed;
+}
+
 .no-resize {
   resize: none;
 }

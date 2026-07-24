@@ -1,12 +1,10 @@
 package com.apps.pkador666.quality_api.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.apps.pkador666.quality_api.dto.request.EvaluationModelRequest;
 import com.apps.pkador666.quality_api.dto.request.EvaluationSectionRequest;
 import com.apps.pkador666.quality_api.dto.response.EvaluationSectionResponse;
 import com.apps.pkador666.quality_api.model.EvaluationModel;
@@ -37,7 +35,7 @@ public class EvaluationSectionService {
     return evaluationSectionRepository.findById(id);
   }
 
-  public EvaluationSection create(EvaluationSectionRequest evaluationSection) {
+  public EvaluationSectionResponse create(EvaluationSectionRequest evaluationSection) {
     EvaluationSection newEvaluationSection = new EvaluationSection();
     newEvaluationSection.setName(evaluationSection.getName());
     newEvaluationSection.setDescription(evaluationSection.getDescription());
@@ -49,7 +47,10 @@ public class EvaluationSectionService {
       newEvaluationSection.setParent(parent.get());
     }
     newEvaluationSection.setStatus(evaluationSection.getStatus() == null ? true : evaluationSection.getStatus().get());
-    return evaluationSectionRepository.save(newEvaluationSection);
+    EvaluationSection newSection = evaluationSectionRepository.save(newEvaluationSection);
+    EvaluationSectionResponse result = new EvaluationSectionResponse();
+    result.setId(Optional.of(newSection.getId()));
+    return result;
   }
 
   @Transactional

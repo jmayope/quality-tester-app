@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="col-3">
-      <div class="card bg-light borderless rounded-semi-pill hand" ng-click="toggleEntity()">
+      <div class="card bg-light border-dashed rounded-semi-pill hand" ng-click="toggleEntity()">
         <div class="card-body text-secondary pt-5 pb-5">
           <div class="row mt-5 mb-5">
             <div class="col-12 text-center">
@@ -24,29 +24,31 @@
       </div>
     </div>
     <div class="col-3 mb-3" ng-repeat="entity in entities | filter:filter.text">
-      <div class="card borderless rounded-semi-pill">
+      <div class="card borderless rounded-semi-pill" style="box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);">
         <div class="card-body">
           <div class="row">
-            <div class="col-3 text-center">
-              <i class="fa fa-repeat fa-3x"></i>
-            </div>
-            <div class="col-9 pt-1">
-              <h2 class="text-primary-color">{{entity.name | uppercase}}</h2>
+            <div class="col-12">
+              <i class="fa fa-building me-1"></i>
+              {{entity.name | uppercase}}
             </div>
             <div class="col-12 pt-2">
+              <i class="fa fa-comment me-1"></i>
               <span class="text-secondary">{{entity.description | uppercase}}</span>
             </div>
             <div class="col-12">
               <span class="badge bg-light border-primary text-primary me-2" ng-repeat="tech in e.technologies">{{tech}}</span>
             </div>
             <div class="col-6 mt-2">
-              <button class="btn btn-sm btn-light text-danger">
-                <i class="fa fa-trash me-1"></i>Eliminar
+              <button class="btn btn-sm btn-light text-success" ng-click="toggleEntity(entity)" title="Editar">
+                <i class="fa fa-edit"></i>
+              </button>
+              <button class="btn btn-sm btn-light text-primary" ng-click="toggleBusinessUser(entity)" title="Usuarios">
+                <i class="fa fa-users"></i>
               </button>
             </div>
             <div class="col-6 mt-2 text-end">
-              <button class="btn btn-sm btn-light text-success" ng-click="toggleEntity(entity)">
-                <i class="fa fa-edit me-1"></i>Editar
+              <button class="btn btn-sm btn-light text-danger" title="Dar de Baja">
+                <i class="fa fa-arrow-down"></i>
               </button>
             </div>
           </div>
@@ -55,6 +57,8 @@
     </div>
   </div>
 </div>
+
+
 <div class="modal fade"
      ng-class="{'show d-block': isEntityOpen}"
      tabindex="-1"
@@ -186,6 +190,245 @@
         <button class="btn btn-primary" ng-disabled="!newEntity.elements.length" ng-click="saveEntity()">Guardar</button>
       </div>
 
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade"
+     ng-class="{'show d-block': isBusinessUserOpen}"
+     tabindex="-1"
+     role="dialog"
+     style="background: rgba(0,0,0,0.5);"
+     ng-if="isBusinessUserOpen">
+
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Usuarios de la Empresa</h5>
+        <button type="button" class="btn-close" ng-click="toggleBusinessUser()"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12 text-center">
+            <span ng-if="!businessUsers.length">
+              <i class="fa fa-times text-danger fa-3x"></i><br>
+              No se tiene registrado ningún usuario. <br>
+            </span>
+            <button class="btn btn-sm btn-light text-primary" ng-click="toggleUser()">
+              <i class="fa fa-plus me-1"></i>Registrar Nuevo Usuario
+            </button>
+          </div>
+          <div class="col-12 mt-3" ng-if="businessUsers.length">
+            <ul class="list-group">
+              <li class="list-group-item" ng-repeat="u in businessUsers">
+                <div class="row">
+                  <div class="col-9">
+                    <div class="row">
+                      <div class="col-9">
+                        <small class="text-secondary">Datos del usuario</small><br>
+                        @{{u.user.username}}
+                      </div>
+                      <div class="col-3"></div>
+                    </div>
+                  </div>
+                  <div class="col-3 pt-2 text-end">
+                    <button class="btn btn-sm btn-light me-1">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-light text-danger">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade"
+     ng-class="{'show d-block': isUserOpen}"
+     tabindex="-1"
+     role="dialog"
+     style="background: rgba(0,0,0,0.5);"
+     ng-if="isUserOpen">
+
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">{{newRecord.editing ? 'Editando' : 'Nuevo'}}&nbsp;Usuario</h5>
+        <button type="button" class="btn-close" ng-click="toggleUser()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form name="userForm">
+          <div class="row">
+            
+            <div class="col-12">
+              <small class="text-secondary">Persona</small>
+              <div class="input-group">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+                <input type="text" name="text" ng-disabled="search.done" ng-model="search.text" class="form-control text-uppercase" placeholder="BUSCAR POR TEXTO" aria-label="BUSCAR POR TEXTO" aria-describedby="basic-addon1">
+                <button class="btn" ng-class="{'btn-success': !search.done, 'btn-danger': search.done}" ng-disabled="search.proccesing" ng-if="search.text || search.done" ng-click="searchPerson()">
+                  <i class="fa me-1" ng-class="{'fa-search': !search.done, 'fa-times': search.done}"></i>{{search.done ? 'Limpiar' : 'Buscar'}}
+                </button>
+              </div>
+              <span class="float-end">Si no existe la persona&nbsp;<span class="hand text-primary" ng-click="togglePerson()">Crealo Aqui</span></span>
+            </div>
+            <div class="col-12 mt-2" ng-if="search.done && !search.proccesing">
+              <div class="row">
+                <div class="col-12 text-center" ng-if="!personFounds.length">
+                  <i class="fa fa-times fa-3x"></i><br>
+                  No se tienen personas con esos filtros
+                </div>
+                <div class="col-12" ng-if="personFounds.length">
+                  <small class="text-secondary">Personas encontradas</small>
+                  <small class="float-end text-secondary">{{personFounds.length}} registros</small>
+                  <ul class="list-group">
+                    <li class="list-group-item hand" ng-class="{'list-group-item-success': personSelected.id === p.id}" ng-click="selectPerson(p)" ng-repeat="p in personFounds">
+                      <div class="row">
+                        <div class="col-10">
+                          {{p.fullName}}
+                        </div>
+                        <div class="col-2 text-end">
+                          <i class="fa fa-circle"></i>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <small class="text-secondary">Tipo de Usuario</small>
+              <select name="userType" ng-disabled="!personSelected" ng-model="newRecord.user.userType" ng-change="selectUserType()" class="form-select" required>
+                <option ng-value="undefined">--SELECCIONE--</option>
+                <option ng-repeat="ut in userTypes" ng-value="ut.code">{{ut.name | uppercase}}</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <small class="text-secondary">Nombre de Usuario</small>
+              <input type="text" name="username" ng-disabled="!personSelected" ng-model="newRecord.user.username" class="form-control" required>
+            </div>
+            <div class="col-12">
+              <small class="text-secondary">Contraseña</small>
+              <div class="input-group">
+                <input ng-attr-type="{{!newRecord.user.showPassword ? 'password' : 'text'}}" name="password" ng-disabled="!personSelected" ng-keyup="validatePassword()" ng-model="newRecord.user.password" class="form-control" required>
+                <button type="button" class="btn btn-light" ng-click="toggleShowPassword()">
+                  <i class="fa" ng-class="{'fa-eye': !newRecord.user.showPassword,'fa-eye-slash': newRecord.user.showPassword }"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-12">
+              <small class="text-secondary">Confirma Contraseña</small>
+              <div class="input-group">
+                <input ng-attr-type="{{!newRecord.user.showPassword ? 'password' : 'text'}}" name="confirmPassword" ng-disabled="!personSelected || !newRecord.user.password" ng-keyup="validatePassword()" ng-model="newRecord.confirmPassword" class="form-control" required>
+                <button type="button" class="btn btn-light" ng-click="toggleShowPassword()">
+                  <i class="fa" ng-class="{'fa-eye': !newRecord.user.showPassword,'fa-eye-slash': newRecord.user.showPassword }"></i>
+                </button>
+              </div>
+              <span class="help-text text-danger" ng-if="!newRecord.passwordEquals">Las contraseñas no coinciden</span>
+            </div>
+            <div class="col-12">
+              <small class="text-secondary">Estado del Usuario</small>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="true" name="status" ng-model="newRecord.user.status" id="user-status">
+                <label class="form-check-label" for="user-status" ng-class="{'text-danger': !newRecord.user.status, 'text-primary': newRecord.user.status}">
+                  {{newRecord.user.status ? 'Activo' : 'Inactivo'}}
+                </label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" ng-click="toggleUser()">Cerrar</button>
+        <button class="btn btn-primary" ng-disabled="userForm.$invalid" ng-click="saveUser()">Guardar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade"
+     ng-class="{'show d-block': isPersonOpen}"
+     tabindex="-1"
+     role="dialog"
+     style="background: rgba(0,0,0,0.5);"
+     ng-if="isPersonOpen">
+
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">{{newPerson.editing ? 'Editando' : 'Nuevo'}}&nbsp;Persona</h5>
+        <button type="button" class="btn-close" ng-click="togglPerson()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form name="personForm">
+          <div class="row">
+            <div class="col-12">
+              <small class="text-secondary">Nombre Completo</small>
+              <input type="text" name="fullName" ng-model="newPerson.fullName" class="form-control">
+            </div>
+            <div class="col-12">
+              <small class="text-secondary">Correo Electónico</small>
+              <input type="text" name="email" ng-model="newPerson.email" class="form-control">
+            </div>
+            <div class="col-12">
+              <small class="text-secondary">Fecha de Nacimiento</small>
+              <input type="date" name="birthDate" ng-model="newPerson.birthDate" class="form-control">
+            </div>
+            <div class="col-12">
+              <small class="text-secondary">Genero</small>
+              <div class="row">
+                <div class="col-10 offset-1">
+                  <div class="row">
+                    <div class="col-6 hand" ng-click="toggleGender(g)" ng-repeat="g in genders">
+                      <div class="card" ng-class="{'bg-success': newPerson.gender === g.id}">
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-12 text-center">
+                              <i class="{{g.icon}} fa-3x"></i><br>
+                              {{g.name | uppercase}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <small class="text-secondary">Estado de la Persona</small>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="true" name="status" ng-model="newPerson.status" id="person-status">
+                <label class="form-check-label" for="person-status" ng-class="{'text-danger': !newPerson.status, 'text-primary': newPerson.status}">
+                  {{newPerson.status ? 'Activo' : 'Inactivo'}}
+                </label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" ng-click="togglePerson()">Cerrar</button>
+        <button class="btn btn-primary" ng-disabled="userForm.$invalid" ng-click="savePerson()">Guardar</button>
+      </div>
     </div>
   </div>
 </div>
